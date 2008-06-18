@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="6"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <ActiveEditorIndexAtStart Value="0"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+      <Language Value=""/>
+      <CharSet Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication Use="True" PathPlusParams="$(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <Units Count="1">
+      <Unit0>
+        <Filename Value="wiitcpload.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WiiTcpLoad"/>
+        <CursorPos X="29" Y="89"/>
+        <TopLine Value="86"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="27"/>
+        <Loaded Value="True"/>
+      </Unit0>
+    </Units>
+    <JumpHistory Count="22" HistoryIndex="21">
+      <Position1>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="25" Column="31" TopLine="1"/>
+      </Position1>
+      <Position2>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="12" Column="21" TopLine="1"/>
+      </Position2>
+      <Position3>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="57" Column="25" TopLine="11"/>
+      </Position3>
+      <Position4>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="10" Column="20" TopLine="1"/>
+      </Position4>
+      <Position5>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="27" Column="7" TopLine="1"/>
+      </Position5>
+      <Position6>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="20" Column="42" TopLine="1"/>
+      </Position6>
+      <Position7>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="45" Column="85" TopLine="17"/>
+      </Position7>
+      <Position8>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="31" Column="38" TopLine="5"/>
+      </Position8>
+      <Position9>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="76" Column="38" TopLine="28"/>
+      </Position9>
+      <Position10>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="33" Column="13" TopLine="18"/>
+      </Position10>
+      <Position11>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="31" Column="34" TopLine="6"/>
+      </Position11>
+      <Position12>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="33" Column="66" TopLine="8"/>
+      </Position12>
+      <Position13>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="45" Column="89" TopLine="20"/>
+      </Position13>
+      <Position14>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="90" Column="38" TopLine="50"/>
+      </Position14>
+      <Position15>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="112" Column="42" TopLine="74"/>
+      </Position15>
+      <Position16>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="61" Column="8" TopLine="36"/>
+      </Position16>
+      <Position17>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="115" Column="18" TopLine="92"/>
+      </Position17>
+      <Position18>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="119" Column="2" TopLine="90"/>
+      </Position18>
+      <Position19>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="116" Column="35" TopLine="108"/>
+      </Position19>
+      <Position20>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="188" Column="35" TopLine="18"/>
+      </Position20>
+      <Position21>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="84" Column="73" TopLine="70"/>
+      </Position21>
+      <Position22>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="91" Column="62" TopLine="68"/>
+      </Position22>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>
