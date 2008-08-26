@@ -21,124 +21,16 @@ program WiiTcpLoad;
 {$mode objfpc}{$H+}
 
 uses
-{$ifdef windows}
- Windows, Winsock,
-{$endif} Classes, SysUtils, Sockets;
+ Classes, SysUtils, Sockets, WiiUnit, Console, WiiHomebrew, WiiTcpLoader, Proc;
 
-type
- TWiiDatagram = Array[0..3] of Byte;
- TWiiLoadVersion = Array[0..1] of Byte;
- 
-type
- TWiiConnect = packed record
-  Sock :Longint;
-  Port :Word;
-  Addr :TInetSockAddr;
- end;
-
-const
- WiiLoadVersion :TWiiLoadVersion = (0, 3);
- AddrSize :Longint = SizeOf(TINetSockAddr);
- INVALID_SOCKET = -1;
- DatagramSize = 16 * 1024;
- HomebrewChannelPort = 4299;
- TCPLoaderChannelPort = 8080;
- 
-const
- prefix = '>>> ';
- 
-
-function WiiConnectFunc(WiiHost :String; var WiiConnect :TWiiConnect) :Boolean;
-begin
- WiiConnect.Sock := Socket(AF_INET, SOCK_STREAM, 0);
- Write(Prefix, 'Creating new socket ... ');
- if WiiConnect.Sock <> INVALID_SOCKET then
- begin
-  Writeln('[done]');
-  Write(Prefix, 'Connecting to ', WiiHost, ':', WiiConnect.Port, ' ... ');
-  WiiConnect.Addr.Family := AF_INET;
-  WiiConnect.Addr.Port := HTons(WiiConnect.Port);
-  WiiConnect.Addr.Sin_addr := HostToNet(StrToHostAddr(WiiHost));
-  Result := FPConnect(WiiConnect.Sock, @WiiConnect.Addr, AddrSize) = 0;
-  if Result = True then
-   Writeln('[done]') else
-   Writeln('[fail]');
-  Exit;
- end else
-  Writeln('[fail]');
- Result := False;
-end;
-
-function WiiSendData(var WiiConnect :TWiiConnect; WiiDatagram :TWiiDatagram) :Boolean;
-begin
- SendTo(WiiConnect.Sock, WiiDatagram, SizeOf(TWiiDatagram), 0, WiiConnect.Addr, AddrSize);
-end;
-
-function WiiSendFile(WiiHost :String; var WiiConnect :TWiiConnect; var FileStream :TFileStream) :Boolean;
-var
- Opt, X :Longint;
- Buffer :Array[0..DatagramSize - 1] of Byte;
-begin
- FileStream.Seek(0, 0);
- Opt := FileStream.Size div DatagramSize;
- 
- if opt > 0 then
- begin
-  for X := 1 to Opt do
-  begin
-   FileStream.ReadBuffer(Buffer, DatagramSize);
-   SendTo(WiiConnect.Sock, Buffer, DatagramSize, 0, WiiConnect.Addr, AddrSize);
-   Writeln('Packet [', X, '] ', DatagramSize, 'Bytes >> ', WiiHost, ':', WiiConnect.Port);
-  end;
- end;
- 
- Opt := FileStream.Size mod DatagramSize;
- 
- if Opt <> 0 then
- begin
-  FileStream.ReadBuffer(Buffer, Opt);
-  SendTo(WiiConnect.Sock, Buffer, Opt, 0, WiiConnect.Addr, AddrSize);
-  Writeln('Packet [', X+1, '] ', Opt, 'Bytes >> ', WiiHost, ':', WiiConnect.Port);
- end;
- Writeln('Done !');
-end;
-
-procedure CClrScr;
-{$ifdef windows}
-var
- Data :CONSOLE_SCREEN_BUFFER_INFO;
- dw :DWord;
- co :_COORD;
- Handle :THandle;
-{$endif}
-begin
-{$ifdef unix}
- Write(#27'[H'#27'[2J');
-{$endif}
-{$ifdef windows}
- ZeroMemory(@co, sizeof(co));
- Handle:=GetStdHandle(STD_OUTPUT_HANDLE);
- GetConsoleScreenBufferInfo(Handle, Data);
- FillConsoleOutputCharacter(Handle, ' ', Data.dwSize.X*Data.dwSize.Y, co, dw);
- SetConsoleCursorPosition(Handle, co);
-{$endif}
-end;
-
-procedure PressEnterToContinue;
-begin
- Writeln;
- Write('Press Enter to continue');
- Readln;
-end;
 
 var
- WiiHost, ElfFile :String;
- WiiConnect :TWiiConnect;
- WiiDatagram :TWiiDatagram;
- FileSize :Longint;
- FileStream :TFileStream;
- StrChoice :String;
- Protocol :Longint;
+ WiiHost :String = '';
+ ElfFile :String = '';
+ FileStream :TFileStream = nil;
+
+ strOption :String;
+ intOption :Longint;
 
 function Check :Boolean;
 begin
@@ -155,17 +47,11 @@ begin
  Result := True;
 end;
 
- 
-begin
- WiiHost := '';
- ElfFile := '';
 
+begin
  repeat
-  CClrScr;
-  Writeln('Welcome in WiiTCPLoader 0.00.1, Developing by Bartlomiej Burdukiewicz');
-  if WiiHost <> '' then
-   Writeln('Wii ', WiiHost) else
-   Writeln;
+  ClrScr;
+  Writeln('Welcome in WiiTCPLoader 0.00.2, Developing by Bartlomiej Burdukiewicz');
   Writeln;
 
   Writeln('   [1]. Connect with Homebrew Channel');
@@ -175,92 +61,20 @@ begin
   Writeln('   [5]. Quit');
   Writeln;
   Write('Your choice: ');
-  Readln(StrChoice);
+  Readln(strOption);
   Writeln;
-  Protocol := StrToIntDef(StrChoice, 0);
+  intOption := StrToIntDef(strOption, 0);
   
-  case Protocol of
-   1:begin
-      if Check then
-      begin
-       WiiConnect.Port := HomebrewChannelPort;
-       if WiiConnectFunc(WiiHost, WiiConnect) then
-       begin
-        Writeln(Prefix, 'Sending HAXX char array');
-        WiiDatagram[0] := Ord('H');
-        WiiDatagram[1] := Ord('A');
-        WiiDatagram[2] := Ord('X');
-        WiiDatagram[3] := Ord('X');
-
-        WiiSendData(WiiConnect, WiiDatagram);
-
-        Writeln(Prefix, 'Sending client version info');
-        WiiDatagram[0] := WiiLoadVersion[0];
-        WiiDatagram[1] := WiiLoadVersion[1];
-        WiiDatagram[2] := (0 shr 8) and $FF;
-        WiiDatagram[3] := 0 and $FF;
-
-        WiiSendData(WiiConnect, WiiDatagram);
-        FileSize := FileStream.Size;
-
-        Writeln(Prefix, 'Sending file size');
-        WiiDatagram[0] := (FileSize shr 24) and $FF;
-        WiiDatagram[1] := (FileSize shr 16) and $FF;
-        WiiDatagram[2] := (FileSize shr 8) and $FF;
-        WiiDatagram[3] := FileSize and $FF;
-
-        WiiSendData(WiiConnect, WiiDatagram);
-        Writeln(Prefix, 'Sending file');
-        WiiSendFile(WiiHost, WiiConnect, FileStream);
-       end;
-      end;
-      PressEnterToContinue;
-     end;
-   2:begin
-      if Check then
-      begin
-       WiiConnect.Port := TCPLoaderChannelPort;
-       if WiiConnectFunc(WiiHost, WiiConnect) then
-       begin
-        Writeln(Prefix, 'WARNING: You must accept connection on your Wii');
-        Writeln(Prefix, 'Sending file size');
-        FileSize := FileStream.Size;
-
-        WiiDatagram[0] := (FileSize shr 24) and $FF;
-        WiiDatagram[1] := (FileSize shr 16) and $FF;
-        WiiDatagram[2] := (FileSize shr 8) and $FF;
-        WiiDatagram[3] := FileSize and $FF;
-
-        WiiSendData(WiiConnect, WiiDatagram);
-        Writeln(Prefix, 'Sending file');
-        WiiSendFile(WiiHost, WiiConnect, FileStream);
-       end;
-      end;
-      PressEnterToContinue;
-     end;
-   3:begin
-      Write('Your wii ip: ');
-      Readln(WiiHost);
-     end;
-   4:begin
-      if ElfFile <> '' then
-       FileStream.Free;
-      Write('File to open: ');
-      Readln(ElfFile);
-      if not FileExists(ElfFile) then
-      begin
-       ElfFile := '';
-       Writeln('File not found');
-       Readln;
-      end else
-       FileStream := TFileStream.Create(ElfFile, fmOpenRead);
-     end;
+  case intOption of
+   1: if Check then WiiHomeBrew.DoWork(WiiHost, FileStream);
+   2: if Check then WiiTcpLoader.DoWork(WiiHost, FileStream);
+   3: GetWiiHost(WiiHost);
+   4: GetElfFile(ElfFile, FileStream);
   end;
   
- until Protocol = 5;
+ until intOption = 5;
 
  if ElfFile <> '' then
   FileStream.Free;
-
 end.
 
