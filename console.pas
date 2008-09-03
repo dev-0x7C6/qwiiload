@@ -23,7 +23,7 @@ unit Console;
 interface
 
 uses
-  Classes, SysUtils; 
+ {$ifdef windows} Windows, {$endif} Classes, SysUtils;
 
 const
  prefix = '>>> ';

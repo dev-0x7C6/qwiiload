@@ -23,7 +23,7 @@ unit WiiTcpLoader;
 interface
 
 uses
-  Classes, SysUtils, WiiUnit, Console;
+  Classes, SysUtils, WiiUnit, Console, Keyboard;
 
  procedure DoWork(const WiiHost :AnsiString; var FileStream :TFileStream);
 

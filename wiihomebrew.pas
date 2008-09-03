@@ -23,7 +23,7 @@ unit WiiHomeBrew;
 interface
 
 uses
-  Classes, SysUtils, WiiUnit, Console;
+  Classes, SysUtils, WiiUnit, Console, Sockets;
 
  procedure DoWork(const WiiHost :AnsiString; var FileStream :TFileStream);
 
@@ -37,31 +37,30 @@ procedure DoWork(const WiiHost :AnsiString; var FileStream :TFileStream);
 var
  WiiConnect :TWiiConnect;
  WiiDatagram :TWiiDatagram;
- FileSize :Longint;
+ FileSize :Longword;
 begin
  WiiConnect.Port := Port;
  if WiiConnectFunc(WiiHost, WiiConnect) = True then
  begin
+  SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_SNDBUF, 16777216, 4);
+  SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_RCVBUF, 16777216, 4);
   WiiDatagram[0] := Ord('H');
   WiiDatagram[1] := Ord('A');
   WiiDatagram[2] := Ord('X');
   WiiDatagram[3] := Ord('X');
-
   WiiSendData(WiiConnect, WiiDatagram);
-
   WiiDatagram[0] := WiiLoadVersion[0];
   WiiDatagram[1] := WiiLoadVersion[1];
   WiiDatagram[2] := (0 shr 8) and $FF;
   WiiDatagram[3] := 0 and $FF;
-
   WiiSendData(WiiConnect, WiiDatagram);
-
+  FileSize := FileStream.Size;
   WiiDatagram[0] := (FileSize shr 24) and $FF;
   WiiDatagram[1] := (FileSize shr 16) and $FF;
   WiiDatagram[2] := (FileSize shr 8) and $FF;
   WiiDatagram[3] := FileSize and $FF;
-
   WiiSendData(WiiConnect, WiiDatagram);
+
   WiiSendFile(WiiHost, WiiConnect, FileStream);
   Writeln(Prefix, 'Done');
  end else

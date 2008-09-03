@@ -46,7 +46,7 @@ var
 
 
  function WiiConnectFunc(WiiHost :String; var WiiConnect :TWiiConnect) :Boolean;
- function WiiSendData(var WiiConnect :TWiiConnect; WiiDatagram :TWiiDatagram) :Boolean;
+ function WiiSendData(var WiiConnect :TWiiConnect; var WiiDatagram :TWiiDatagram) :Boolean;
  function WiiSendFile(WiiHost :String; var WiiConnect :TWiiConnect; var FileStream :TFileStream) :Boolean;
 
 implementation
@@ -68,28 +68,30 @@ begin
  Result := False;
 end;
 
-function WiiSendData(var WiiConnect :TWiiConnect; WiiDatagram :TWiiDatagram) :Boolean;
+function WiiSendData(var WiiConnect :TWiiConnect; var WiiDatagram :TWiiDatagram) :Boolean;
 begin
- Send(WiiConnect.Sock, WiiDatagram, SizeOf(TWiiDatagram), 0);
+ sendto(WiiConnect.Sock, WiiDatagram, SizeOf(TWiiDatagram), 0, WiiConnect.Addr, SizeOf(WiiConnect.Addr));
 end;
 
 function WiiSendFile(WiiHost :String; var WiiConnect :TWiiConnect; var FileStream :TFileStream) :Boolean;
 var
- Opt, X :Longint;
+ Opt, X, Long :Longint;
  Buffer :Array[0..DatagramSize - 1] of Byte;
 begin
+ Writeln('WiiSendFile: Start sending...');
  FileStream.Seek(0, 0);
  Opt := FileStream.Size div DatagramSize;
  if opt > 0 then
  begin
   for X := 1 to Opt do
   begin
-
    FileStream.ReadBuffer(Buffer, DatagramSize);
-   Send(WiiConnect.Sock, Buffer, DatagramSize, 0);
-
-   Writeln('Packet [', X, '] ', DatagramSize, 'Bytes >> ', WiiHost, ':', WiiConnect.Port);
-
+   Long := SendTo(WiiConnect.Sock, Buffer, DatagramSize, 0, WiiConnect.Addr, SizeOf(WiiConnect.Addr));
+   if Long <> DatagramSize then
+   begin
+    Writeln('WiiSendFile: Socket error ', SocketError);
+    exit(false);
+   end;
   end;
  end;
 
@@ -98,10 +100,9 @@ begin
  if Opt <> 0 then
  begin
   FileStream.ReadBuffer(Buffer, Opt);
-  Send(WiiConnect.Sock, Buffer, Opt, 0);
-  Writeln('Packet [', X+1, '] ', Opt, 'Bytes >> ', WiiHost, ':', WiiConnect.Port);
+  sendto(WiiConnect.Sock, Buffer, Opt, 0, WiiConnect.Addr, SizeOf(WiiConnect.Addr));
  end;
- Writeln('Done !');
+ Writeln('WiiSendFile: Done');
 end;
 
 {$ifdef windows}
