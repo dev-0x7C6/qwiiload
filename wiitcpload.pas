@@ -25,7 +25,7 @@ uses
  Windows, Registry,
 {$endif}
  Classes, SysUtils, Sockets, WiiUnit, Console, WiiHomebrew, WiiTcpLoader, Proc,
- Settings, DOM;
+ Settings;
 
 
 var
