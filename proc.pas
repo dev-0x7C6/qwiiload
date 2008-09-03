@@ -32,7 +32,7 @@ implementation
 
 procedure GetWiiHost(var WiiHost :String);
 begin
- Write('Get wii ip: ');
+ Write('Wii-> ');
  Readln(WiiHost);
 end;
 
@@ -43,7 +43,7 @@ begin
   FileStream.Free;
   FileStream := nil;
  end;
- Write('File to open: ');
+ Write('File-> ');
  Readln(ElfFile);
  if not FileExists(ElfFile) then
  begin

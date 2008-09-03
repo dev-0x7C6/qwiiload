@@ -21,7 +21,11 @@ program WiiTcpLoad;
 {$mode objfpc}{$H+}
 
 uses
- Classes, SysUtils, Sockets, WiiUnit, Console, WiiHomebrew, WiiTcpLoader, Proc;
+{$ifdef windows}
+ Windows, Registry,
+{$endif}
+ Classes, SysUtils, Sockets, WiiUnit, Console, WiiHomebrew, WiiTcpLoader, Proc,
+ Settings, DOM;
 
 
 var
@@ -47,22 +51,81 @@ begin
  Result := True;
 end;
 
+{$ifdef unix}
+const
+ CfgDirName = '.wiitcpload';
+var
+ CfgDirPath :AnsiString;
+ TextFile :Text;
+{$endif}
+
+{$ifdef windows}
+var
+ Reg :TRegistry;
+{$endif}
 
 begin
+{$ifdef unix}
+  CfgDirPath := GetHomeDirectory + CfgDirName;
+  if not DirectoryExists(CfgDirPath) then
+   mkdir(CfgDirPath);
+  CfgDirPath := CfgDirPath + '/';
+  if FileExists(CfgDirPath + 'wii') then
+  begin
+   AssignFile(TextFile, CfgDirPath + 'wii');
+   Reset(TextFile);
+   Readln(TextFile, WiiHost);
+   CloseFile(TextFile);
+  end;
+  if FileExists(CfgDirPath + 'lastfile') then
+  begin
+   AssignFile(TextFile, CfgDirPath + 'lastfile');
+   Reset(TextFile);
+   Readln(TextFile, ElfFile);
+   CloseFile(TextFile);
+  end;
+{$endif}
+
+{$ifdef windows}
+ Reg := TRegistry.Create;
+ Reg.RootKey := HKEY_CURRENT_USER;
+ Reg.OpenKey('Software\Microsoft\WiiTCPLoad', true);
+ if Reg.ValueExists('Wii') then
+  WiiHost := Reg.ReadString('Wii');
+ if Reg.ValueExists('LastFile') then
+  ElfFile := Reg.ReadString('LastFile');
+{$endif}
+
+ if ParamCount > 1 then
+ begin
+  ElfFile := ParamStr(1);
+  if ParamCount > 2 then
+   WiiHost := ParamStr(2);
+ end;
+
+ if FileExists(ElfFile) then
+  FileStream := TFileStream.Create(ElfFile, fmOpenRead) else
+  ElfFile := '';
+
  repeat
   ClrScr;
-  Writeln('Welcome in WiiTCPLoader 0.00.2, Developing by Bartlomiej Burdukiewicz');
+  Writeln('Welcome in WiiTCPLoader 0.00.2b, Developing by Bartlomiej Burdukiewicz');
+  Writeln;
+  Write('Wii--> '); if WiiHost = '' then Writeln('<empty>') else Writeln(WiiHost);
+  Write('Elf--> '); if ElfFile = '' then Writeln('<empty>') else Writeln(ElfFile);
   Writeln;
 
+  Writeln('-------------------------------------------');
   Writeln('   [1]. Connect with Homebrew Channel');
   Writeln('   [2]. Connect with TCP Loader Channel');
-  Writeln('   [3]. Set Wii console IP address');
-  Writeln('   [4]. Set file to send');
-  Writeln('   [5]. Quit');
+  Writeln('-------------------------------------------');
+  Writeln('   [3]. Change wii hostname');
+  Writeln('   [4]. Chose file to stream');
+  Writeln('   [5]. Quit&Save');
+  Writeln('-------------------------------------------');
   Writeln;
-  Write('Your choice: ');
+  Write('>');
   Readln(strOption);
-  Writeln;
   intOption := StrToIntDef(strOption, 0);
   
   case intOption of
@@ -73,6 +136,29 @@ begin
   end;
   
  until intOption = 5;
+
+{$ifdef unix}
+ CfgDirPath := GetHomeDirectory + CfgDirName;
+ if not DirectoryExists(CfgDirPath) then
+  mkdir(CfgDirPath);
+ CfgDirPath := CfgDirPath + '/';
+
+ AssignFile(TextFile, CfgDirPath + 'wii');
+ Rewrite(TextFile);
+ Writeln(TextFile, WiiHost);
+ CloseFile(TextFile);
+
+ AssignFile(TextFile, CfgDirPath + 'lastfile');
+ Rewrite(TextFile);
+ Writeln(TextFile, ElfFile);
+ CloseFile(TextFile);
+{$endif}
+
+{$ifdef windows}
+ Reg.WriteString('Wii', WiiHost);
+ Reg.WriteString('LastFile', ElfFile);
+ Reg.Free;
+{$endif}
 
  if ElfFile <> '' then
   FileStream.Free;

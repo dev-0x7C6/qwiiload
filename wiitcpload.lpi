@@ -12,7 +12,7 @@
       <MainUnit Value="0"/>
       <IconPath Value=".\"/>
       <TargetFileExt Value=""/>
-      <ActiveEditorIndexAtStart Value="5"/>
+      <ActiveEditorIndexAtStart Value="0"/>
     </General>
     <VersionInfo>
       <ProjectVersion Value=""/>
@@ -32,15 +32,15 @@
         <LaunchingApplication Use="True" PathPlusParams="$(TargetCmdLine)"/>
       </local>
     </RunParams>
-    <Units Count="9">
+    <Units Count="10">
       <Unit0>
         <Filename Value="wiitcpload.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WiiTcpLoad"/>
-        <CursorPos X="30" Y="34"/>
-        <TopLine Value="30"/>
+        <CursorPos X="61" Y="107"/>
+        <TopLine Value="70"/>
         <EditorIndex Value="0"/>
-        <UsageCount Value="33"/>
+        <UsageCount Value="41"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -48,29 +48,29 @@
         <UnitName Value="winsock"/>
         <CursorPos X="23" Y="796"/>
         <TopLine Value="758"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit1>
       <Unit2>
         <Filename Value="C:\lazarus\fpc\2.2.1\source\rtl\inc\socketsh.inc"/>
         <CursorPos X="40" Y="179"/>
         <TopLine Value="176"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\lazarus\fpc\2.2.1\source\rtl\win\winsock2.pp"/>
         <UnitName Value="WinSock2"/>
         <CursorPos X="1" Y="1"/>
         <TopLine Value="80"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit3>
       <Unit4>
         <Filename Value="wiiunit.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="WiiUnit"/>
-        <CursorPos X="41" Y="103"/>
+        <CursorPos X="38" Y="103"/>
         <TopLine Value="80"/>
-        <EditorIndex Value="5"/>
-        <UsageCount Value="24"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -78,9 +78,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Console"/>
         <CursorPos X="35" Y="26"/>
-        <TopLine Value="17"/>
-        <EditorIndex Value="4"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="22"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -89,8 +89,8 @@
         <UnitName Value="WiiHomeBrew"/>
         <CursorPos X="41" Y="58"/>
         <TopLine Value="22"/>
-        <EditorIndex Value="2"/>
-        <UsageCount Value="23"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
@@ -99,141 +99,151 @@
         <UnitName Value="WiiTcpLoader"/>
         <CursorPos X="56" Y="37"/>
         <TopLine Value="11"/>
-        <EditorIndex Value="3"/>
-        <UsageCount Value="23"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="proc.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Proc"/>
-        <CursorPos X="57" Y="54"/>
+        <CursorPos X="3" Y="54"/>
         <TopLine Value="9"/>
-        <EditorIndex Value="1"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="2"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="settings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Settings"/>
+        <CursorPos X="10" Y="56"/>
+        <TopLine Value="24"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit9>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="40" Column="2" TopLine="8"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="33" Column="4" TopLine="28"/>
       </Position1>
       <Position2>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="55" Column="7" TopLine="37"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="32" Column="4" TopLine="24"/>
       </Position2>
       <Position3>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="40" Column="1" TopLine="39"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="24" Column="79" TopLine="13"/>
       </Position3>
       <Position4>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="59" Column="66" TopLine="40"/>
+        <Filename Value="proc.pas"/>
+        <Caret Line="36" Column="14" TopLine="28"/>
       </Position4>
       <Position5>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="86" Column="46" TopLine="67"/>
+        <Filename Value="wiihomebrew.pas"/>
+        <Caret Line="45" Column="19" TopLine="26"/>
       </Position5>
       <Position6>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="85" Column="46" TopLine="66"/>
+        <Filename Value="wiihomebrew.pas"/>
+        <Caret Line="26" Column="47" TopLine="3"/>
       </Position6>
       <Position7>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="61" Column="66" TopLine="42"/>
+        <Filename Value="wiihomebrew.pas"/>
+        <Caret Line="45" Column="68" TopLine="26"/>
       </Position7>
       <Position8>
-        <Filename Value="console.pas"/>
-        <Caret Line="1" Column="1" TopLine="1"/>
+        <Filename Value="wiiunit.pas"/>
+        <Caret Line="90" Column="1" TopLine="69"/>
       </Position8>
       <Position9>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="35" Column="24" TopLine="14"/>
+        <Filename Value="wiiunit.pas"/>
+        <Caret Line="101" Column="81" TopLine="67"/>
       </Position9>
       <Position10>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="26" Column="29" TopLine="17"/>
+        <Filename Value="wiiunit.pas"/>
+        <Caret Line="73" Column="26" TopLine="48"/>
       </Position10>
       <Position11>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="37" Column="26" TopLine="18"/>
+        <Filename Value="wiiunit.pas"/>
+        <Caret Line="84" Column="55" TopLine="62"/>
       </Position11>
       <Position12>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="28" Column="73" TopLine="20"/>
+        <Filename Value="console.pas"/>
+        <Caret Line="29" Column="18" TopLine="16"/>
       </Position12>
       <Position13>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="26" Column="38" TopLine="10"/>
+        <Filename Value="proc.pas"/>
+        <Caret Line="54" Column="57" TopLine="9"/>
       </Position13>
       <Position14>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="39" Column="20" TopLine="22"/>
+        <Filename Value="proc.pas"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
       </Position14>
       <Position15>
-        <Filename Value="wiitcpload.pas"/>
-        <Caret Line="29" Column="1" TopLine="13"/>
+        <Filename Value="settings.pas"/>
+        <Caret Line="28" Column="40" TopLine="1"/>
       </Position15>
       <Position16>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="65" Column="3" TopLine="33"/>
+        <Filename Value="settings.pas"/>
+        <Caret Line="36" Column="7" TopLine="1"/>
       </Position16>
       <Position17>
-        <Filename Value="wiitcploader.pas"/>
-        <Caret Line="36" Column="27" TopLine="4"/>
+        <Filename Value="settings.pas"/>
+        <Caret Line="33" Column="7" TopLine="3"/>
       </Position17>
       <Position18>
-        <Filename Value="wiitcploader.pas"/>
-        <Caret Line="19" Column="21" TopLine="1"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="58" Column="85" TopLine="39"/>
       </Position18>
       <Position19>
         <Filename Value="wiitcpload.pas"/>
-        <Caret Line="33" Column="4" TopLine="28"/>
+        <Caret Line="57" Column="20" TopLine="35"/>
       </Position19>
       <Position20>
         <Filename Value="wiitcpload.pas"/>
-        <Caret Line="32" Column="4" TopLine="24"/>
+        <Caret Line="63" Column="52" TopLine="35"/>
       </Position20>
       <Position21>
         <Filename Value="wiitcpload.pas"/>
-        <Caret Line="24" Column="79" TopLine="13"/>
+        <Caret Line="25" Column="10" TopLine="25"/>
       </Position21>
       <Position22>
-        <Filename Value="proc.pas"/>
-        <Caret Line="36" Column="14" TopLine="28"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="62" Column="3" TopLine="40"/>
       </Position22>
       <Position23>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="45" Column="19" TopLine="26"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="25" Column="12" TopLine="3"/>
       </Position23>
       <Position24>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="26" Column="47" TopLine="3"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="81" Column="17" TopLine="63"/>
       </Position24>
       <Position25>
-        <Filename Value="wiihomebrew.pas"/>
-        <Caret Line="45" Column="68" TopLine="26"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="97" Column="12" TopLine="75"/>
       </Position25>
       <Position26>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="90" Column="1" TopLine="69"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="91" Column="25" TopLine="71"/>
       </Position26>
       <Position27>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="101" Column="81" TopLine="67"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="64" Column="16" TopLine="39"/>
       </Position27>
       <Position28>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="73" Column="26" TopLine="48"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="24" Column="11" TopLine="18"/>
       </Position28>
       <Position29>
-        <Filename Value="wiiunit.pas"/>
-        <Caret Line="84" Column="55" TopLine="62"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="91" Column="25" TopLine="66"/>
       </Position29>
       <Position30>
-        <Filename Value="console.pas"/>
-        <Caret Line="29" Column="18" TopLine="16"/>
+        <Filename Value="wiitcpload.pas"/>
+        <Caret Line="155" Column="40" TopLine="110"/>
       </Position30>
     </JumpHistory>
   </ProjectOptions>
