@@ -42,8 +42,6 @@ begin
  WiiConnect.Port := Port;
  if WiiConnectFunc(WiiHost, WiiConnect) = True then
  begin
-  SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_SNDBUF, 16777216, 4);
-  SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_RCVBUF, 16777216, 4);
   WiiDatagram[0] := Ord('H');
   WiiDatagram[1] := Ord('A');
   WiiDatagram[2] := Ord('X');

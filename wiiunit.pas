@@ -61,7 +61,11 @@ begin
   WiiConnect.Addr.Sin_addr := HostToNet(StrToHostAddr(WiiHost));
   Result := FPConnect(WiiConnect.Sock, @WiiConnect.Addr, AddrSize) = 0;
   if (Result = False) then
-   WiiUnitLastError := 'Can''t connect to ' + WiiHost + ':' + IntToStr(WiiConnect.Port);
+   WiiUnitLastError := 'Can''t connect to ' + WiiHost + ':' + IntToStr(WiiConnect.Port) else
+   begin
+    SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_SNDBUF, 16777216, 4);
+    SetSocketOptions(WiiConnect.Sock, SOL_SOCKET, SO_RCVBUF, 16777216, 4);
+   end;
   Exit(Result);
  end else
   WiiUnitLastError := 'Can''t create socket';
