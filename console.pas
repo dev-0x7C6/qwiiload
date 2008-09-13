@@ -23,15 +23,23 @@ unit Console;
 interface
 
 uses
- {$ifdef windows} Windows, {$endif} Classes, SysUtils;
+ {$ifdef windows} Windows, {$endif} Classes, SysUtils, Crt;
 
 const
  prefix = '>>> ';
 
  procedure ClrScr;
+ procedure ClrEol;
  procedure PressEnterToContinue;
 
 implementation
+
+procedure ClrEol;
+begin
+{$ifdef unix}
+ Write(#27'[K');
+{$endif}
+end;
 
 procedure ClrScr;
 {$ifdef windows}

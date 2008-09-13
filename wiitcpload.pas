@@ -25,7 +25,7 @@ uses
  Windows, Registry,
 {$endif}
  Classes, SysUtils, Sockets, WiiUnit, Console, WiiHomebrew, WiiTcpLoader, Proc,
- Settings;
+ Settings, Progress;
 
 
 var
@@ -35,6 +35,7 @@ var
 
  strOption :String;
  intOption :Longint;
+ x :Longint;
 
 function Check :Boolean;
 begin
@@ -109,6 +110,7 @@ begin
 
  repeat
   ClrScr;
+
   Writeln('Welcome in WiiTCPLoader 0.00.2b, Developing by Bartlomiej Burdukiewicz');
   Writeln;
   Write('Wii--> '); if WiiHost = '' then Writeln('<empty>') else Writeln(WiiHost);
@@ -125,7 +127,8 @@ begin
   Writeln('-------------------------------------------');
   Writeln;
   Write('>');
-  Readln(strOption);
+  Read(strOption);
+  for
   intOption := StrToIntDef(strOption, 0);
   
   case intOption of

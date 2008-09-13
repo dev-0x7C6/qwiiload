@@ -23,7 +23,7 @@ unit WiiUnit;
 interface
 
 uses
-{$ifdef windows} Windows, Winsock2, {$endif} Classes, SysUtils, Sockets;
+{$ifdef windows} Windows, Winsock2, {$endif} Classes, SysUtils, Sockets, Progress;
 
 type
  TWiiDatagram = Array[0..3] of Byte;
@@ -81,8 +81,9 @@ function WiiSendFile(WiiHost :String; var WiiConnect :TWiiConnect; var FileStrea
 var
  Opt, X, Long :Longint;
  Buffer :Array[0..DatagramSize - 1] of Byte;
+ ProgressBar :TTxtProgress;
 begin
- Writeln('WiiSendFile: Start sending...');
+ ProgressBar := TTxtProgress.Create;
  FileStream.Seek(0, 0);
  Opt := FileStream.Size div DatagramSize;
  if opt > 0 then
@@ -106,6 +107,7 @@ begin
   FileStream.ReadBuffer(Buffer, Opt);
   sendto(WiiConnect.Sock, Buffer, Opt, 0, WiiConnect.Addr, SizeOf(WiiConnect.Addr));
  end;
+ ProgressBar.Free;
  Writeln('WiiSendFile: Done');
 end;
 
