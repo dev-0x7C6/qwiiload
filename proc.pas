@@ -23,7 +23,7 @@ unit Proc;
 interface
 
 uses
-  Classes, SysUtils; 
+  Classes, SysUtils, wiiunit;
 
  procedure GetWiiHost(var WiiHost :String);
  procedure GetElfFile(var ElfFile :String; var FileStream :TFileStream);
@@ -34,6 +34,7 @@ procedure GetWiiHost(var WiiHost :String);
 begin
  Write('Wii-> ');
  Readln(WiiHost);
+ WiiHost := Conv2IP(WiiHost);
 end;
 
 procedure GetElfFile(var ElfFile :String; var FileStream :TFileStream);

@@ -23,7 +23,7 @@ unit WiiUnit;
 interface
 
 uses
-{$ifdef windows} Windows, Winsock2, {$endif} Classes, SysUtils, Sockets, Progress;
+{$ifdef windows} Windows, Winsock2, {$endif} Classes, SysUtils, Sockets, Progress, resolve, netdb;
 
 type
  TWiiDatagram = Array[0..3] of Byte;
@@ -49,7 +49,44 @@ var
  function WiiSendData(var WiiConnect :TWiiConnect; var WiiDatagram :TWiiDatagram) :Boolean;
  function WiiSendFile(WiiHost :String; var WiiConnect :TWiiConnect; var FileStream :TFileStream) :Boolean;
 
+ function Conv2IP(HostName :AnsiString) :AnsiString;
+// function CheckIP(Address :AnsiString) :Boolean;
+
+var
+ HostResolver :THostResolver;
+
 implementation
+
+function Conv2IP(HostName :AnsiString) :AnsiString;
+var
+ HostEnt: THostEntry;
+ IP :Array[0..3] of Byte;
+ X :longint;
+begin
+ HostResolver := THostResolver.Create(nil);
+ Result := HostName;
+ if HostResolver.NameLookup(HostName) then
+ begin
+  FillChar(IP, SizeOf(IP), 0);
+  IP[0] := HostResolver.Addresses[0].s_addr shr 24;
+  IP[1] := HostResolver.Addresses[1].s_addr shr 16;
+  IP[2] := HostResolver.Addresses[2].s_addr shr 8;
+  IP[3] := HostResolver.Addresses[3].s_addr;
+  Result := '';
+  for X := Low(IP) to High(IP)-1 do
+   Result := Result + IntToStr(IP[X]) + '.';
+  Result := Result + IntToStr(IP[High(IP)]);
+ end;
+end;
+
+//255 255 255 255 - Max
+//000 000 000 000 - Min
+//???.???.???.??? - Mask
+
+//function CheckIP(Address :AnsiString) :Boolean;
+//begin
+
+//end;
 
 function WiiConnectFunc(WiiHost :String; var WiiConnect :TWiiConnect) :Boolean;
 begin
@@ -59,6 +96,7 @@ begin
   WiiConnect.Addr.Family := AF_INET;
   WiiConnect.Addr.Port := HTons(WiiConnect.Port);
   WiiConnect.Addr.Sin_addr := HostToNet(StrToHostAddr(WiiHost));
+
   Result := FPConnect(WiiConnect.Sock, @WiiConnect.Addr, AddrSize) = 0;
   if (Result = False) then
    WiiUnitLastError := 'Can''t connect to ' + WiiHost + ':' + IntToStr(WiiConnect.Port) else
@@ -118,6 +156,7 @@ var
 
 initialization
 begin
+ HostResolver := THostResolver.Create(nil);
 {$ifdef windows}
  if WSAStartup ($101, _WSADATA) <> 0 then
  begin
@@ -129,6 +168,7 @@ end;
 
 finalization
 begin
+ HostResolver.Free;
 {$ifdef windows}
  WSACleanup();
 {$endif}

@@ -79,21 +79,22 @@ end;
 
 procedure TTxtProgress.Inc(X :Longint);
 begin
- write()
 end;
 
 procedure TTxtProgress.SetEmpty;
 begin
- TTxtProgress.Draw(fField);
 end;
 
 procedure TTxtProgress.SetFill;
+var
+ x :Longint;
+ str :AnsiString;
 begin
  fProgress := 0;
  fPosition := fField; 
  write(ProgressBar[0]);
  str := '';
- for x := 1 to fFiled do
+ for x := 1 to fField do
   str := str + FillField;
  write(str, ProgressBar[1]); 
 end;

@@ -111,7 +111,7 @@ begin
  repeat
   ClrScr;
 
-  Writeln('Welcome in WiiTCPLoader 0.00.2b, Developing by Bartlomiej Burdukiewicz');
+  Writeln('Welcome in WiiTCPLoader 0.00.3, Developing by Bartlomiej Burdukiewicz');
   Writeln;
   Write('Wii--> '); if WiiHost = '' then Writeln('<empty>') else Writeln(WiiHost);
   Write('Elf--> '); if ElfFile = '' then Writeln('<empty>') else Writeln(ElfFile);
@@ -127,8 +127,7 @@ begin
   Writeln('-------------------------------------------');
   Writeln;
   Write('>');
-  Read(strOption);
-  for
+  Readln(strOption);
   intOption := StrToIntDef(strOption, 0);
   
   case intOption of
