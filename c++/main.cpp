@@ -1,6 +1,12 @@
-#include <stdio>
+#include <QApplication>
 
-int main()
+#include "mainform.h"
+#include "progressform.h"
+
+int main(int argc, char *argv[])
 {
-  return 0;
+        QApplication app(argc, argv);
+        MainForm window;
+        window.show();
+        return app.exec();
 }
