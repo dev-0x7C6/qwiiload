@@ -38,7 +38,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2" >
+  <widget class="QLineEdit" name="localFile" >
    <property name="geometry" >
     <rect>
      <x>210</x>
@@ -48,7 +48,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QToolButton" name="toolButton" >
+  <widget class="QToolButton" name="openFile" >
    <property name="geometry" >
     <rect>
      <x>400</x>
