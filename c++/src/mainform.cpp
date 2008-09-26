@@ -18,9 +18,10 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
  connect(WiiSock, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(WiiSock, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
  connect(WiiSock, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
- connect(ui.readyButton, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
+ connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
  ui.wiiHostName->setText("192.168.1.2");
+ setMaximumHeight(height());
 }
 
 bool Connected = FALSE;
@@ -102,9 +103,9 @@ void MainForm::slotReadyBtnClicked()
  if (Connected == TRUE)
   WiiSock->disconnectFromHost();
 
- ui.readyButton->setEnabled(FALSE);
+ ui.readyBtn->setEnabled(FALSE);
   WiiSock->connectToHost(host, port);
   if (!WiiSock->waitForConnected(3000))
    Connected = FALSE;
- ui.readyButton->setEnabled(TRUE);
+ ui.readyBtn->setEnabled(TRUE);
 };
