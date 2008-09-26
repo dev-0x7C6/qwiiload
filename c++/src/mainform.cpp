@@ -14,14 +14,19 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
  ui.setupUi(this);
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  WiiSock = new QTcpSocket(this);
- FileDialog = new QFileDialog(this);
+FileDialog = new QFileDialog(this);
  connect(WiiSock, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(WiiSock, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
  connect(WiiSock, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
- ui.wiiHostName->setText("192.168.1.2");
  setMaximumHeight(height());
+}
+
+MainForm::~MainForm()
+{
+ delete WiiSock;
+ delete FileDialog;
 }
 
 bool Connected = FALSE;
