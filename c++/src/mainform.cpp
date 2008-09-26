@@ -1,14 +1,6 @@
 #include "mainform.h"
 #include "about.h"
 
-#include <QMessageBox>
-
-#include <QTcpSocket>
-
-#include <QFile>
-#include <QDataStream>
-#include <QFileDialog>
-
 QTcpSocket *Network;
 
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
@@ -27,6 +19,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  connect(Network, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
+ connect(ui.actionAboutProgram, SIGNAL(triggered()), this, SLOT(slotAboutProgram()));
  connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 }
@@ -37,16 +30,15 @@ MainForm::~MainForm()
  delete FileDialog;
 }
 
-QConnectionThread::QConnectionThread(QString Host, int Port):QThread()
-{
- QHost = Host;
- QPort = Port;
-}
+//QConnectionThread::QConnectionThread(QString Host, int Port):QThread()
+//{
+// QHost = Host;
+// QPort = Port;
+//}
 
-void QConnectionThread::run()
-{
- Network->connectToHost("localhost", 21, QIODevice::ReadWrite);
-}
+//void QConnectionThread::run()
+//{
+//}
 
 QString host, filename = "";
 int port = 0;
@@ -72,9 +64,8 @@ void MainForm::slotConnected()
  } else
  {
   QMessageBox::information(this, trUtf8("Info"), trUtf8("Please confirm connection on your Wii"));
- };
+ }
 
- 
  QFile file(filename);
  if (!file.open(QIODevice::ReadOnly))
   return;
@@ -93,8 +84,6 @@ void MainForm::slotConnected()
  char buffer[256];
  int readed;
  QDataStream readfile(&file);
-
-
  
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
@@ -119,6 +108,13 @@ void MainForm::slotReadyRead()
 {
 }
 
+void MainForm::slotAboutProgram()
+{
+ AboutForm *window = new AboutForm(this);
+ window->exec();
+ delete window;
+}
+
 void MainForm::slotReadyBtnClicked()
 {
  host = ui.wiiHostName->text();
@@ -129,7 +125,6 @@ void MainForm::slotReadyBtnClicked()
  {
   Network->disconnectFromHost();
  }
- 
  Network->connectToHost(host, port);
  //ConnectionThread = new QConnectionThread(host, port);
  //ConnectionThread->start();

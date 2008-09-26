@@ -155,7 +155,7 @@
     <property name="title" >
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_WiiTCPLoad" />
+    <addaction name="actionAboutProgram" />
     <addaction name="actionAboutQt" />
    </widget>
    <addaction name="menuFile" />
@@ -177,7 +177,7 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionAbout_WiiTCPLoad" >
+  <action name="actionAboutProgram" >
    <property name="text" >
     <string>About WiiTCPLoad</string>
    </property>
