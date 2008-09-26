@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/new/prefix1" >
         <file>krfb.png</file>
+        <file>krfb_64.png</file>
     </qresource>
 </RCC>
