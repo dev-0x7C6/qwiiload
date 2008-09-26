@@ -9,6 +9,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  ui.setupUi(this);
  setMaximumHeight(height());
  setMinimumHeight(height());
+ ui.statusbar->showMessage("Disconnected");
 
  Network = new QTcpSocket;
 
@@ -19,6 +20,9 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  connect(Network, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
+// MainMenu
+ connect(ui.actionOpen, SIGNAL(triggered()), this, SLOT(slotOpenFileClicked()));
+ connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(slotActionExit()));
  connect(ui.actionAboutProgram, SIGNAL(triggered()), this, SLOT(slotAboutProgram()));
  connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -46,6 +50,7 @@ int port = 0;
 
 void MainForm::slotConnected()
 {
+ ui.statusbar->showMessage("Connected");
  unsigned char datagram[4];
  if (port == 4299)
  {
@@ -68,8 +73,10 @@ void MainForm::slotConnected()
 
  QFile file(filename);
  if (!file.open(QIODevice::ReadOnly))
+ {
+  QMessageBox::information(this, trUtf8("Info"), trUtf8("Can't open file"));
   return;
-
+ }
  int FileSize = file.size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
@@ -84,13 +91,14 @@ void MainForm::slotConnected()
  char buffer[256];
  int readed;
  QDataStream readfile(&file);
- 
+
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   Network->write((const char *)&buffer, readed);
   ui.progressBar->setValue(ui.progressBar->value() + readed);
  }
  ui.progressBar->setEnabled(FALSE);
+ Network->disconnectFromHost();
 }
 
 
@@ -102,6 +110,7 @@ void MainForm::slotOpenFileClicked()
 
 void MainForm::slotDisconnected()
 {
+  ui.statusbar->showMessage("Disconnected");
 }
 
 void MainForm::slotReadyRead()
@@ -113,6 +122,11 @@ void MainForm::slotAboutProgram()
  AboutForm *window = new AboutForm(this);
  window->exec();
  delete window;
+}
+
+void MainForm::slotActionExit()
+{
+ close();
 }
 
 void MainForm::slotReadyBtnClicked()

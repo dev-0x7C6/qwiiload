@@ -39,5 +39,7 @@ Q_OBJECT
    void slotReadyRead();
    void slotReadyBtnClicked();
    void slotOpenFileClicked();
+// MainMenu
    void slotAboutProgram();
+   void slotActionExit();
 };

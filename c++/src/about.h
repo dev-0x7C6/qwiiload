@@ -12,4 +12,6 @@ Q_OBJECT
    aboutform ui;
    AboutForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~AboutForm(){};
+ public slots:
+   void slotConfirmButton();
 };
