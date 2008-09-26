@@ -10,14 +10,14 @@
 
 QTcpSocket *Network;
 
-MainForm::MainForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
+MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  ui.setupUi(this);
  setMaximumHeight(height());
  setMinimumHeight(height());
 
- Network = new QTcpSocket(this);
+ Network = new QTcpSocket;
 
  FileDialog = new QFileDialog(this);
 
@@ -81,9 +81,13 @@ void MainForm::slotConnected()
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
+ ui.progressBar->setMaximum(FileSize);
+ ui.progressBar->setMinimum(0);
+ ui.progressBar->setValue(0);
+ ui.progressBar->setEnabled(TRUE);
  Network->write((const char *)&datagram, sizeof(datagram));
 
- char buffer[4096];
+ char buffer[256];
  int readed;
  QDataStream readfile(&file);
 
@@ -92,7 +96,9 @@ void MainForm::slotConnected()
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   Network->write((const char *)&buffer, readed);
+  ui.progressBar->setValue(ui.progressBar->value() + readed);
  }
+ ui.progressBar->setEnabled(FALSE);
 }
 
 
@@ -121,6 +127,7 @@ void MainForm::slotReadyBtnClicked()
   Network->disconnectFromHost();
  }
  
- ConnectionThread = new QConnectionThread(host, port);
- ConnectionThread->start();
+ Network->connectToHost(host, port);
+ //ConnectionThread = new QConnectionThread(host, port);
+ //ConnectionThread->start();
 };

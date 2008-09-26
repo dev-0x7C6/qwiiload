@@ -1,5 +1,4 @@
 #include "ui_mainform.h"
-#include "progressform.h"
 
 #include <QDialog>
 #include <QThread>
@@ -20,7 +19,7 @@ Q_OBJECT
    QConnectionThread(QString Host, int Port);
 };
 
-class MainForm: public QDialog
+class MainForm: public QMainWindow
 {
 Q_OBJECT
  private:

@@ -9,7 +9,7 @@ INCLUDEPATH += . src
 QT += network
 
 # Input
-HEADERS += src/mainform.h src/progressform.h
-FORMS += forms/mainform.ui forms/progressform.ui
-SOURCES += main.cpp src/mainform.cpp src/progressform.cpp
+HEADERS += src/mainform.h 
+FORMS += forms/mainform.ui forms/about.ui
+SOURCES += main.cpp src/mainform.cpp
 RESOURCES += resource.qrc
