@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog" >
+ <class>aboutform</class>
+ <widget class="QDialog" name="aboutform" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>About WiiTCPLoad</string>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >

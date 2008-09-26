@@ -1,4 +1,5 @@
 #include "mainform.h"
+#include "about.h"
 
 #include <QMessageBox>
 
@@ -26,6 +27,8 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  connect(Network, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
+ connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
 }
 
 MainForm::~MainForm()
