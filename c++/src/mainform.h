@@ -1,4 +1,5 @@
 #include "ui_mainform.h"
+#include "progressform.h"
 
 #include <QDialog>
 #include <QFileDialog>
@@ -13,6 +14,7 @@ Q_OBJECT
  private:
    QTcpSocket *WiiSock;
    QFileDialog *FileDialog;
+   QDialog *Window;
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );

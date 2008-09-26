@@ -12,7 +12,7 @@ int port = 0;
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
 {
  ui.setupUi(this);
- QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
+ QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  WiiSock = new QTcpSocket(this);
  FileDialog = new QFileDialog(this);
  connect(WiiSock, SIGNAL(connected()), this, SLOT(slotConnected()));
@@ -21,12 +21,13 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
  connect(ui.readyButton, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
  ui.wiiHostName->setText("192.168.1.2");
- FileDialog->setFilter( "*.*" );
 }
+
+bool Connected = FALSE;
 
 void MainForm::slotConnected()
 {
- QMessageBox::information(this, "Information", tr("Connected with ") + host);
+ Connected = TRUE;
  unsigned char datagram[4];
  if (port == 4299)
  {
@@ -42,6 +43,9 @@ void MainForm::slotConnected()
  	datagram[2] = (0 >> 8) && 0xFF;
  	datagram[3] = 0 && 0xFF;
  	WiiSock->write((const char *)&datagram, sizeof(datagram));
+ } else
+ {
+  QMessageBox::information(this, "Info", tr("Please confirm connection on your Wii"));
  };
 
  
@@ -60,10 +64,18 @@ void MainForm::slotConnected()
  int readed;
  QDataStream readfile(&file);
 
+ Window = new ProgressForm(this);
+ Window->show();
+ Window->raise();
+ Window->activateWindow();
+ //ProgressForm window(this);
+ //window.exec();
+ 
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   WiiSock->write((const char *)&buffer, readed);
  }
+ Window->close();
 }
 
 
@@ -75,6 +87,7 @@ void MainForm::slotOpenFileClicked()
 
 void MainForm::slotDisconnected()
 {
+ Connected = FALSE;
 }
 
 void MainForm::slotReadyRead()
@@ -86,5 +99,12 @@ void MainForm::slotReadyBtnClicked()
  host = ui.wiiHostName->text();
  if (ui.channelSelect->currentIndex() == 0) port = 4299;
  if (ui.channelSelect->currentIndex() == 1) port = 8080;
- WiiSock->connectToHost(host, port);
+ if (Connected == TRUE)
+  WiiSock->disconnectFromHost();
+
+ ui.readyButton->setEnabled(FALSE);
+  WiiSock->connectToHost(host, port);
+  if (!WiiSock->waitForConnected(3000))
+   Connected = FALSE;
+ ui.readyButton->setEnabled(TRUE);
 };

@@ -11,5 +11,5 @@ QT += network
 # Input
 HEADERS += src/mainform.h src/progressform.h
 FORMS += forms/mainform.ui forms/progressform.ui
-SOURCES += main.cpp src/mainform.cpp
+SOURCES += main.cpp src/mainform.cpp src/progressform.cpp
 RESOURCES += resource.qrc
