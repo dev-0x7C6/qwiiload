@@ -1,4 +1,9 @@
 <RCC>
+    <qresource prefix="/actions" >
+        <file>icons/actions/console.png</file>
+        <file>icons/actions/document_open_folder.png</file>
+        <file>icons/actions/exit.png</file>
+    </qresource>
     <qresource prefix="/console" >
         <file>icons/console/console128.png</file>
         <file>icons/console/console64.png</file>
