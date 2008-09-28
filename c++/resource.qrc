@@ -1,6 +1,6 @@
 <RCC>
-    <qresource prefix="/new/prefix1" >
-        <file>krfb.png</file>
-        <file>krfb_64.png</file>
+    <qresource prefix="/console" >
+        <file>icons/console/console128.png</file>
+        <file>icons/console/console64.png</file>
     </qresource>
 </RCC>
