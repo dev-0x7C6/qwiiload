@@ -12,6 +12,9 @@
   <property name="windowTitle" >
    <string>About WiiTCPLoad</string>
   </property>
+  <property name="windowIcon" >
+   <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
+  </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
     <layout class="QGridLayout" >
