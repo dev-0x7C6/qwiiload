@@ -9,7 +9,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  ui.setupUi(this);
  setMaximumHeight(height());
  setMinimumHeight(height());
- ui.statusbar->showMessage("Disconnected");
+// ui.statusbar->showMessage("Disconnected");
 
  Network = new QTcpSocket;
 
@@ -50,7 +50,7 @@ int port = 0;
 
 void MainForm::slotConnected()
 {
- ui.statusbar->showMessage("Connected");
+// ui.statusbar->showMessage("Connected");
  unsigned char datagram[4];
  if (port == 4299)
  {
@@ -110,7 +110,7 @@ void MainForm::slotOpenFileClicked()
 
 void MainForm::slotDisconnected()
 {
-  ui.statusbar->showMessage("Disconnected");
+//  ui.statusbar->showMessage("Disconnected");
 }
 
 void MainForm::slotReadyRead()

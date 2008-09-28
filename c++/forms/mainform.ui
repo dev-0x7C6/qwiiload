@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>WiiTCPLoad v0.01beta</string>
+   <string>WiiTCPLoad v0.02</string>
   </property>
   <property name="windowIcon" >
    <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
@@ -54,7 +54,11 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2" >
-       <widget class="QLineEdit" name="wiiHostName" />
+       <widget class="QLineEdit" name="wiiHostName" >
+        <property name="statusTip" >
+         <string>Set your wii address</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_7" >
@@ -64,10 +68,17 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QLineEdit" name="localFile" />
+       <widget class="QLineEdit" name="localFile" >
+        <property name="statusTip" >
+         <string>Chose file to send</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2" >
        <widget class="QToolButton" name="openFile" >
+        <property name="statusTip" >
+         <string>Chose file to send</string>
+        </property>
         <property name="text" >
          <string>...</string>
         </property>
@@ -82,6 +93,9 @@
       </item>
       <item row="2" column="1" colspan="2" >
        <widget class="QComboBox" name="channelSelect" >
+        <property name="statusTip" >
+         <string>Chose your channel</string>
+        </property>
         <item>
          <property name="text" >
           <string>Homebrew Channel</string>
@@ -129,6 +143,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="statusTip" >
+         <string>Connect and send file</string>
+        </property>
         <property name="text" >
          <string>connect</string>
         </property>
@@ -146,6 +163,9 @@
      <width>539</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="statusTip" >
+    <string/>
    </property>
    <widget class="QMenu" name="menuFile" >
     <property name="title" >
@@ -172,6 +192,9 @@
    <property name="text" >
     <string>Exit</string>
    </property>
+   <property name="statusTip" >
+    <string>Exit</string>
+   </property>
   </action>
   <action name="actionOpen" >
    <property name="icon" >
@@ -180,9 +203,15 @@
    <property name="text" >
     <string>Open</string>
    </property>
+   <property name="statusTip" >
+    <string>Open</string>
+   </property>
   </action>
   <action name="actionAboutQt" >
    <property name="text" >
+    <string>About Qt</string>
+   </property>
+   <property name="statusTip" >
     <string>About Qt</string>
    </property>
   </action>
@@ -191,6 +220,9 @@
     <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
    </property>
    <property name="text" >
+    <string>About WiiTCPLoad</string>
+   </property>
+   <property name="statusTip" >
     <string>About WiiTCPLoad</string>
    </property>
   </action>
