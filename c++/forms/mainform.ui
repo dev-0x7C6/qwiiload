@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>216</height>
+    <width>539</width>
+    <height>201</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -111,6 +111,16 @@
     </item>
     <item row="1" column="1" >
      <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QProgressBar" name="progressBar" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="value" >
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1" >
        <widget class="QPushButton" name="readyBtn" >
         <property name="sizePolicy" >
@@ -124,16 +134,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" >
-       <widget class="QProgressBar" name="progressBar" >
-        <property name="enabled" >
-         <bool>false</bool>
-        </property>
-        <property name="value" >
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -143,7 +143,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>546</width>
+     <width>539</width>
      <height>26</height>
     </rect>
    </property>
