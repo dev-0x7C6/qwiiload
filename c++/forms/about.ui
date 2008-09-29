@@ -80,7 +80,7 @@ p, li { white-space: pre-wrap; }
         </font>
        </property>
        <property name="text" >
-        <string>Version: 0.01 GUI</string>
+        <string>Version: 0.02 GUI</string>
        </property>
       </widget>
      </item>

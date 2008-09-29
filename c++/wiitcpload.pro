@@ -10,6 +10,6 @@ QT += network
 
 # Input
 HEADERS += src/about.h src/mainform.h
-FORMS += forms/about.ui forms/mainform.ui
+FORMS += forms/about.ui forms/mainform.ui forms/wiimanager.ui
 SOURCES += main.cpp src/about.cpp src/mainform.cpp
 RESOURCES += resource.qrc
