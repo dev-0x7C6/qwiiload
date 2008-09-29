@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QTextCodec>
+#include <QMessageBox>
 
 using namespace Ui;
 

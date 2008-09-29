@@ -7,6 +7,7 @@ TARGET =
 DEPENDPATH += . forms src
 INCLUDEPATH += . src
 QT += network
+RC_FILE = icon.rc
 
 # Input
 HEADERS += src/about.h src/mainform.h src/manager.h
