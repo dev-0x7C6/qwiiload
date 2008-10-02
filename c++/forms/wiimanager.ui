@@ -5,26 +5,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>427</width>
-    <height>196</height>
+    <width>450</width>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Wii Connection Manager</string>
   </property>
   <property name="windowIcon" >
-   <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
+   <iconset resource="../resource.qrc" >:/actions/icons/actions/controller.png</iconset>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" colspan="2" >
     <layout class="QGridLayout" >
      <item row="0" column="0" >
       <widget class="QTableWidget" name="tableWidget" >
+       <property name="verticalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="dragDropMode" >
+        <enum>QAbstractItemView::NoDragDrop</enum>
+       </property>
        <property name="iconSize" >
         <size>
          <width>32</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="verticalScrollMode" >
+        <enum>QAbstractItemView::ScrollPerPixel</enum>
+       </property>
+       <property name="gridStyle" >
+        <enum>Qt::SolidLine</enum>
+       </property>
+       <property name="rowCount" >
+        <number>0</number>
        </property>
        <column>
         <property name="text" >
@@ -79,14 +94,21 @@
      <item row="0" column="0" >
       <widget class="QPushButton" name="aConnectionButton" >
        <property name="text" >
-        <string>Add connection</string>
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2" >
+      <widget class="QPushButton" name="dConnectionButton" >
+       <property name="text" >
+        <string>Delete</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1" >
-      <widget class="QPushButton" name="dConnectionButton" >
+      <widget class="QPushButton" name="eConnectionButton" >
        <property name="text" >
-        <string>Delete connection</string>
+        <string>Edit</string>
        </property>
       </widget>
      </item>

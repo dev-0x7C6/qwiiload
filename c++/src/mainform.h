@@ -26,6 +26,7 @@
 #include <QTextCodec>
 #include <QTcpSocket>
 #include <QFile>
+#include <QFileInfo>
 #include <QDataStream>
 
 

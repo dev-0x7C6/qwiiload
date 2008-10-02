@@ -37,13 +37,11 @@ void ManagerForm::slotSelectButtonClicked()
 {
 }
 
-
+int insertRow;
 
 void ManagerForm::slotAConnectionClicked()
 {
- int *row;
- ui.tableWidget->insertRow(row);
- delete row;
+ ui.tableWidget->insertRow(insertRow);
 }
 
 void ManagerForm::slotDConnectionClicked()

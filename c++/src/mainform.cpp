@@ -126,8 +126,7 @@ void MainForm::slotConnected()
 
 void MainForm::slotOpenFileClicked()
 {
- filename = FileDialog->getOpenFileName();
- ui.localFile->setText(filename); 
+ ui.localFile->setText(FileDialog->getOpenFileName()); 
 }
 
 void MainForm::slotDisconnected()
@@ -162,6 +161,22 @@ void MainForm::slotActionManagerRun()
 void MainForm::slotReadyBtnClicked()
 {
  host = ui.wiiHostName->text();
+ if (host == QString("")) {
+  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Wii hostname is empty"));
+  return;
+ }
+ filename = ui.localFile->text();
+ QFileInfo *FileInfo;
+ FileInfo = new QFileInfo(filename);
+ bool fileExists = FileInfo->exists() && !FileInfo->isDir();
+ FileInfo->~QFileInfo();
+ delete FileInfo;
+
+ if (fileExists == FALSE) {
+  QMessageBox::critical(this, trUtf8("Critical"), trUtf8("Selected file don't exists"));
+  return;
+ }
+
  if (ui.channelSelect->currentIndex() == 0) port = 4299;
  if (ui.channelSelect->currentIndex() == 1) port = 8080;
  int status = Network->state();
