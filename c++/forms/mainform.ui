@@ -227,10 +227,10 @@
     <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
    </property>
    <property name="text" >
-    <string>About WiiTCPLoad</string>
+    <string>About WiiTCPLoadGUI</string>
    </property>
    <property name="statusTip" >
-    <string>About WiiTCPLoad</string>
+    <string>About WiiTCPLoadGUI</string>
    </property>
   </action>
   <action name="actionManagerRun" >
