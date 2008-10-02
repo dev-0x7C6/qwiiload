@@ -22,23 +22,20 @@
 #include "manager.h"
 #include "about.h"
 
-QTcpSocket *Network;
-
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  ui.setupUi(this);
  setMaximumHeight(height());
  setMinimumHeight(height());
-// ui.statusbar->showMessage("Disconnected");
 
  Network = new QTcpSocket;
-
  FileDialog = new QFileDialog(this);
 
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
- connect(Network, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+// connect(Network, SIGNAL(error(int)), this, SLOT(slotSocketError()));
+
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
 // MainMenu
@@ -55,16 +52,6 @@ MainForm::~MainForm()
  delete Network;
  delete FileDialog;
 }
-
-//QConnectionThread::QConnectionThread(QString Host, int Port):QThread()
-//{
-// QHost = Host;
-// QPort = Port;
-//}
-
-//void QConnectionThread::run()
-//{
-//}
 
 QString host, filename = "";
 int port = 0;
@@ -131,10 +118,9 @@ void MainForm::slotOpenFileClicked()
 
 void MainForm::slotDisconnected()
 {
-//  ui.statusbar->showMessage("Disconnected");
 }
 
-void MainForm::slotReadyRead()
+void MainForm::slotSocketError()
 {
 }
 
@@ -185,6 +171,4 @@ void MainForm::slotReadyBtnClicked()
   Network->disconnectFromHost();
  }
  Network->connectToHost(host, port);
- //ConnectionThread = new QConnectionThread(host, port);
- //ConnectionThread->start();
-};
+}

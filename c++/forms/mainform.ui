@@ -56,7 +56,7 @@
       <item row="0" column="1" colspan="2" >
        <widget class="QLineEdit" name="wiiHostName" >
         <property name="statusTip" >
-         <string>Set your wii address</string>
+         <string>Set wii hostname</string>
         </property>
        </widget>
       </item>
@@ -234,6 +234,9 @@
    </property>
   </action>
   <action name="actionManagerRun" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
     <iconset resource="../resource.qrc" >:/actions/icons/actions/controller.png</iconset>
    </property>

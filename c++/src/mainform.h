@@ -55,14 +55,17 @@ Q_OBJECT
    QFileDialog *FileDialog;
    QDialog *Window;
    //QConnectionThread *ConnectionThread;
+   QTcpSocket *Network;
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~MainForm();
  public slots:
+// Network
    void slotConnected();
    void slotDisconnected();
-   void slotReadyRead();
+   void slotSocketError();
+// Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();
 // MainMenu
