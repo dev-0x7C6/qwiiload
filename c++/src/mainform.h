@@ -67,4 +67,5 @@ Q_OBJECT
 // MainMenu
    void slotAboutProgram();
    void slotActionExit();
+   void slotActionManagerRun();
 };

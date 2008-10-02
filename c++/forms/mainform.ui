@@ -181,7 +181,14 @@
     <addaction name="actionAboutQt" />
     <addaction name="actionAboutProgram" />
    </widget>
+   <widget class="QMenu" name="menuManager" >
+    <property name="title" >
+     <string>Manager</string>
+    </property>
+    <addaction name="actionManagerRun" />
+   </widget>
    <addaction name="menuFile" />
+   <addaction name="menuManager" />
    <addaction name="menuHelp" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -224,6 +231,14 @@
    </property>
    <property name="statusTip" >
     <string>About WiiTCPLoad</string>
+   </property>
+  </action>
+  <action name="actionManagerRun" >
+   <property name="icon" >
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/controller.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Run Manager</string>
    </property>
   </action>
  </widget>
