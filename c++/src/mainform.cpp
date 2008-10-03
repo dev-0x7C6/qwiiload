@@ -22,19 +22,22 @@
 #include "manager.h"
 #include "about.h"
 
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.02";
+
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  ui.setupUi(this);
  setMaximumHeight(height());
  setMinimumHeight(height());
+ setWindowTitle(mainWindowTitle);
 
  Network = new QTcpSocket;
  FileDialog = new QFileDialog(this);
 
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
-// connect(Network, SIGNAL(error(int)), this, SLOT(slotSocketError()));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotSocketError(QAbstractSocket::SocketError)));
 
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
@@ -59,7 +62,7 @@ int port = 0;
 
 void MainForm::slotConnected()
 {
-// ui.statusbar->showMessage("Connected");
+ ui.statusbar->showMessage("Connected");
  unsigned char datagram[4];
  if (port == 4299)
  {
@@ -86,6 +89,7 @@ void MainForm::slotConnected()
   QMessageBox::information(this, trUtf8("Info"), trUtf8("Can't open file"));
   return;
  }
+
  int FileSize = file.size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
@@ -118,10 +122,12 @@ void MainForm::slotOpenFileClicked()
 
 void MainForm::slotDisconnected()
 {
+ QMessageBox::information(this, trUtf8("Info"), trUtf8("Hmm"));
 }
 
-void MainForm::slotSocketError()
+void MainForm::slotSocketError(QAbstractSocket::SocketError socketError)
 {
+ QMessageBox::information(this, trUtf8("Info"), Network->errorString());
 }
 
 void MainForm::slotAboutProgram()
@@ -155,7 +161,6 @@ void MainForm::slotReadyBtnClicked()
  QFileInfo *FileInfo;
  FileInfo = new QFileInfo(filename);
  bool fileExists = FileInfo->exists() && !FileInfo->isDir();
- FileInfo->~QFileInfo();
  delete FileInfo;
 
  if (fileExists == FALSE) {
@@ -170,5 +175,14 @@ void MainForm::slotReadyBtnClicked()
  {
   Network->disconnectFromHost();
  }
+ setWindowTitle(mainWindowTitle);
  Network->connectToHost(host, port);
+}
+
+QConnectionThread::QConnectionThread(QString Host, int Port)
+{
+}
+
+void QConnectionThread::run()
+{
 }
