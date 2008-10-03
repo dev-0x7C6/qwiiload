@@ -95,10 +95,10 @@ void MainForm::slotConnected()
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
- ui.progressBar->setMaximum(FileSize);
- ui.progressBar->setMinimum(0);
- ui.progressBar->setValue(0);
- ui.progressBar->setEnabled(TRUE);
+ //ui.progressBar->setMaximum(FileSize);
+ //ui.progressBar->setMinimum(0);
+ //ui.progressBar->setValue(0);
+ //ui.progressBar->setEnabled(TRUE);
  Network->write((const char *)&datagram, sizeof(datagram));
 
  char buffer[256];
@@ -108,9 +108,9 @@ void MainForm::slotConnected()
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   Network->write((const char *)&buffer, readed);
-  ui.progressBar->setValue(ui.progressBar->value() + readed);
+ // ui.progressBar->setValue(ui.progressBar->value() + readed);
  }
- ui.progressBar->setEnabled(FALSE);
+// ui.progressBar->setEnabled(FALSE);
  Network->disconnectFromHost();
 }
 

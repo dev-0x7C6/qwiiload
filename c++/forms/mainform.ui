@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
-    <height>201</height>
+    <width>528</width>
+    <height>198</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -108,33 +108,10 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="1" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
     <item row="1" column="1" >
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QProgressBar" name="progressBar" >
-        <property name="enabled" >
-         <bool>false</bool>
-        </property>
-        <property name="value" >
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1" >
        <widget class="QPushButton" name="readyBtn" >
         <property name="sizePolicy" >
@@ -147,9 +124,25 @@
          <string>Connect and send file</string>
         </property>
         <property name="text" >
-         <string>connect</string>
+         <string>ready</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="../resource.qrc" >:/actions/icons/actions/button_ok.png</iconset>
         </property>
        </widget>
+      </item>
+      <item row="0" column="0" >
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -160,7 +153,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>539</width>
+     <width>528</width>
      <height>26</height>
     </rect>
    </property>

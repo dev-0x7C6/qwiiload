@@ -17,3 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+#include "ui_progressform.h"
+
+using namespace Ui;
+
+class QDialog;
+class QWidget;
+
+class QConnectionThread: public QThread
+{
+Q_OBJECT 
+ private:
+   QString QHost;
+   int QPort;
+ public:
+   void run();
+   QConnectionThread(QString Host, int Port);
+};
+
+class ProgressForm: public QDialog
+{
+Q_OBJECT
+ private:
+   QConnectionThread *ConnectionThread;
+ public:
+   progressForm ui;
+   ProgressForm(QWidget * parent = 0, Qt::WFlags f = 0);
+   ~ProgressForm(){};
+};

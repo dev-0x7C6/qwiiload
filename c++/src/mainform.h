@@ -21,7 +21,6 @@
 #include "ui_mainform.h"
 
 #include <QMessageBox>
-#include <QDialog>
 #include <QThread>
 #include <QFileDialog>
 #include <QTextCodec>
@@ -34,20 +33,8 @@
 using namespace Ui;
 
 class QDialog;
-class QFileDialog;
+class QThread;
 class QWidget;
-
-
-class QConnectionThread: public QThread
-{
-Q_OBJECT 
- private:
-   QString QHost;
-   int QPort;
- public:
-   void run();
-   QConnectionThread(QString Host, int Port);
-};
 
 class MainForm: public QMainWindow
 {
@@ -55,7 +42,6 @@ Q_OBJECT
  private:
    QFileDialog *FileDialog;
    QDialog *Window;
-   QConnectionThread *ConnectionThread;
    QTcpSocket *Network;
  public:
    mainform ui;
