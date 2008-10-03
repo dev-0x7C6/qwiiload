@@ -19,10 +19,6 @@
  ***************************************************************************/
 
 #include "mainform.h"
-#include "manager.h"
-#include "about.h"
-
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02";
 
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
@@ -32,12 +28,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  setMinimumHeight(height());
  setWindowTitle(mainWindowTitle);
 
- Network = new QTcpSocket;
  FileDialog = new QFileDialog(this);
-
- connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
- connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
- connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotSocketError(QAbstractSocket::SocketError)));
 
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
@@ -52,15 +43,15 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 
 MainForm::~MainForm()
 {
- delete Network;
  delete FileDialog;
 }
 
 QString host, filename = "";
 int port = 0;
 
+ProgressForm *progressForm;
 
-void MainForm::slotConnected()
+/*void MainForm::slotConnected()
 {
  ui.statusbar->showMessage("Connected");
  unsigned char datagram[4];
@@ -111,8 +102,8 @@ void MainForm::slotConnected()
  // ui.progressBar->setValue(ui.progressBar->value() + readed);
  }
 // ui.progressBar->setEnabled(FALSE);
- Network->disconnectFromHost();
-}
+ Network->disconnectFromHost(); 
+}*/
 
 
 void MainForm::slotOpenFileClicked()
@@ -120,14 +111,9 @@ void MainForm::slotOpenFileClicked()
  ui.localFile->setText(FileDialog->getOpenFileName()); 
 }
 
-void MainForm::slotDisconnected()
+void MainForm::slotActionExit()
 {
- QMessageBox::information(this, trUtf8("Info"), trUtf8("Hmm"));
-}
-
-void MainForm::slotSocketError(QAbstractSocket::SocketError socketError)
-{
- QMessageBox::information(this, trUtf8("Info"), Network->errorString());
+ close();
 }
 
 void MainForm::slotAboutProgram()
@@ -135,11 +121,6 @@ void MainForm::slotAboutProgram()
  AboutForm *window = new AboutForm(this);
  window->exec();
  delete window;
-}
-
-void MainForm::slotActionExit()
-{
- close();
 }
 
 void MainForm::slotActionManagerRun()
@@ -152,7 +133,10 @@ void MainForm::slotActionManagerRun()
 
 void MainForm::slotReadyBtnClicked()
 {
- host = ui.wiiHostName->text();
+ progressForm = new ProgressForm(this);
+ progressForm->exec();
+ delete progressForm;
+ /*host = ui.wiiHostName->text();
  if (host == QString("")) {
   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Wii hostname is empty"));
   return;
@@ -175,14 +159,6 @@ void MainForm::slotReadyBtnClicked()
  {
   Network->disconnectFromHost();
  }
- setWindowTitle(mainWindowTitle);
  Network->connectToHost(host, port);
-}
-
-QConnectionThread::QConnectionThread(QString Host, int Port)
-{
-}
-
-void QConnectionThread::run()
-{
+*/
 }

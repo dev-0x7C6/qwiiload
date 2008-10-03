@@ -20,13 +20,12 @@
 
 #include "ui_wiimanager.h"
 
-#include <QMessageBox>
 #include <QTextCodec>
-
 
 using namespace Ui;
 
 class QDialog;
+class QTextCodec;
 class QWidget;
 
 class ManagerForm: public QDialog

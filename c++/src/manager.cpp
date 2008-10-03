@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "manager.h"
-
 ManagerForm::ManagerForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
 {
  ui.setupUi(this);

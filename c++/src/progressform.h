@@ -19,11 +19,15 @@
  ***************************************************************************/
 
 #include "ui_progressform.h"
+#include <QThread>
+#include "network.h"
 
 using namespace Ui;
 
 class QDialog;
+class QString;
 class QWidget;
+class QThread;
 
 class QConnectionThread: public QThread
 {
@@ -31,6 +35,7 @@ Q_OBJECT
  private:
    QString QHost;
    int QPort;
+   WiiConnection *wiiConnection;
  public:
    void run();
    QConnectionThread(QString Host, int Port);
@@ -42,7 +47,7 @@ Q_OBJECT
  private:
    QConnectionThread *ConnectionThread;
  public:
-   progressForm ui;
+   progressform ui;
    ProgressForm(QWidget * parent = 0, Qt::WFlags f = 0);
    ~ProgressForm(){};
 };

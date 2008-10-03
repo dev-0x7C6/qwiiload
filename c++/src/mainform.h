@@ -19,9 +19,12 @@
  ***************************************************************************/
 
 #include "ui_mainform.h"
+#include "progressform.h"
+#include "manager.h"
+#include "about.h"
+
 
 #include <QMessageBox>
-#include <QThread>
 #include <QFileDialog>
 #include <QTextCodec>
 #include <QTcpSocket>
@@ -36,22 +39,18 @@ class QDialog;
 class QThread;
 class QWidget;
 
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.02 (broken)";
+
 class MainForm: public QMainWindow
 {
 Q_OBJECT
  private:
    QFileDialog *FileDialog;
-   QDialog *Window;
-   QTcpSocket *Network;
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~MainForm();
  public slots:
-// Network
-   void slotConnected();
-   void slotDisconnected();
-   void slotSocketError(QAbstractSocket::SocketError socketError);
 // Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();

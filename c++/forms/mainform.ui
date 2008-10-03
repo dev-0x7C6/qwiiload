@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>198</height>
+    <width>542</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -29,19 +29,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>128</width>
-          <height>16</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
     <item row="0" column="1" >
@@ -49,7 +36,7 @@
       <item row="0" column="0" >
        <widget class="QLabel" name="label_6" >
         <property name="text" >
-         <string>Wii Host</string>
+         <string>Hostname</string>
         </property>
        </widget>
       </item>
@@ -108,10 +95,30 @@
         </item>
        </widget>
       </item>
+      <item row="3" column="0" colspan="3" >
+       <widget class="Line" name="line" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="1" column="1" >
      <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="0" column="1" >
        <widget class="QPushButton" name="readyBtn" >
         <property name="sizePolicy" >
@@ -131,19 +138,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
    </layout>
@@ -153,7 +147,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>528</width>
+     <width>542</width>
      <height>26</height>
     </rect>
    </property>
@@ -165,6 +159,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen" />
+    <addaction name="separator" />
     <addaction name="actionExit" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
