@@ -10,7 +10,7 @@ QT += network
 RC_FILE = icon.rc
 
 # Input
-HEADERS += src/about.h src/mainform.h src/manager.h src/progressform.h src/network.h
-FORMS += forms/about.ui forms/mainform.ui forms/wiimanager.ui forms/progressform.ui
-SOURCES += main.cpp src/about.cpp src/mainform.cpp src/manager.cpp src/progressform.cpp src/network.cpp
+HEADERS += src/about.h src/mainform.h src/manager.h src/connectionthread.h src/network.h
+FORMS += forms/about.ui forms/mainform.ui forms/wiimanager.ui
+SOURCES += main.cpp src/about.cpp src/mainform.cpp src/manager.cpp src/connectionthread.cpp src/network.cpp
 RESOURCES += resource.qrc

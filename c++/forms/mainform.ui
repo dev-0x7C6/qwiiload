@@ -106,19 +106,6 @@
     </item>
     <item row="1" column="1" >
      <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <spacer>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" >
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="0" column="1" >
        <widget class="QPushButton" name="readyBtn" >
         <property name="sizePolicy" >
@@ -135,6 +122,16 @@
         </property>
         <property name="icon" >
          <iconset resource="../resource.qrc" >:/actions/icons/actions/button_ok.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" >
+       <widget class="QProgressBar" name="progressBar" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="value" >
+         <number>0</number>
         </property>
        </widget>
       </item>

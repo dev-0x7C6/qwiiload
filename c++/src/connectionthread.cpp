@@ -18,36 +18,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ui_progressform.h"
-#include <QThread>
-#include "network.h"
+#include "connectionthread.h"
 
-using namespace Ui;
-
-class QDialog;
-class QString;
-class QWidget;
-class QThread;
-
-class QConnectionThread: public QThread
+QConnectionThread::QConnectionThread(QString Host, int Port)
 {
-Q_OBJECT 
- private:
-   QString QHost;
-   int QPort;
-   WiiConnection *wiiConnection;
- public:
-   void run();
-   QConnectionThread(QString Host, int Port);
-};
+ QHost = Host;
+ QPort = Port;
+}
 
-class ProgressForm: public QDialog
+void QConnectionThread::run()
 {
-Q_OBJECT
- private:
-   QConnectionThread *ConnectionThread;
- public:
-   progressform ui;
-   ProgressForm(QWidget * parent = 0, Qt::WFlags f = 0);
-   ~ProgressForm(){};
-};
+ wiiConnection = new WiiConnection;
+ wiiConnection->Network->connectToHost(QHost, QPort);
+ delete wiiConnection;
+}
