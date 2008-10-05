@@ -22,13 +22,19 @@
 
 QConnectionThread::QConnectionThread(QString Host, int Port)
 {
+ wiiConnection = new WiiConnection;
+ connect(wiiConnection, SLOT(signalConnected()), this, SIGNAL(slotConnected()));
+ connect(wiiConnection, SLOT(signalDisconnected()), this, SIGNAL(slotDisconnected()));
  QHost = Host;
  QPort = Port;
 }
 
+QConnectionThread::~QConnectionThread()
+{
+ delete wiiConnection;
+}
+
 void QConnectionThread::run()
 {
- wiiConnection = new WiiConnection;
  wiiConnection->Network->connectToHost(QHost, QPort);
- delete wiiConnection;
 }

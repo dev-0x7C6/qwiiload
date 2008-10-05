@@ -32,5 +32,9 @@ Q_OBJECT
  public slots:
    void slotNetworkConnected();
    void slotNetworkDisconnected();
-   void slotNetworkError(QAbstractSocket::SocketError);
+   void slotNetworkError(QAbstractSocket::SocketError error);
+ signals:
+   void signalConnected();
+   void signalDisconnected();
+   void signalError(QAbstractSocket::SocketError error);
 };

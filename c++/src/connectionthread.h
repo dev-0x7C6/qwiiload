@@ -35,6 +35,7 @@ Q_OBJECT
  public:
    void run();
    QConnectionThread(QString Host, int Port);
+   ~QConnectionThread();
  signals:
    void onChangeStatus();
    void setProgressBarEnable(bool b);

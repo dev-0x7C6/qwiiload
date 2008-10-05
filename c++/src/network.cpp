@@ -33,6 +33,6 @@ WiiConnection::~WiiConnection()
  delete Network;
 }
 
-void WiiConnection::slotNetworkConnected(){}
-void WiiConnection::slotNetworkDisconnected(){}
-void WiiConnection::slotNetworkError(QAbstractSocket::SocketError){}
+void WiiConnection::slotNetworkConnected(){emit signalConnected();}
+void WiiConnection::slotNetworkDisconnected(){emit signalDisconnected();}
+void WiiConnection::slotNetworkError(QAbstractSocket::SocketError error){emit signalError(error);}
