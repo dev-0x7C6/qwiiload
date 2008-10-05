@@ -46,6 +46,7 @@ class MainForm: public QMainWindow
 Q_OBJECT
  private:
    QFileDialog *FileDialog;
+   QConnectionThread *ConnectionThread;
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
@@ -54,6 +55,7 @@ Q_OBJECT
 // Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();
+// Thread
 // MainMenu
    void slotAboutProgram();
    void slotActionExit();

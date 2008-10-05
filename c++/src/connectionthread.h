@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "network.h"
-
 #include <QThread>
 #include <QTcpSocket>
 
@@ -36,12 +34,15 @@ Q_OBJECT
    QTcpSocket *Network;
  public:
    void run();
-   QConnectionThread(QString Host, int Port);
+   QConnectionThread();
    ~QConnectionThread();
+   void setHost(const QString Host);
+   void setPort(int Port);
  public slots:
    void slotConnected();
    void slotDisconnected();
-   void slotError(QAbstractSocket::SocketError socketError)
+   void slotError(QAbstractSocket::SocketError error);
+   void slotHostFound(); 
    void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
    void onChangeStatus();

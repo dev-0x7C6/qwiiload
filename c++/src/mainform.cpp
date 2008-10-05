@@ -29,6 +29,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  setWindowTitle(mainWindowTitle);
 
  FileDialog = new QFileDialog(this);
+ ConnectionThread = new QConnectionThread();
 
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
@@ -131,6 +132,9 @@ void MainForm::slotActionManagerRun()
 
 void MainForm::slotReadyBtnClicked()
 {
+ ui.readyBtn->setEnabled(FALSE);
+ ui.statusLabel->setText("Connecting");
+
  /*host = ui.wiiHostName->text();
  if (host == QString("")) {
   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Wii hostname is empty"));

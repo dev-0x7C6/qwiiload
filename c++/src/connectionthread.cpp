@@ -20,29 +20,31 @@
 
 #include "connectionthread.h"
 
-QConnectionThread::QConnectionThread(QString Host, int Port)
+QConnectionThread::QConnectionThread()
 {
  Network = new QTcpSocket(this);
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotkDisconnected()));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
- connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotNetworkStateChanged(QAbstractSocket::SocketState)));
-
- QHost = Host;
- QPort = Port;
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+ connect(Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
 }
+
+void QConnectionThread::setHost(const QString Host){QHost = Host;}
+void QConnectionThread::setPort(int Port){QPort = Port;}
 
 QConnectionThread::~QConnectionThread()
 {
- delete wiiConnection;
+ delete Network;
 }
 
 void QConnectionThread::run()
 {
- wiiConnection->Network->connectToHost(QHost, QPort);
+ Network->connectToHost(QHost, QPort);
 }
 
-void QConnectionThread::slotConnected(){};
-void QConnectionThread::slotDisconnected(){};
-void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){};
-void QConnectionThread::slotError(QAbstractSocket::SocketError socketError){};
+void QConnectionThread::slotConnected(){}
+void QConnectionThread::slotDisconnected(){}
+void QConnectionThread::slotError(QAbstractSocket::SocketError error){}
+void QConnectionThread::slotHostFound(){}
+void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){}
