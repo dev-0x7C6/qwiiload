@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "ui_mainform.h"
-#include "progressform.h"
+#include "connectionthread.h"
 #include "manager.h"
 #include "about.h"
 

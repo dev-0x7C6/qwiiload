@@ -49,8 +49,6 @@ MainForm::~MainForm()
 QString host, filename = "";
 int port = 0;
 
-ProgressForm *progressForm;
-
 /*void MainForm::slotConnected()
 {
  ui.statusbar->showMessage("Connected");
@@ -133,9 +131,6 @@ void MainForm::slotActionManagerRun()
 
 void MainForm::slotReadyBtnClicked()
 {
- progressForm = new ProgressForm(this);
- progressForm->exec();
- delete progressForm;
  /*host = ui.wiiHostName->text();
  if (host == QString("")) {
   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Wii hostname is empty"));

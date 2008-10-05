@@ -22,8 +22,6 @@
 
 #include <QThread>
 
-using namespace Ui;
-
 class QString;
 class QThread;
 
@@ -37,4 +35,9 @@ Q_OBJECT
  public:
    void run();
    QConnectionThread(QString Host, int Port);
+ signals:
+   void onChangeStatus();
+   void setProgressBarEnable(bool b);
+   void setProgressBarRange(int min, int max);
+   void setProgressBarValue(int value);
 };
