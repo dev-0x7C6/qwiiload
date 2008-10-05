@@ -29,7 +29,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  setWindowTitle(mainWindowTitle);
 
  FileDialog = new QFileDialog(this);
- ConnectionThread = new QConnectionThread();
+ ConnectionThread = new QConnectionThread(this);
 
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
@@ -44,6 +44,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 
 MainForm::~MainForm()
 {
+ delete ConnectionThread;
  delete FileDialog;
 }
 
@@ -132,8 +133,16 @@ void MainForm::slotActionManagerRun()
 
 void MainForm::slotReadyBtnClicked()
 {
- ui.readyBtn->setEnabled(FALSE);
- ui.statusLabel->setText("Connecting");
+ ConnectionThread->setHost(ui.wiiHostName->text());
+ switch(ui.channelSelect->currentIndex()) {
+  case 0: ConnectionThread->setPort(21); break;
+  case 1: ConnectionThread->setPort(8080); break;
+ }
+ ConnectionThread->start();
+
+
+ //ui.readyBtn->setEnabled(FALSE);
+// ui.statusLabel->setText("Connecting");
 
  /*host = ui.wiiHostName->text();
  if (host == QString("")) {

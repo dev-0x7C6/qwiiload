@@ -19,28 +19,34 @@
  ***************************************************************************/
 
 #include "connectionthread.h"
+#include <QMetaType>
+#include <QMessageBox>
+#include <QApplication>
 
-QConnectionThread::QConnectionThread()
-{
- Network = new QTcpSocket(this);
- connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
- connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotkDisconnected()));
- connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
- connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- connect(Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
+class QMessageBox;
+
+QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
+ qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
+ qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 }
+QConnectionThread::~QConnectionThread(){}
 
-void QConnectionThread::setHost(const QString Host){QHost = Host;}
+void QConnectionThread::setHost(const QString Host){QHostName = Host;}
 void QConnectionThread::setPort(int Port){QPort = Port;}
 
-QConnectionThread::~QConnectionThread()
-{
- delete Network;
-}
+
 
 void QConnectionThread::run()
 {
- Network->connectToHost(QHost, QPort);
+ QTcpSocket Network;
+ connect(&Network, SIGNAL(connected()), this, SLOT(slotConnected()));
+ connect(&Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
+ connect(&Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
+ connect(&Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+ connect(&Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
+ Network.connectToHost(QHostName, QPort);
+ QMessageBox::warning(NULL, trUtf8("Warning"), trUtf8("Wii hostname is empty"));
+ exec();
 }
 
 void QConnectionThread::slotConnected(){}

@@ -29,15 +29,17 @@ class QConnectionThread: public QThread
 {
 Q_OBJECT 
  private:
-   QString QHost;
+   QString QHostName;
+   QString QFileName;
    int QPort;
    QTcpSocket *Network;
  public:
-   void run();
-   QConnectionThread();
+   QConnectionThread(QObject *parent = 0);
    ~QConnectionThread();
    void setHost(const QString Host);
    void setPort(int Port);
+ protected:
+    void run();
  public slots:
    void slotConnected();
    void slotDisconnected();
