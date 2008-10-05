@@ -26,6 +26,7 @@ WiiConnection::WiiConnection()
  connect(Network, SIGNAL(connected()), this, SLOT(slotNetworkConnected()));
  connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotNetworkDisconnected()));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotNetworkError(QAbstractSocket::SocketError)));
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotNetworkStateChanged(QAbstractSocket::SocketState)));
 }
 
 WiiConnection::~WiiConnection()
@@ -36,3 +37,4 @@ WiiConnection::~WiiConnection()
 void WiiConnection::slotNetworkConnected(){emit signalConnected();}
 void WiiConnection::slotNetworkDisconnected(){emit signalDisconnected();}
 void WiiConnection::slotNetworkError(QAbstractSocket::SocketError error){emit signalError(error);}
+void WiiConnection::slotNetworkStateChanged(QAbstractSocket::SocketState state){emit signalStateChanged(state);}

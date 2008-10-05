@@ -33,6 +33,7 @@ Q_OBJECT
    void slotNetworkConnected();
    void slotNetworkDisconnected();
    void slotNetworkError(QAbstractSocket::SocketError error);
+   void slotNetworkStateChanged(QAbstractSocket::SocketState state);
  signals:
    void signalConnected();
    void signalDisconnected();
