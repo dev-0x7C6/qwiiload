@@ -38,4 +38,5 @@ Q_OBJECT
    void signalConnected();
    void signalDisconnected();
    void signalError(QAbstractSocket::SocketError error);
+   void signalStateChanged(QAbstractSocket::SocketState state);
 };

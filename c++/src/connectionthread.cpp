@@ -23,8 +23,9 @@
 QConnectionThread::QConnectionThread(QString Host, int Port)
 {
  wiiConnection = new WiiConnection;
- connect(wiiConnection, SLOT(signalConnected()), this, SIGNAL(slotConnected()));
- connect(wiiConnection, SLOT(signalDisconnected()), this, SIGNAL(slotDisconnected()));
+ connect(wiiConnection, SIGNAL(signalConnected()), this, SLOT(slotConnected()));
+ connect(wiiConnection, SIGNAL(signalDisconnected()), this, SLOT(slotDisconnected()));
+ connect(wiiConnection, SIGNAL(signalStateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
  QHost = Host;
  QPort = Port;
 }
