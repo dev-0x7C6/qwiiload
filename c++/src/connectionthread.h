@@ -21,9 +21,11 @@
 #include "network.h"
 
 #include <QThread>
+#include <QTcpSocket>
 
 class QString;
 class QThread;
+class QTcpSocket;
 
 class QConnectionThread: public QThread
 {
@@ -31,11 +33,16 @@ Q_OBJECT
  private:
    QString QHost;
    int QPort;
-   WiiConnection *wiiConnection;
+   QTcpSocket *Network;
  public:
    void run();
    QConnectionThread(QString Host, int Port);
    ~QConnectionThread();
+ public slots:
+   void slotConnected();
+   void slotDisconnected();
+   void slotError(QAbstractSocket::SocketError socketError)
+   void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
    void onChangeStatus();
    void setProgressBarEnable(bool b);

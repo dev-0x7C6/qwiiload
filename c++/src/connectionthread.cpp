@@ -22,10 +22,12 @@
 
 QConnectionThread::QConnectionThread(QString Host, int Port)
 {
- wiiConnection = new WiiConnection;
- connect(wiiConnection, SIGNAL(signalConnected()), this, SLOT(slotConnected()));
- connect(wiiConnection, SIGNAL(signalDisconnected()), this, SLOT(slotDisconnected()));
- connect(wiiConnection, SIGNAL(signalStateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+ Network = new QTcpSocket(this);
+ connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
+ connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotkDisconnected()));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotNetworkStateChanged(QAbstractSocket::SocketState)));
+
  QHost = Host;
  QPort = Port;
 }
@@ -39,3 +41,8 @@ void QConnectionThread::run()
 {
  wiiConnection->Network->connectToHost(QHost, QPort);
 }
+
+void QConnectionThread::slotConnected(){};
+void QConnectionThread::slotDisconnected(){};
+void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){};
+void QConnectionThread::slotError(QAbstractSocket::SocketError socketError){};
