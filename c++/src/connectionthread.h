@@ -29,7 +29,7 @@ class QConnectionThread: public QThread
 {
 Q_OBJECT
  private:
-   bool connecting;
+   QAbstractSocket::SocketState lastStatus;
    QString wiiHost;
    QString wiiFile;
    int wiiPort;
@@ -47,16 +47,12 @@ Q_OBJECT
     void run();
  private slots:
    void slotConnected();
-   void slotDisconnected();
    void slotError(QAbstractSocket::SocketError error);
-   void slotHostFound(); 
    void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
    void onChangeStatus(QString status);
-   void setProgressBarMax(int max);
-   void setProgressBarMin(int min);
+   void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-   void setProgressBarEnabled(bool enabled);
    void setReadyBtnEnabled();
    void showSocketError(QAbstractSocket::SocketError error);
 };

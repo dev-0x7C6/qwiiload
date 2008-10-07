@@ -31,7 +31,7 @@ class QFileInfo;
 QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
- connecting = TRUE;
+ lastStatus = QAbstractSocket::UnconnectedState;
 }
 
 QConnectionThread::~QConnectionThread(){}
@@ -41,10 +41,8 @@ void QConnectionThread::run()
 {
  Network = new QTcpSocket();
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
- connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- connect(Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
  Network->connectToHost(wiiHost, wiiPort);
  exec();
 }
@@ -84,12 +82,9 @@ void QConnectionThread::slotConnected()
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
  Network->write((const char *)&datagram, sizeof(datagram));
- emit setProgressBarEnabled(TRUE);
- emit setProgressBarMax(FileSize);
- emit setProgressBarMin(0);
- emit setProgressBarValue(0);
+ emit setProgressBarState(TRUE, FileSize, 0, 0);
 
- char buffer[256];
+ char buffer[4096];
  int readed, total = 0;
  QDataStream readfile(&file);
 
@@ -102,21 +97,16 @@ void QConnectionThread::slotConnected()
   Network->write((const char *)&buffer, readed);
   emit setProgressBarValue(total);
  }
- emit setProgressBarEnabled(FALSE);
+ emit setProgressBarState(TRUE, FileSize, 0, 0);
  Network->disconnectFromHost();
- emit setReadyBtnEnabled();
 }
-
-void QConnectionThread::slotDisconnected(){}
 
 void QConnectionThread::slotError(QAbstractSocket::SocketError error)
 {
- emit setReadyBtnEnabled();
  emit showSocketError(error);
+ emit setReadyBtnEnabled();
  quit();
 }
-
-void QConnectionThread::slotHostFound(){}
 
 void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
  switch(state) {
@@ -126,5 +116,6 @@ void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
   case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
   case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
  }
+ if (state == QAbstractSocket::UnconnectedState) emit setReadyBtnEnabled();
  emit onChangeStatus(currentStatus);
 }

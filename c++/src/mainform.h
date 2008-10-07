@@ -43,16 +43,15 @@ Q_OBJECT
  private:
    QFileDialog *FileDialog;
    QConnectionThread *ConnectionThread;
+   void defaultProgressBar(bool enabled, int max, int min, int value);
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~MainForm();
  public slots:
    void onChangeStatus(QString status);
-   void setProgressBarMax(int max);
-   void setProgressBarMin(int min);
+   void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-   void setProgressBarEnabled(bool enabled);
    void setReadyBtnEnabled();
    void showSocketError(QAbstractSocket::SocketError error);
 // Form

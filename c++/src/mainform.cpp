@@ -31,9 +31,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  setMaximumHeight(height());
  setMinimumHeight(height());
  setWindowTitle(mainWindowTitle);
-
  FileDialog = new QFileDialog(this);
-
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
 // MainMenu
@@ -42,46 +40,45 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  connect(ui.actionManagerRun, SIGNAL(triggered()), this, SLOT(slotActionManagerRun()));
  connect(ui.actionAboutProgram, SIGNAL(triggered()), this, SLOT(slotAboutProgram()));
  connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
 }
 
-MainForm::~MainForm()
-{
+MainForm::~MainForm(){
  ConnectionThread->quit();
  delete FileDialog;
 }
 
-void MainForm::slotOpenFileClicked()
-{
+
+void MainForm::slotOpenFileClicked(){
  QString fileName = FileDialog->getOpenFileName();
  if (fileName != QString("")) ui.localFile->setText(fileName);
 }
 
-void MainForm::slotActionExit()
-{
- close();
-}
+void MainForm::slotActionExit(){close();}
 
-void MainForm::slotAboutProgram()
-{
+void MainForm::slotAboutProgram(){
  AboutForm *window = new AboutForm(this);
  window->exec();
  delete window;
 }
 
-void MainForm::slotActionManagerRun()
-{
+void MainForm::slotActionManagerRun(){
  ManagerForm *window;
  window = new ManagerForm(this);
  window->exec();
  delete window;
 }
 
+void MainForm::onChangeStatus(QString status){ui.statusLabel->setText(status);}
 
-void MainForm::onChangeStatus(QString status)
-{
- ui.statusLabel->setText(status);
+void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
+ ui.progressBar->setMaximum(max);
+ ui.progressBar->setMinimum(min);
+ ui.progressBar->setEnabled(enabled);
+ ui.progressBar->setValue(value);
 }
+
+void MainForm::setProgressBarState(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
+void MainForm::setProgressBarValue(int value){ ui.progressBar->setValue(value); }
 
 void MainForm::slotReadyBtnClicked()
 {
@@ -117,15 +114,14 @@ void MainForm::slotReadyBtnClicked()
   }
 
   connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
-  connect(ConnectionThread, SIGNAL(setProgressBarMax(int)), this, SLOT(setProgressBarMax(int)));
-  connect(ConnectionThread, SIGNAL(setProgressBarMin(int)), this, SLOT(setProgressBarMin(int)));
+  connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
   connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
-  connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
-  connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
+
   connect(ConnectionThread, SIGNAL(setReadyBtnEnabled()), this, SLOT(setReadyBtnEnabled())); 
   connect(ConnectionThread, SIGNAL(showSocketError(QAbstractSocket::SocketError)), this, SLOT(showSocketError(QAbstractSocket::SocketError))); 
   ConnectionThread->start();
  } else {
+  defaultProgressBar(FALSE, 100, 0, 0);
   ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
   ui.readyBtn->setText("ready");
   ConnectionThread->disconnectAnyway();
@@ -134,35 +130,17 @@ void MainForm::slotReadyBtnClicked()
  }
 }
 
-
 void MainForm::setReadyBtnEnabled()
 {
+ defaultProgressBar(FALSE, 100, 0, 0);
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
  ui.readyBtn->setText("ready");
 }
 
-void MainForm::setProgressBarMax(int max)
-{
- ui.progressBar->setMaximum(max);
-}
-
-void MainForm::setProgressBarMin(int min)
-{
- ui.progressBar->setMinimum(min);
-}
-
-void MainForm::setProgressBarValue(int value)
-{
- ui.progressBar->setValue(value);
-}
-
-void MainForm::setProgressBarEnabled(bool enabled)
-{
- ui.progressBar->setEnabled(enabled);
-}
 
 void MainForm::showSocketError(QAbstractSocket::SocketError error)
 {
+ defaultProgressBar(FALSE, 100, 0, 0);
  QString msgError = "Unknown socket error";
  switch (error) {
   case QAbstractSocket::ConnectionRefusedError: msgError = "The connection was refused by the peer or timed out."; break;
