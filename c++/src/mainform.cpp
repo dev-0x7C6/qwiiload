@@ -83,7 +83,14 @@ void MainForm::onChangeStatus(QString status)
 
 void MainForm::slotReadyBtnClicked()
 {
- QString fileName = ui.localFile->text();
+ QString Hostname = ui.wiiHostName->text();
+ if (Hostname == QString("")) {
+  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Hostname is empty"));
+  return;
+ }
+
+ QString fileName;
+ fileName = ui.localFile->text();
  QFileInfo *FileInfo;
  FileInfo = new QFileInfo(fileName);
  bool fileExists = FileInfo->exists() && !FileInfo->isDir();
@@ -95,45 +102,39 @@ void MainForm::slotReadyBtnClicked()
  }
 
  ui.readyBtn->setEnabled(FALSE);
- 
+
  ConnectionThread = new QConnectionThread(this);
- QString Hostname = ui.wiiHostName->text();
  ConnectionThread->setHost(Hostname);
+ ConnectionThread->setFile(fileName);
  switch(ui.channelSelect->currentIndex()) {
-  case 0: ConnectionThread->setPort(21); break;
+  case 0: ConnectionThread->setPort(4299); break;
   case 1: ConnectionThread->setPort(8080); break;
  }
 
  connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
+ connect(ConnectionThread, SIGNAL(setProgressBarMax(int)), this, SLOT(setProgressBarMax(int)));
+ connect(ConnectionThread, SIGNAL(setProgressBarMin(int)), this, SLOT(setProgressBarMin(int)));
+ connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
+ connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
  ConnectionThread->start();
+}
 
+void MainForm::setProgressBarMax(int max)
+{
+ ui.progressBar->setMaximum(max);
+}
 
- //ui.readyBtn->setEnabled(FALSE);
-// ui.statusLabel->setText("Connecting");
+void MainForm::setProgressBarMin(int min)
+{
+ ui.progressBar->setMinimum(min);
+}
 
- /*host = ui.wiiHostName->text();
- if (host == QString("")) {
-  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Wii hostname is empty"));
-  return;
- }
- filename = ui.localFile->text();
- QFileInfo *FileInfo;
- FileInfo = new QFileInfo(filename);
- bool fileExists = FileInfo->exists() && !FileInfo->isDir();
- delete FileInfo;
+void MainForm::setProgressBarValue(int value)
+{
+ ui.progressBar->setValue(value);
+}
 
- if (fileExists == FALSE) {
-  QMessageBox::critical(this, trUtf8("Critical"), trUtf8("Selected file don't exists"));
-  return;
- }
-
- if (ui.channelSelect->currentIndex() == 0) port = 4299;
- if (ui.channelSelect->currentIndex() == 1) port = 8080;
- int status = Network->state();
- if (status != QTcpSocket::UnconnectedState)
- {
-  Network->disconnectFromHost();
- }
- Network->connectToHost(host, port);
-*/
+void MainForm::setProgressBarEnabled(bool enabled)
+{
+ ui.progressBar->setEnabled(enabled);
 }

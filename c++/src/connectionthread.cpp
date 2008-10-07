@@ -65,39 +65,43 @@ void QConnectionThread::slotConnected()
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
  }
- currentStatus = "Stream data...";
- emit onChangeStatus(currentStatus);
- // QFile file(wiiFile);
-// if (!file.open(QIODevice::ReadOnly))
-// {
-//  return;
-// }
-/* int FileSize = file.size();
+
+ QFile file(wiiFile);
+ if (!file.open(QIODevice::ReadOnly))
+ {
+  return;
+ }
+
+ int FileSize = file.size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
- //ui.progressBar->setMaximum(FileSize);
- //ui.progressBar->setMinimum(0);
- //ui.progressBar->setValue(0);
- //ui.progressBar->setEnabled(TRUE);
  Network->write((const char *)&datagram, sizeof(datagram));
+ emit setProgressBarEnabled(TRUE);
+ emit setProgressBarMax(FileSize);
+ emit setProgressBarMin(0);
+ emit setProgressBarValue(0);
 
  char buffer[256];
- int readed;
+ int readed, total = 0;
  QDataStream readfile(&file);
+
+ currentStatus = "Stream data...";
+ emit onChangeStatus(currentStatus);
 
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
+  total += readed;
   Network->write((const char *)&buffer, readed);
- // ui.progressBar->setValue(ui.progressBar->value() + readed);
+  emit setProgressBarValue(total);
  }
-// ui.progressBar->setEnabled(FALSE);
- Network->disconnectFromHost(); 
-*/
+ emit setProgressBarEnabled(FALSE);
+ Network->disconnectFromHost();
 }
 
 void QConnectionThread::slotDisconnected(){}
+
 void QConnectionThread::slotError(QAbstractSocket::SocketError error){}
 void QConnectionThread::slotHostFound(){}
 
@@ -107,7 +111,7 @@ void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
   case QAbstractSocket::HostLookupState: currentStatus = "Resolving hostname..."; break;
   case QAbstractSocket::ConnectingState: currentStatus = "Connecting..."; break;
   case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
-  case QAbstractSocket::ClosingState: currentStatus = "Closing socket..."; break;
+  case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
  }
  emit onChangeStatus(currentStatus);
 }

@@ -49,6 +49,10 @@ Q_OBJECT
    ~MainForm();
  public slots:
    void onChangeStatus(QString status);
+   void setProgressBarMax(int max);
+   void setProgressBarMin(int min);
+   void setProgressBarValue(int value);
+   void setProgressBarEnabled(bool enabled);
 // Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();
