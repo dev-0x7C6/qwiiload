@@ -131,6 +131,15 @@ void MainForm::slotActionManagerRun()
  delete window;
 }
 
+void MainForm::showMessageBox(QEvent *event)
+{
+ if( event->type() == 10000)
+ {
+  QString* message = static_cast<QString*>(event->data());
+  QMessageBox::critical(this, trUtf8("Critical"), message);
+ }
+}
+
 void MainForm::slotReadyBtnClicked()
 {
  ConnectionThread->setHost(ui.wiiHostName->text());

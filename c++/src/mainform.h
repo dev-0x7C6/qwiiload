@@ -31,7 +31,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDataStream>
-
+#include <QEvent>
 
 using namespace Ui;
 
@@ -47,6 +47,8 @@ Q_OBJECT
  private:
    QFileDialog *FileDialog;
    QConnectionThread *ConnectionThread;
+ protected:
+   void showMessageBox(QEvent *event);
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );

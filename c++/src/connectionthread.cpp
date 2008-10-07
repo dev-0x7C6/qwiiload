@@ -21,7 +21,7 @@
 #include "connectionthread.h"
 #include <QMetaType>
 #include <QMessageBox>
-#include <QApplication>
+#include <QCoreApplication>
 
 class QMessageBox;
 
@@ -29,12 +29,11 @@ QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 }
+
 QConnectionThread::~QConnectionThread(){}
 
 void QConnectionThread::setHost(const QString Host){QHostName = Host;}
 void QConnectionThread::setPort(int Port){QPort = Port;}
-
-
 
 void QConnectionThread::run()
 {
@@ -45,11 +44,10 @@ void QConnectionThread::run()
  connect(&Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
  connect(&Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
  Network.connectToHost(QHostName, QPort);
- QMessageBox::warning(NULL, trUtf8("Warning"), trUtf8("Wii hostname is empty"));
  exec();
 }
 
-void QConnectionThread::slotConnected(){}
+void QConnectionThread::slotConnected(){ QMessageBox::warning(NULL, trUtf8("Warning"), trUtf8("Wii hostname is empty"));}
 void QConnectionThread::slotDisconnected(){}
 void QConnectionThread::slotError(QAbstractSocket::SocketError error){}
 void QConnectionThread::slotHostFound(){}
