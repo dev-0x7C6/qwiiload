@@ -47,12 +47,14 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 
 MainForm::~MainForm()
 {
+ ConnectionThread->quit();
  delete FileDialog;
 }
 
 void MainForm::slotOpenFileClicked()
 {
- ui.localFile->setText(FileDialog->getOpenFileName()); 
+ QString fileName = FileDialog->getOpenFileName();
+ if (fileName != QString("")) ui.localFile->setText(fileName);
 }
 
 void MainForm::slotActionExit()
@@ -108,6 +110,7 @@ void MainForm::slotReadyBtnClicked()
   ConnectionThread = new QConnectionThread(this);
   ConnectionThread->setHost(Hostname);
   ConnectionThread->setFile(fileName);
+
   switch(ui.channelSelect->currentIndex()) {
    case 0: ConnectionThread->setPort(4299); break;
    case 1: ConnectionThread->setPort(8080); break;
@@ -134,7 +137,8 @@ void MainForm::slotReadyBtnClicked()
 
 void MainForm::setReadyBtnEnabled()
 {
- ui.readyBtn->setEnabled(TRUE);
+ ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
+ ui.readyBtn->setText("ready");
 }
 
 void MainForm::setProgressBarMax(int max)
