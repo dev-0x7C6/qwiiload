@@ -20,6 +20,10 @@
 
 #include "mainform.h"
 
+#include <QFileInfo>
+
+class QFileInfo;
+
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
@@ -29,7 +33,6 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  setWindowTitle(mainWindowTitle);
 
  FileDialog = new QFileDialog(this);
- ConnectionThread = new QConnectionThread(this);
 
  connect(ui.readyBtn, SIGNAL(clicked()), this, SLOT(slotReadyBtnClicked()));
  connect(ui.openFile, SIGNAL(clicked()), this, SLOT(slotOpenFileClicked()));
@@ -44,67 +47,8 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 
 MainForm::~MainForm()
 {
- delete ConnectionThread;
  delete FileDialog;
 }
-
-QString host, filename = "";
-int port = 0;
-
-/*void MainForm::slotConnected()
-{
- ui.statusbar->showMessage("Connected");
- unsigned char datagram[4];
- if (port == 4299)
- {
- 	char header[4];
- 	header[0] = 'H';
- 	header[1] = 'A';
- 	header[2] = 'X';
- 	header[3] = 'X';
- 	Network->write((const char *)&header, sizeof(header));
- 
- 	datagram[0] = 0;
- 	datagram[1] = 3;
- 	datagram[2] = (0 >> 8) && 0xFF;
- 	datagram[3] = 0 && 0xFF;
- 	Network->write((const char *)&datagram, sizeof(datagram));
- } else
- {
-  QMessageBox::information(this, trUtf8("Info"), trUtf8("Please confirm connection on your Wii"));
- }
-
- QFile file(filename);
- if (!file.open(QIODevice::ReadOnly))
- {
-  QMessageBox::information(this, trUtf8("Info"), trUtf8("Can't open file"));
-  return;
- }
-
- int FileSize = file.size();
- datagram[0] = FileSize >> 24;
- datagram[1] = FileSize >> 16;
- datagram[2] = FileSize >> 8;
- datagram[3] = FileSize;
- //ui.progressBar->setMaximum(FileSize);
- //ui.progressBar->setMinimum(0);
- //ui.progressBar->setValue(0);
- //ui.progressBar->setEnabled(TRUE);
- Network->write((const char *)&datagram, sizeof(datagram));
-
- char buffer[256];
- int readed;
- QDataStream readfile(&file);
-
- while (!readfile.atEnd()) {
-  readed = readfile.readRawData(buffer, sizeof(buffer));
-  Network->write((const char *)&buffer, readed);
- // ui.progressBar->setValue(ui.progressBar->value() + readed);
- }
-// ui.progressBar->setEnabled(FALSE);
- Network->disconnectFromHost(); 
-}*/
-
 
 void MainForm::slotOpenFileClicked()
 {
@@ -131,22 +75,36 @@ void MainForm::slotActionManagerRun()
  delete window;
 }
 
-void MainForm::showMessageBox(QEvent *event)
+
+void MainForm::onChangeStatus(QString status)
 {
- if( event->type() == 10000)
- {
-  QString* message = static_cast<QString*>(event->data());
-  QMessageBox::critical(this, trUtf8("Critical"), message);
- }
+ ui.statusLabel->setText(status);
 }
 
 void MainForm::slotReadyBtnClicked()
 {
- ConnectionThread->setHost(ui.wiiHostName->text());
+ QString fileName = ui.localFile->text();
+ QFileInfo *FileInfo;
+ FileInfo = new QFileInfo(fileName);
+ bool fileExists = FileInfo->exists() && !FileInfo->isDir();
+ delete FileInfo;
+
+ if (fileExists == FALSE) {
+  QMessageBox::critical(this, trUtf8("Critical"), trUtf8("File not found"));
+  return;
+ }
+
+ ui.readyBtn->setEnabled(FALSE);
+ 
+ ConnectionThread = new QConnectionThread(this);
+ QString Hostname = ui.wiiHostName->text();
+ ConnectionThread->setHost(Hostname);
  switch(ui.channelSelect->currentIndex()) {
   case 0: ConnectionThread->setPort(21); break;
   case 1: ConnectionThread->setPort(8080); break;
  }
+
+ connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
  ConnectionThread->start();
 
 

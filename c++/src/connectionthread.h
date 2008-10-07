@@ -29,15 +29,18 @@ class QConnectionThread: public QThread
 {
 Q_OBJECT 
  private:
-   QString QHostName;
-   QString QFileName;
-   int QPort;
+   QString wiiHost;
+   QString wiiFile;
+   int wiiPort;
+   QString currentStatus;
    QTcpSocket *Network;
  public:
    QConnectionThread(QObject *parent = 0);
    ~QConnectionThread();
-   void setHost(const QString Host);
-   void setPort(int Port);
+
+   void setHost(QString Host){wiiHost = Host;};
+   void setFile(QString File){wiiFile = File;};
+   void setPort(int Port){wiiPort = Port;};
  protected:
     void run();
  public slots:
@@ -47,7 +50,7 @@ Q_OBJECT
    void slotHostFound(); 
    void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
-   void onChangeStatus();
+   void onChangeStatus(QString status);
    void setProgressBarEnable(bool b);
    void setProgressBarRange(int min, int max);
    void setProgressBarValue(int value);

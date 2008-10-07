@@ -20,10 +20,13 @@
 
 #include "connectionthread.h"
 #include <QMetaType>
-#include <QMessageBox>
-#include <QCoreApplication>
 
-class QMessageBox;
+#include <QDataStream>
+#include <QFile>
+
+class QDataStream;
+class QFile;
+class QFileInfo;
 
 QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
@@ -32,23 +35,79 @@ QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
 
 QConnectionThread::~QConnectionThread(){}
 
-void QConnectionThread::setHost(const QString Host){QHostName = Host;}
-void QConnectionThread::setPort(int Port){QPort = Port;}
 
 void QConnectionThread::run()
 {
- QTcpSocket Network;
- connect(&Network, SIGNAL(connected()), this, SLOT(slotConnected()));
- connect(&Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
- connect(&Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
- connect(&Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- connect(&Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
- Network.connectToHost(QHostName, QPort);
+ Network = new QTcpSocket();
+ connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
+ connect(Network, SIGNAL(connectionClosed()), this, SLOT(slotDisconnected()));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+ connect(Network, SIGNAL(hostFound()), this, SLOT(slotHostFound()));
+ Network->connectToHost(wiiHost, wiiPort);
  exec();
 }
 
-void QConnectionThread::slotConnected(){ QMessageBox::warning(NULL, trUtf8("Warning"), trUtf8("Wii hostname is empty"));}
+void QConnectionThread::slotConnected()
+{
+ unsigned char datagram[4];
+ if (wiiPort == 4299)
+ {
+  char header[4];
+  header[0] = 'H';
+  header[1] = 'A';
+  header[2] = 'X';
+  header[3] = 'X';
+  Network->write((const char *)&header, sizeof(header));
+  datagram[0] = 0;
+  datagram[1] = 3;
+  datagram[2] = (0 >> 8) && 0xFF;
+  datagram[3] = 0 && 0xFF;
+  Network->write((const char *)&datagram, sizeof(datagram));
+ }
+ currentStatus = "Stream data...";
+ emit onChangeStatus(currentStatus);
+ // QFile file(wiiFile);
+// if (!file.open(QIODevice::ReadOnly))
+// {
+//  return;
+// }
+/* int FileSize = file.size();
+ datagram[0] = FileSize >> 24;
+ datagram[1] = FileSize >> 16;
+ datagram[2] = FileSize >> 8;
+ datagram[3] = FileSize;
+ //ui.progressBar->setMaximum(FileSize);
+ //ui.progressBar->setMinimum(0);
+ //ui.progressBar->setValue(0);
+ //ui.progressBar->setEnabled(TRUE);
+ Network->write((const char *)&datagram, sizeof(datagram));
+
+ char buffer[256];
+ int readed;
+ QDataStream readfile(&file);
+
+ while (!readfile.atEnd()) {
+  readed = readfile.readRawData(buffer, sizeof(buffer));
+  Network->write((const char *)&buffer, readed);
+ // ui.progressBar->setValue(ui.progressBar->value() + readed);
+ }
+// ui.progressBar->setEnabled(FALSE);
+ Network->disconnectFromHost(); 
+*/
+}
+
 void QConnectionThread::slotDisconnected(){}
 void QConnectionThread::slotError(QAbstractSocket::SocketError error){}
 void QConnectionThread::slotHostFound(){}
-void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){}
+
+void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
+ switch(state) {
+  case QAbstractSocket::UnconnectedState: currentStatus = "Disconnected"; break;
+  case QAbstractSocket::HostLookupState: currentStatus = "Resolving hostname..."; break;
+  case QAbstractSocket::ConnectingState: currentStatus = "Connecting..."; break;
+  case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
+  case QAbstractSocket::ClosingState: currentStatus = "Closing socket..."; break;
+ }
+ emit onChangeStatus(currentStatus);
+}
