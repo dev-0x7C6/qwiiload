@@ -83,40 +83,57 @@ void MainForm::onChangeStatus(QString status)
 
 void MainForm::slotReadyBtnClicked()
 {
- QString Hostname = ui.wiiHostName->text();
- if (Hostname == QString("")) {
-  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Hostname is empty"));
-  return;
+ if (ui.readyBtn->text() == QString("ready")) {
+  QString Hostname = ui.wiiHostName->text();
+  if (Hostname == QString("")) {
+   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Hostname is empty"));
+   return;
+  }
+
+  QString fileName;
+  fileName = ui.localFile->text();
+  QFileInfo *FileInfo;
+  FileInfo = new QFileInfo(fileName);
+  bool fileExists = FileInfo->exists() && !FileInfo->isDir();
+  delete FileInfo;
+
+  if (fileExists == FALSE) {
+   QMessageBox::critical(this, trUtf8("Critical"), trUtf8("File not found"));
+   return;
+  }
+
+  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_cancel.png")));
+  ui.readyBtn->setText("cancel");
+
+  ConnectionThread = new QConnectionThread(this);
+  ConnectionThread->setHost(Hostname);
+  ConnectionThread->setFile(fileName);
+  switch(ui.channelSelect->currentIndex()) {
+   case 0: ConnectionThread->setPort(4299); break;
+   case 1: ConnectionThread->setPort(8080); break;
+  }
+
+  connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
+  connect(ConnectionThread, SIGNAL(setProgressBarMax(int)), this, SLOT(setProgressBarMax(int)));
+  connect(ConnectionThread, SIGNAL(setProgressBarMin(int)), this, SLOT(setProgressBarMin(int)));
+  connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
+  connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
+  connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
+  connect(ConnectionThread, SIGNAL(setReadyBtnEnabled()), this, SLOT(setReadyBtnEnabled())); 
+  connect(ConnectionThread, SIGNAL(showSocketError(QAbstractSocket::SocketError)), this, SLOT(showSocketError(QAbstractSocket::SocketError))); 
+  ConnectionThread->start();
+ } else {
+  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
+  ui.readyBtn->setText("ready");
+  ConnectionThread->quit();
+  ui.statusLabel->setText("Disconnected");
  }
+}
 
- QString fileName;
- fileName = ui.localFile->text();
- QFileInfo *FileInfo;
- FileInfo = new QFileInfo(fileName);
- bool fileExists = FileInfo->exists() && !FileInfo->isDir();
- delete FileInfo;
 
- if (fileExists == FALSE) {
-  QMessageBox::critical(this, trUtf8("Critical"), trUtf8("File not found"));
-  return;
- }
-
- ui.readyBtn->setEnabled(FALSE);
-
- ConnectionThread = new QConnectionThread(this);
- ConnectionThread->setHost(Hostname);
- ConnectionThread->setFile(fileName);
- switch(ui.channelSelect->currentIndex()) {
-  case 0: ConnectionThread->setPort(4299); break;
-  case 1: ConnectionThread->setPort(8080); break;
- }
-
- connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
- connect(ConnectionThread, SIGNAL(setProgressBarMax(int)), this, SLOT(setProgressBarMax(int)));
- connect(ConnectionThread, SIGNAL(setProgressBarMin(int)), this, SLOT(setProgressBarMin(int)));
- connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
- connect(ConnectionThread, SIGNAL(setProgressBarEnabled(bool)), this, SLOT(setProgressBarEnabled(bool)));
- ConnectionThread->start();
+void MainForm::setReadyBtnEnabled()
+{
+ ui.readyBtn->setEnabled(TRUE);
 }
 
 void MainForm::setProgressBarMax(int max)
@@ -137,4 +154,22 @@ void MainForm::setProgressBarValue(int value)
 void MainForm::setProgressBarEnabled(bool enabled)
 {
  ui.progressBar->setEnabled(enabled);
+}
+
+void MainForm::showSocketError(QAbstractSocket::SocketError error)
+{
+ QString msgError = "Unknown socket error";
+ switch (error) {
+  case QAbstractSocket::ConnectionRefusedError: msgError = "The connection was refused by the peer or timed out."; break;
+  case QAbstractSocket::RemoteHostClosedError: msgError = "The remote host closed the connection."; break;
+  case QAbstractSocket::HostNotFoundError: msgError = "The host address was not found."; break;
+  case QAbstractSocket::SocketAccessError: msgError = "The socket operation failed because the application lacked the required privileges."; break;
+  case QAbstractSocket::SocketResourceError: msgError = "The local system ran out of resources (e.g., too many sockets)."; break;
+  case QAbstractSocket::SocketTimeoutError: msgError = "The socket operation timed out."; break;
+  case QAbstractSocket::DatagramTooLargeError: msgError = "The datagram was larger than the operating system's limit."; break;
+  case QAbstractSocket::NetworkError: msgError = "An error occurred with the network."; break;
+  case QAbstractSocket::UnsupportedSocketOperationError: msgError = "The requested socket operation is not supported by the local operating system."; break;
+  case QAbstractSocket::ProxyAuthenticationRequiredError: msgError = "The socket is using a proxy, and the proxy requires authentication."; break;
+ }
+ QMessageBox::critical(this, trUtf8("Critical"), msgError);
 }

@@ -56,4 +56,6 @@ Q_OBJECT
    void setProgressBarMin(int min);
    void setProgressBarValue(int value);
    void setProgressBarEnabled(bool enabled);
+   void setReadyBtnEnabled();
+   void showSocketError(QAbstractSocket::SocketError error);
 };

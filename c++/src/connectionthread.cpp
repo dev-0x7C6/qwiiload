@@ -31,6 +31,7 @@ class QFileInfo;
 QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+ connecting = TRUE;
 }
 
 QConnectionThread::~QConnectionThread(){}
@@ -98,11 +99,18 @@ void QConnectionThread::slotConnected()
  }
  emit setProgressBarEnabled(FALSE);
  Network->disconnectFromHost();
+ emit setReadyBtnEnabled();
 }
 
 void QConnectionThread::slotDisconnected(){}
 
-void QConnectionThread::slotError(QAbstractSocket::SocketError error){}
+void QConnectionThread::slotError(QAbstractSocket::SocketError error)
+{
+ emit setReadyBtnEnabled();
+ emit showSocketError(error);
+ quit();
+}
+
 void QConnectionThread::slotHostFound(){}
 
 void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
