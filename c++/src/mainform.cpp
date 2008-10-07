@@ -125,6 +125,7 @@ void MainForm::slotReadyBtnClicked()
  } else {
   ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
   ui.readyBtn->setText("ready");
+  ConnectionThread->disconnectAnyway();
   ConnectionThread->quit();
   ui.statusLabel->setText("Disconnected");
  }

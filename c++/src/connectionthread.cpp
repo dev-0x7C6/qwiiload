@@ -49,6 +49,11 @@ void QConnectionThread::run()
  exec();
 }
 
+void QConnectionThread::disconnectAnyway()
+{
+ Network->disconnectFromHost();
+}
+
 void QConnectionThread::slotConnected()
 {
  unsigned char datagram[4];

@@ -42,9 +42,10 @@ Q_OBJECT
    void setHost(QString Host){wiiHost = Host;};
    void setFile(QString File){wiiFile = File;};
    void setPort(int Port){wiiPort = Port;};
+   void disconnectAnyway();
  protected:
     void run();
- public slots:
+ private slots:
    void slotConnected();
    void slotDisconnected();
    void slotError(QAbstractSocket::SocketError error);
