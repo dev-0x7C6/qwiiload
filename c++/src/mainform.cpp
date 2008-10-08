@@ -117,6 +117,7 @@ void MainForm::slotReadyBtnClicked()
   ConnectionThread = new QConnectionThread(this, streamThread);
   ConnectionThread->setHost(Hostname);
   ConnectionThread->setFile(fileName);
+  connect(streamThread, SIGNAL(updateProgressBar(int)), ConnectionThread, SLOT(updateProgressBar(int)));
 
   switch(ui.channelSelect->currentIndex()) {
    case 0: ConnectionThread->setPort(4299); break;

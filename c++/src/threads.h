@@ -33,6 +33,7 @@ Q_OBJECT
  private:
    QTcpSocket *Network;
    QFile *streamFile;
+   bool breakMainLoop;
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread(){};
@@ -41,7 +42,10 @@ Q_OBJECT
    void setSocket(QTcpSocket *socket = 0){ Network = socket; };
  protected:
    void run();
+ public slots:
+   void breakLoop();
  signals:
+   void waitTimeout();
    void updateProgressBar(int value);
 };
 

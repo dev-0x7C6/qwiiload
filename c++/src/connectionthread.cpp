@@ -94,7 +94,8 @@ void QConnectionThread::slotConnected()
  currentStatus = "Stream data...";
  emit onChangeStatus(currentStatus);
 
- connect(StreamThread, SIGNAL(updateProgressBar(int)), this, SLOT(updateProgressBar(int)));
+ StreamThread->setFile(file);
+ StreamThread->setSocket(Network);
  StreamThread->start();
 }
 

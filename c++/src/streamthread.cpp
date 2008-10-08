@@ -20,7 +20,15 @@
 
 #include "threads.h"
 
-QStreamThread::QStreamThread(QObject *parent):QThread(parent){}
+QStreamThread::QStreamThread(QObject *parent):QThread(parent)
+{
+ breakMainLoop == FALSE;
+}
+
+void QStreamThread::breakLoop()
+{
+ breakMainLoop == TRUE;
+}
 
 void QStreamThread::run()
 {
@@ -28,12 +36,15 @@ void QStreamThread::run()
  int readed, total = 0;
  QDataStream readfile(streamFile);
 
- while (!readfile.atEnd()) {
+ while (!readfile.atEnd() || breakMainLoop == TRUE) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
   Network->write((const char *)&buffer, readed);
-  Network->waitForBytesWritten(-1);
   emit updateProgressBar(total);
+  if (Network->waitForBytesWritten(5000) == FALSE) {
+   breakMainLoop = TRUE;
+   emit waitTimeout();
+  }
  }
 
  Network->disconnectFromHost();
