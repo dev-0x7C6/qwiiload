@@ -112,7 +112,9 @@ void MainForm::slotReadyBtnClicked()
 
   setCancelMode();
 
-  ConnectionThread = new QConnectionThread(this);
+  QStreamThread *streamThread;
+  streamThread = new QStreamThread(this);
+  ConnectionThread = new QConnectionThread(this, streamThread);
   ConnectionThread->setHost(Hostname);
   ConnectionThread->setFile(fileName);
 
@@ -124,7 +126,7 @@ void MainForm::slotReadyBtnClicked()
   connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
   connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
   connect(ConnectionThread, SIGNAL(transferDone()), this, SLOT(transferDone())); 
-  connect(ConnectionThread, SIGNAL(transferFail(QAbstractSocket::SocketError)), this, SLOT(transferFail(QAbstractSocket::SocketError))); 
+  connect(ConnectionThread, SIGNAL(transferFail(QString)), this, SLOT(transferFail(QString))); 
   ConnectionThread->start();
 
  } else {
@@ -143,23 +145,10 @@ void MainForm::transferDone(){
  QMessageBox::information(this, trUtf8("Done"),trUtf8("File was successful transfered"));
 }
 
-void MainForm::transferFail(QAbstractSocket::SocketError error)
+void MainForm::transferFail(QString error)
 {
  defaultProgressBar(FALSE, 100, 0, 0);
- QString msgError = "Unknown socket error";
- switch (error) {
-  case QAbstractSocket::ConnectionRefusedError: msgError = "The connection was refused by the peer or timed out."; break;
-  case QAbstractSocket::RemoteHostClosedError: msgError = "The remote host closed the connection."; break;
-  case QAbstractSocket::HostNotFoundError: msgError = "The host address was not found."; break;
-  case QAbstractSocket::SocketAccessError: msgError = "The socket operation failed because the application lacked the required privileges."; break;
-  case QAbstractSocket::SocketResourceError: msgError = "The local system ran out of resources (e.g., too many sockets)."; break;
-  case QAbstractSocket::SocketTimeoutError: msgError = "The socket operation timed out."; break;
-  case QAbstractSocket::DatagramTooLargeError: msgError = "The datagram was larger than the operating system's limit."; break;
-  case QAbstractSocket::NetworkError: msgError = "An error occurred with the network."; break;
-  case QAbstractSocket::UnsupportedSocketOperationError: msgError = "The requested socket operation is not supported by the local operating system."; break;
-  case QAbstractSocket::ProxyAuthenticationRequiredError: msgError = "The socket is using a proxy, and the proxy requires authentication."; break;
- }
- QMessageBox::critical(this, trUtf8("Critical"), msgError);
+ QMessageBox::critical(this, trUtf8("Critical"), error);
  ui.statusLabel->setText("Disconnected");
  setReadyMode();
 }

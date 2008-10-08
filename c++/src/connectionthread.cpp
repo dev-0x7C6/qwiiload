@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "connectionthread.h"
+#include "threads.h"
 #include <QMetaType>
 
 #include <QDataStream>
@@ -27,9 +27,10 @@
 class QDataStream;
 class QFileInfo;
 
-QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
+QConnectionThread::QConnectionThread(QObject *parent, QStreamThread *thread):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+ StreamThread = thread;
 }
 
 QConnectionThread::~QConnectionThread(){}
@@ -48,30 +49,6 @@ void QConnectionThread::disconnectAnyway(){
  Network->disconnectFromHost();
 }
 
-QStreamThread::QStreamThread(QTcpSocket *socket, QFile *file){ 
- Network = socket;
- streamFile = file;
-}
-
-void QStreamThread::run()
-{
- char buffer[256];
- int readed, total = 0;
- QDataStream readfile(streamFile);
-
- while (!readfile.atEnd()) {
-  readed = readfile.readRawData(buffer, sizeof(buffer));
-  total += readed;
-  Network->write((const char *)&buffer, readed);
-  Network->waitForBytesWritten(-1);
-  emit updateProgressBar(total);
- }
-
- Network->disconnectFromHost();
- delete streamFile;
-}
-
-
 void QConnectionThread::updateProgressBar(int value)
 {
  emit setProgressBarValue(value);
@@ -80,7 +57,6 @@ void QConnectionThread::updateProgressBar(int value)
 
 void QConnectionThread::slotConnected()
 {
- //Network->moveToThread();
  unsigned char datagram[4];
  if (wiiPort == 4299)
  {
@@ -102,7 +78,7 @@ void QConnectionThread::slotConnected()
  QFile *file;
  file = new QFile(wiiFile);
  if (!file->open(QIODevice::ReadOnly)) {
-  emit transferFail(QAbstractSocket::RemoteHostClosedError);
+  emit transferFail("Can't open file to the read");
   return;
  }
 
@@ -118,15 +94,14 @@ void QConnectionThread::slotConnected()
  currentStatus = "Stream data...";
  emit onChangeStatus(currentStatus);
 
- StreamThread = new QStreamThread(Network, file);
  connect(StreamThread, SIGNAL(updateProgressBar(int)), this, SLOT(updateProgressBar(int)));
  StreamThread->start();
 }
 
 void QConnectionThread::slotError(QAbstractSocket::SocketError error){
- StreamThread->quit();
- emit transferFail(error);
- quit();
+ QString strError = Network->errorString();
+ emit transferFail(strError);
+ terminate();
 }
 
 void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
@@ -138,9 +113,9 @@ void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
   case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
  }
  emit onChangeStatus(currentStatus);
- if (state == QAbstractSocket::UnconnectedState) 
+ if (state == QAbstractSocket::UnconnectedState || Network->error() ) 
  {
-  emit transferDone();
-  quit();
+  //emit transferDone();
+ // terminate();
  }
 }

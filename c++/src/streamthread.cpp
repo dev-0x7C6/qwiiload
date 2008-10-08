@@ -18,60 +18,24 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QThread>
-#include <QTcpSocket>
-#include <QFile>
+#include "threads.h"
 
-class QString;
-class QThread;
-class QTcpSocket;
-class QFile;
+QStreamThread::QStreamThread(QObject *parent):QThread(parent){}
 
-class QStreamThread: public QThread
+void QStreamThread::run()
 {
-Q_OBJECT
- private:
-   QTcpSocket *Network;
-   QFile *streamFile;
- public:
-   QStreamThread(QTcpSocket *socket = 0 , QFile *file = 0);
-   ~QStreamThread(){};
- protected:
-   void run();
- signals:
-   void updateProgressBar(int value);
-};
+ char buffer[256];
+ int readed, total = 0;
+ QDataStream readfile(streamFile);
 
-class QConnectionThread: public QThread
-{
-Q_OBJECT
- private:
-   QString wiiHost;
-   QString wiiFile;
-   int wiiPort;
-   QString currentStatus;
-   QTcpSocket *Network;
-   QStreamThread *StreamThread;
- public:
-   QConnectionThread(QObject *parent = 0);
-   ~QConnectionThread();
+ while (!readfile.atEnd()) {
+  readed = readfile.readRawData(buffer, sizeof(buffer));
+  total += readed;
+  Network->write((const char *)&buffer, readed);
+  Network->waitForBytesWritten(-1);
+  emit updateProgressBar(total);
+ }
 
-   void setHost(QString Host){wiiHost = Host;};
-   void setFile(QString File){wiiFile = File;};
-   void setPort(int Port){wiiPort = Port;};
-   void disconnectAnyway();
- protected:
-    void run();
- private slots:
-   void updateProgressBar(int value);
-   void slotConnected();
-   void slotError(QAbstractSocket::SocketError error);
-   void slotStateChanged(QAbstractSocket::SocketState state);
- signals:
-   void transferDone();
-   void transferFail(QAbstractSocket::SocketError error);
-
-   void onChangeStatus(QString status);
-   void setProgressBarState(bool enabled, int max, int min, int value);
-   void setProgressBarValue(int value);
-};
+ Network->disconnectFromHost();
+ delete streamFile;
+}

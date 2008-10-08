@@ -18,50 +18,63 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ui_mainform.h"
-#include "threads.h"
-#include "manager.h"
-#include "about.h"
-
-
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QTextCodec>
+#include <QThread>
 #include <QTcpSocket>
+#include <QFile>
 
-using namespace Ui;
-
-class QDialog;
+class QString;
 class QThread;
-class QWidget;
+class QTcpSocket;
+class QFile;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02svn (broken)";
-
-class MainForm: public QMainWindow
+class QStreamThread: public QThread
 {
 Q_OBJECT
  private:
-   QFileDialog *FileDialog;
-   QConnectionThread *ConnectionThread;
-   void defaultProgressBar(bool enabled, int max, int min, int value);
-   void setReadyMode();
-   void setCancelMode();
+   QTcpSocket *Network;
+   QFile *streamFile;
  public:
-   mainform ui;
-   MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
-   ~MainForm();
- public slots:
+   QStreamThread(QObject *parent = 0);
+   ~QStreamThread(){};
+
+   void setFile(QFile *file = 0){ streamFile = file; };
+   void setSocket(QTcpSocket *socket = 0){ Network = socket; };
+ protected:
+   void run();
+ signals:
+   void updateProgressBar(int value);
+};
+
+class QConnectionThread: public QThread
+{
+Q_OBJECT
+ private:
+   QString wiiHost;
+   QString wiiFile;
+   int wiiPort;
+   QString currentStatus;
+   QTcpSocket *Network;
+   QStreamThread *StreamThread;
+ public:
+   QConnectionThread(QObject *parent = 0, QStreamThread *thread = 0);
+   ~QConnectionThread();
+
+   void setHost(QString Host){wiiHost = Host;};
+   void setFile(QString File){wiiFile = File;};
+   void setPort(int Port){wiiPort = Port;};
+   void disconnectAnyway();
+ protected:
+    void run();
+ private slots:
+   void updateProgressBar(int value);
+   void slotConnected();
+   void slotError(QAbstractSocket::SocketError error);
+   void slotStateChanged(QAbstractSocket::SocketState state);
+ signals:
+   void transferDone();
+   void transferFail(QString error);
+
    void onChangeStatus(QString status);
    void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-   void transferDone();
-   void transferFail(QString error);
-// Form
-   void slotReadyBtnClicked();
-   void slotOpenFileClicked();
-// Thread
-// MainMenu
-   void slotAboutProgram();
-   void slotActionExit();
-   void slotActionManagerRun();
 };
