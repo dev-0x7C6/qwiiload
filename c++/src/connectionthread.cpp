@@ -39,24 +39,48 @@ void QConnectionThread::run(){
  Network = new QTcpSocket(this);
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
- connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- Network->connectToHost(wiiHost, wiiPort); 
+ Network->connectToHost(wiiHost, wiiPort);
+ emit onChangeStatus("Resolving hostname...");
  exec();
 }
 
-void QConnectionThread::disconnectAnyway(){ 
- StreamThread->quit();
- Network->disconnectFromHost();
+void QConnectionThread::slotError(QAbstractSocket::SocketError error){
+ QString strError = Network->errorString();
+ if (StreamThread->isRunning() == TRUE)
+ {
+  StreamThread->breakLoop();
+  StreamThread->setTerminationEnabled(TRUE);
+ }
+ emit transferFail(strError);
+ terminate();
 }
 
-void QConnectionThread::updateProgressBar(int value)
-{
- emit setProgressBarValue(value);
+void QConnectionThread::disconnectAnyway(){
+ if (StreamThread->isRunning() == TRUE)
+ {
+  StreamThread->breakLoop();
+  StreamThread->setTerminationEnabled(TRUE);
+ }
+ Network->disconnectFromHost();
+ emit transferFail(strError);
+}
+
+
+void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
+ switch(state) {
+  case QAbstractSocket::UnconnectedState: currentStatus = "Disconnected"; break;
+  case QAbstractSocket::HostLookupState: currentStatus = "Resolving hostname..."; break;
+  case QAbstractSocket::ConnectingState: currentStatus = "Connecting..."; break;
+  case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
+  case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
+ }
+ emit onChangeStatus(currentStatus);
 }
 
 
 void QConnectionThread::slotConnected()
 {
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
  unsigned char datagram[4];
  if (wiiPort == 4299)
  {
@@ -97,26 +121,4 @@ void QConnectionThread::slotConnected()
  StreamThread->setFile(file);
  StreamThread->setSocket(Network);
  StreamThread->start();
-}
-
-void QConnectionThread::slotError(QAbstractSocket::SocketError error){
- QString strError = Network->errorString();
- emit transferFail(strError);
- terminate();
-}
-
-void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
- switch(state) {
-  case QAbstractSocket::UnconnectedState: currentStatus = "Disconnected"; break;
-  case QAbstractSocket::HostLookupState: currentStatus = "Resolving hostname..."; break;
-  case QAbstractSocket::ConnectingState: currentStatus = "Connecting..."; break;
-  case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
-  case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
- }
- emit onChangeStatus(currentStatus);
- if (state == QAbstractSocket::UnconnectedState || Network->error() ) 
- {
-  //emit transferDone();
- // terminate();
- }
 }

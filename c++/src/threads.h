@@ -27,28 +27,6 @@ class QThread;
 class QTcpSocket;
 class QFile;
 
-class QStreamThread: public QThread
-{
-Q_OBJECT
- private:
-   QTcpSocket *Network;
-   QFile *streamFile;
-   bool breakMainLoop;
- public:
-   QStreamThread(QObject *parent = 0);
-   ~QStreamThread(){};
-
-   void setFile(QFile *file = 0){ streamFile = file; };
-   void setSocket(QTcpSocket *socket = 0){ Network = socket; };
- protected:
-   void run();
- public slots:
-   void breakLoop();
- signals:
-   void waitTimeout();
-   void updateProgressBar(int value);
-};
-
 class QConnectionThread: public QThread
 {
 Q_OBJECT
@@ -69,8 +47,9 @@ Q_OBJECT
    void disconnectAnyway();
  protected:
     void run();
+ public slots:
+   void updateProgressBar(int value){ emit setProgressBarValue(value); };
  private slots:
-   void updateProgressBar(int value);
    void slotConnected();
    void slotError(QAbstractSocket::SocketError error);
    void slotStateChanged(QAbstractSocket::SocketState state);

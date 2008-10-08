@@ -126,8 +126,10 @@ void MainForm::slotReadyBtnClicked()
   connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
   connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
   connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
+ 
   connect(ConnectionThread, SIGNAL(transferDone()), this, SLOT(transferDone())); 
   connect(ConnectionThread, SIGNAL(transferFail(QString)), this, SLOT(transferFail(QString))); 
+
   ConnectionThread->start();
 
  } else {
