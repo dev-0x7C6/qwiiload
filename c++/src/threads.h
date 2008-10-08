@@ -35,9 +35,9 @@ Q_OBJECT
    QString wiiFile;
    int wiiPort;
    QString currentStatus;
-   QTcpSocket *Network;
-   QStreamThread *StreamThread;
  public:
+   QTcpSocket *Network;
+
    QConnectionThread(QObject *parent = 0, QStreamThread *thread = 0);
    ~QConnectionThread();
 
@@ -47,12 +47,6 @@ Q_OBJECT
    void disconnectAnyway();
  protected:
     void run();
- public slots:
-   void updateProgressBar(int value){ emit setProgressBarValue(value); };
- private slots:
-   void slotConnected();
-   void slotError(QAbstractSocket::SocketError error);
-   void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
    void transferDone();
    void transferFail(QString error);

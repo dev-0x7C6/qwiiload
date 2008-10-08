@@ -112,12 +112,9 @@ void MainForm::slotReadyBtnClicked()
 
   setCancelMode();
 
-  QStreamThread *streamThread;
-  streamThread = new QStreamThread(this);
   ConnectionThread = new QConnectionThread(this, streamThread);
   ConnectionThread->setHost(Hostname);
   ConnectionThread->setFile(fileName);
-  connect(streamThread, SIGNAL(updateProgressBar(int)), ConnectionThread, SLOT(updateProgressBar(int)));
 
   switch(ui.channelSelect->currentIndex()) {
    case 0: ConnectionThread->setPort(4299); break;
@@ -126,7 +123,6 @@ void MainForm::slotReadyBtnClicked()
   connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
   connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
   connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
- 
   connect(ConnectionThread, SIGNAL(transferDone()), this, SLOT(transferDone())); 
   connect(ConnectionThread, SIGNAL(transferFail(QString)), this, SLOT(transferFail(QString))); 
 
@@ -141,6 +137,8 @@ void MainForm::slotReadyBtnClicked()
   ConnectionThread->quit();
  }
 }
+
+
 
 void MainForm::transferDone(){
  defaultProgressBar(FALSE, 100, 0, 0); 

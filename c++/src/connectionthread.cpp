@@ -46,11 +46,7 @@ void QConnectionThread::run(){
 
 void QConnectionThread::slotError(QAbstractSocket::SocketError error){
  QString strError = Network->errorString();
- if (StreamThread->isRunning() == TRUE)
- {
-  StreamThread->breakLoop();
-  StreamThread->setTerminationEnabled(TRUE);
- }
+
  emit transferFail(strError);
  terminate();
 }

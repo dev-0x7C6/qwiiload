@@ -46,10 +46,16 @@ Q_OBJECT
    void defaultProgressBar(bool enabled, int max, int min, int value);
    void setReadyMode();
    void setCancelMode();
+
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~MainForm();
+
+ private slots:
+   void slotError(QAbstractSocket::SocketError error);
+   void slotStateChanged(QAbstractSocket::SocketState state);
+
  public slots:
    void onChangeStatus(QString status);
    void setProgressBarState(bool enabled, int max, int min, int value);
