@@ -44,6 +44,8 @@ Q_OBJECT
    QFileDialog *FileDialog;
    QConnectionThread *ConnectionThread;
    void defaultProgressBar(bool enabled, int max, int min, int value);
+   void setReadyMode();
+   void setCancelMode();
  public:
    mainform ui;
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
@@ -52,8 +54,8 @@ Q_OBJECT
    void onChangeStatus(QString status);
    void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-   void setReadyBtnEnabled();
-   void showSocketError(QAbstractSocket::SocketError error);
+   void transferDone();
+   void transferFail(QAbstractSocket::SocketError error);
 // Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();

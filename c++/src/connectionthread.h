@@ -20,21 +20,38 @@
 
 #include <QThread>
 #include <QTcpSocket>
+#include <QFile>
 
 class QString;
 class QThread;
 class QTcpSocket;
+class QFile;
+
+class QStreamThread: public QThread
+{
+Q_OBJECT
+ private:
+   QTcpSocket *Network;
+   QFile *streamFile;
+ public:
+   QStreamThread(QTcpSocket *socket = 0 , QFile *file = 0);
+   ~QStreamThread(){};
+ protected:
+   void run();
+ signals:
+   void updateProgressBar(int value);
+};
 
 class QConnectionThread: public QThread
 {
 Q_OBJECT
  private:
-   QAbstractSocket::SocketState lastStatus;
    QString wiiHost;
    QString wiiFile;
    int wiiPort;
    QString currentStatus;
    QTcpSocket *Network;
+   QStreamThread *StreamThread;
  public:
    QConnectionThread(QObject *parent = 0);
    ~QConnectionThread();
@@ -46,13 +63,15 @@ Q_OBJECT
  protected:
     void run();
  private slots:
+   void updateProgressBar(int value);
    void slotConnected();
    void slotError(QAbstractSocket::SocketError error);
    void slotStateChanged(QAbstractSocket::SocketState state);
  signals:
+   void transferDone();
+   void transferFail(QAbstractSocket::SocketError error);
+
    void onChangeStatus(QString status);
    void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-   void setReadyBtnEnabled();
-   void showSocketError(QAbstractSocket::SocketError error);
 };

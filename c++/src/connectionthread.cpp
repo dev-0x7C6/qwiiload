@@ -22,38 +22,65 @@
 #include <QMetaType>
 
 #include <QDataStream>
-#include <QFile>
+#include <QApplication>
 
 class QDataStream;
-class QFile;
 class QFileInfo;
 
 QConnectionThread::QConnectionThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
- lastStatus = QAbstractSocket::UnconnectedState;
 }
 
 QConnectionThread::~QConnectionThread(){}
 
-
-void QConnectionThread::run()
-{
- Network = new QTcpSocket();
+void QConnectionThread::run(){
+ Network = new QTcpSocket(this);
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- Network->connectToHost(wiiHost, wiiPort);
+ Network->connectToHost(wiiHost, wiiPort); 
  exec();
 }
 
-void QConnectionThread::disconnectAnyway()
-{
+void QConnectionThread::disconnectAnyway(){ 
+ StreamThread->quit();
  Network->disconnectFromHost();
 }
 
+QStreamThread::QStreamThread(QTcpSocket *socket, QFile *file){ 
+ Network = socket;
+ streamFile = file;
+}
+
+void QStreamThread::run()
+{
+ char buffer[256];
+ int readed, total = 0;
+ QDataStream readfile(streamFile);
+
+ while (!readfile.atEnd()) {
+  readed = readfile.readRawData(buffer, sizeof(buffer));
+  total += readed;
+  Network->write((const char *)&buffer, readed);
+  Network->waitForBytesWritten(-1);
+  emit updateProgressBar(total);
+ }
+
+ Network->disconnectFromHost();
+ delete streamFile;
+}
+
+
+void QConnectionThread::updateProgressBar(int value)
+{
+ emit setProgressBarValue(value);
+}
+
+
 void QConnectionThread::slotConnected()
 {
+ //Network->moveToThread();
  unsigned char datagram[4];
  if (wiiPort == 4299)
  {
@@ -63,48 +90,42 @@ void QConnectionThread::slotConnected()
   header[2] = 'X';
   header[3] = 'X';
   Network->write((const char *)&header, sizeof(header));
+  Network->waitForBytesWritten(-1);
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
+  Network->waitForBytesWritten(-1);
  }
 
- QFile file(wiiFile);
- if (!file.open(QIODevice::ReadOnly))
- {
+ QFile *file;
+ file = new QFile(wiiFile);
+ if (!file->open(QIODevice::ReadOnly)) {
+  emit transferFail(QAbstractSocket::RemoteHostClosedError);
   return;
  }
 
- int FileSize = file.size();
+ int FileSize = file->size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
  Network->write((const char *)&datagram, sizeof(datagram));
+ Network->waitForBytesWritten(-1);
  emit setProgressBarState(TRUE, FileSize, 0, 0);
-
- char buffer[4096];
- int readed, total = 0;
- QDataStream readfile(&file);
 
  currentStatus = "Stream data...";
  emit onChangeStatus(currentStatus);
 
- while (!readfile.atEnd()) {
-  readed = readfile.readRawData(buffer, sizeof(buffer));
-  total += readed;
-  Network->write((const char *)&buffer, readed);
-  emit setProgressBarValue(total);
- }
- emit setProgressBarState(TRUE, FileSize, 0, 0);
- Network->disconnectFromHost();
+ StreamThread = new QStreamThread(Network, file);
+ connect(StreamThread, SIGNAL(updateProgressBar(int)), this, SLOT(updateProgressBar(int)));
+ StreamThread->start();
 }
 
-void QConnectionThread::slotError(QAbstractSocket::SocketError error)
-{
- emit showSocketError(error);
- emit setReadyBtnEnabled();
+void QConnectionThread::slotError(QAbstractSocket::SocketError error){
+ StreamThread->quit();
+ emit transferFail(error);
  quit();
 }
 
@@ -116,6 +137,10 @@ void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
   case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
   case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
  }
- if (state == QAbstractSocket::UnconnectedState) emit setReadyBtnEnabled();
  emit onChangeStatus(currentStatus);
+ if (state == QAbstractSocket::UnconnectedState) 
+ {
+  emit transferDone();
+  quit();
+ }
 }

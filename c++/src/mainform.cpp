@@ -43,7 +43,6 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 }
 
 MainForm::~MainForm(){
- ConnectionThread->quit();
  delete FileDialog;
 }
 
@@ -80,6 +79,16 @@ void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
 void MainForm::setProgressBarState(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
 void MainForm::setProgressBarValue(int value){ ui.progressBar->setValue(value); }
 
+void MainForm::setReadyMode(){
+ ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
+ ui.readyBtn->setText("ready");
+}
+
+void MainForm::setCancelMode(){
+ ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_cancel.png")));
+ ui.readyBtn->setText("cancel");
+}
+
 void MainForm::slotReadyBtnClicked()
 {
  if (ui.readyBtn->text() == QString("ready")) {
@@ -101,8 +110,7 @@ void MainForm::slotReadyBtnClicked()
    return;
   }
 
-  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_cancel.png")));
-  ui.readyBtn->setText("cancel");
+  setCancelMode();
 
   ConnectionThread = new QConnectionThread(this);
   ConnectionThread->setHost(Hostname);
@@ -112,33 +120,30 @@ void MainForm::slotReadyBtnClicked()
    case 0: ConnectionThread->setPort(4299); break;
    case 1: ConnectionThread->setPort(8080); break;
   }
-
   connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
   connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
   connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
-
-  connect(ConnectionThread, SIGNAL(setReadyBtnEnabled()), this, SLOT(setReadyBtnEnabled())); 
-  connect(ConnectionThread, SIGNAL(showSocketError(QAbstractSocket::SocketError)), this, SLOT(showSocketError(QAbstractSocket::SocketError))); 
+  connect(ConnectionThread, SIGNAL(transferDone()), this, SLOT(transferDone())); 
+  connect(ConnectionThread, SIGNAL(transferFail(QAbstractSocket::SocketError)), this, SLOT(transferFail(QAbstractSocket::SocketError))); 
   ConnectionThread->start();
+
  } else {
   defaultProgressBar(FALSE, 100, 0, 0);
-  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
-  ui.readyBtn->setText("ready");
+  setReadyMode();
+  ui.statusLabel->setText("Disconnected");
+
   ConnectionThread->disconnectAnyway();
   ConnectionThread->quit();
-  ui.statusLabel->setText("Disconnected");
  }
 }
 
-void MainForm::setReadyBtnEnabled()
-{
- defaultProgressBar(FALSE, 100, 0, 0);
- ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
- ui.readyBtn->setText("ready");
+void MainForm::transferDone(){
+ defaultProgressBar(FALSE, 100, 0, 0); 
+ setReadyMode();
+ QMessageBox::information(this, trUtf8("Done"),trUtf8("File was successful transfered"));
 }
 
-
-void MainForm::showSocketError(QAbstractSocket::SocketError error)
+void MainForm::transferFail(QAbstractSocket::SocketError error)
 {
  defaultProgressBar(FALSE, 100, 0, 0);
  QString msgError = "Unknown socket error";
@@ -155,4 +160,6 @@ void MainForm::showSocketError(QAbstractSocket::SocketError error)
   case QAbstractSocket::ProxyAuthenticationRequiredError: msgError = "The socket is using a proxy, and the proxy requires authentication."; break;
  }
  QMessageBox::critical(this, trUtf8("Critical"), msgError);
+ ui.statusLabel->setText("Disconnected");
+ setReadyMode();
 }
