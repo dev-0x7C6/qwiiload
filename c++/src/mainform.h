@@ -35,7 +35,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02svn (broken)";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.02svn (untested)";
 
 class MainForm: public QMainWindow
 {
@@ -64,8 +64,6 @@ Q_OBJECT
    void progressSetup(bool enabled, int max, int min, int value);
    void progressValue(int value);
    void statusMessage(QString msg){ ui.statusLabel->setText(msg); };
-  // void transferDone();
-  // void transferFail(QString error);
 // Form
    void slotReadyBtnClicked();
    void slotOpenFileClicked();
@@ -74,6 +72,4 @@ Q_OBJECT
    void slotAboutProgram();
    void slotActionExit();
    void slotActionManagerRun();
-  signals:
-   //void disconnect();
 };

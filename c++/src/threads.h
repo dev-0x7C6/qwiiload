@@ -80,11 +80,3 @@ Q_OBJECT
    void statusMessage(QString msg);
 };
 
-/*
-signals:
-   void transferDone();
-   void transferFail(QString error);
-
-   void setProgressBarState(bool enabled, int max, int min, int value);
-   void setProgressBarValue(int value);
-*/
