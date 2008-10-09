@@ -142,6 +142,7 @@ void MainForm::slotReadyBtnClicked()
   ui.statusLabel->setText("Disconnected");
   defaultProgressBar(FALSE, 100, 0, 0);
   setReadyMode();
+  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Transfer interrupted"));
  }
 }
 
@@ -149,7 +150,7 @@ void MainForm::slotDone()
 {
  disconnect(&networkThread, 0, 0, 0);
  disconnect(&nstreamThread, 0, 0, 0);
- QMessageBox::information(this, trUtf8("Warning"), trUtf8("Transfer successful"));
+ QMessageBox::information(this, trUtf8("Information"), trUtf8("Transfer successful"));
  defaultProgressBar(FALSE, 100, 0, 0);
  ui.statusLabel->setText("Disconnected");
  networkThread.quit();
@@ -161,7 +162,7 @@ void MainForm::slotFail()
 {
  disconnect(&networkThread, 0, 0, 0);
  disconnect(&nstreamThread, 0, 0, 0);
- QMessageBox::information(this, trUtf8("Warning"), trUtf8("Transfer failed"));
+ QMessageBox::critical(this, trUtf8("Critical"), trUtf8("Transfer failed"));
  nstreamThread.cancel();
  nstreamThread.wait();
  networkThread.quit();
