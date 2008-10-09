@@ -27,9 +27,6 @@ class QFileInfo;
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
- networkThread = new QNetworkThread(this);
- nstreamThread = new QStreamThread(this);
- connect(networkThread, SIGNAL(error(QString)), this, SLOT(onError(QString)));
 
  ui.setupUi(this);
  setMaximumHeight(height());
@@ -47,8 +44,13 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 }
 
 MainForm::~MainForm(){
- networkThread->terminate();
- nstreamThread->terminate();
+ disconnect(&networkThread, 0, 0, 0);
+ disconnect(&nstreamThread, 0, 0, 0);
+ nstreamThread.cancel();
+ nstreamThread.wait();
+ networkThread.quit();
+ networkThread.wait();
+ 
  delete FileDialog;
 }
 
@@ -80,40 +82,8 @@ void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
  ui.progressBar->setValue(value);
 }
 
-/*
-void MainForm::onChangeStatus(QString status){ui.statusLabel->setText(status);}
-
-
-
-void MainForm::setProgressBarState(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
-void MainForm::setProgressBarValue(int value){ ui.progressBar->setValue(value); }
-
-
-void MainForm::slotStateChanged(QAbstractSocket::SocketState state){
-
-}
-
-void MainForm::slotError(QAbstractSocket::SocketError error){
- QMessageBox::critical(this, trUtf8("Critical"), ConnectionThread->Network->errorString());
-}
-
-
-void MainForm::transferDone(){
- defaultProgressBar(FALSE, 100, 0, 0); 
- setReadyMode();
- QMessageBox::information(this, trUtf8("Done"),trUtf8("File was successful transfered"));
-}
-
-void MainForm::transferFail(QString error)
-{
- defaultProgressBar(FALSE, 100, 0, 0);
- QMessageBox::critical(this, trUtf8("Critical"), error);
- ui.statusLabel->setText("Disconnected");
- setReadyMode();
-}
-
-
-*/
+void MainForm::progressSetup(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
+void MainForm::progressValue(int value){ ui.progressBar->setValue(value); }
 
 void MainForm::setReadyMode(){
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
@@ -149,39 +119,70 @@ void MainForm::slotReadyBtnClicked()
 
   setCancelMode();
   defaultProgressBar(FALSE, 100, 0, 0);
-  networkThread->setHost(Hostname);
+  networkThread.setHost(Hostname);
 
   switch(ui.channelSelect->currentIndex()) {
-   case 0: networkThread->setPort(4299); break;
-   case 1: networkThread->setPort(8080); break;
+   case 0: networkThread.setPort(4299); break;
+   case 1: networkThread.setPort(8080); break;
   }
+  disconnect(&networkThread, 0, 0, 0);
+  disconnect(&nstreamThread, 0, 0, 0);
 
-  networkThread->start();
-  connect(networkThread, SIGNAL(connected(QTcpSocket)), this, SLOT(onConnected(QTcpSocket)));
-
-
-  //connect(ConnectionThread, SIGNAL(onChangeStatus(QString)), this, SLOT(onChangeStatus(QString)));
-  //connect(ConnectionThread, SIGNAL(setProgressBarState(bool, int, int, int)), this, SLOT(setProgressBarState(bool, int, int, int)));
-  //connect(ConnectionThread, SIGNAL(setProgressBarValue(int)), this, SLOT(setProgressBarValue(int)));
-  //connect(ConnectionThread, SIGNAL(transferDone()), this, SLOT(transferDone())); 
-  //connect(ConnectionThread, SIGNAL(transferFail(QString)), this, SLOT(transferFail(QString))); 
-
-  // connect(ConnectionThread->Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
-  //  connect(ConnectionThread->Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+  networkThread.start();
+  connect(&networkThread, SIGNAL(connected(QTcpSocket*)), this, SLOT(onConnected(QTcpSocket*)));
+  connect(&networkThread, SIGNAL(state(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
 
  } else {
+  disconnect(&networkThread, 0, 0, 0);
+  disconnect(&nstreamThread, 0, 0, 0);
+  nstreamThread.cancel();
+  nstreamThread.wait();
+  networkThread.quit();
+  networkThread.wait();
+  ui.statusLabel->setText("Disconnected");
   defaultProgressBar(FALSE, 100, 0, 0);
   setReadyMode();
-
-  //ConnectionThread->quit();
  }
+}
+
+void MainForm::slotDone()
+{
+ disconnect(&networkThread, 0, 0, 0);
+ disconnect(&nstreamThread, 0, 0, 0);
+ QMessageBox::information(this, trUtf8("Warning"), trUtf8("Transfer successful"));
+ defaultProgressBar(FALSE, 100, 0, 0);
+ ui.statusLabel->setText("Disconnected");
+ networkThread.quit();
+ networkThread.wait();
+ setReadyMode();
+}
+
+void MainForm::slotFail()
+{
+ disconnect(&networkThread, 0, 0, 0);
+ disconnect(&nstreamThread, 0, 0, 0);
+ QMessageBox::information(this, trUtf8("Warning"), trUtf8("Transfer failed"));
+ nstreamThread.cancel();
+ nstreamThread.wait();
+ networkThread.quit();
+ networkThread.wait();
+ ui.statusLabel->setText("Disconnected");
+ defaultProgressBar(FALSE, 100, 0, 0);
+ setReadyMode();
 }
 
 void MainForm::onConnected(QTcpSocket *socket)
 {
- nstreamThread->setSock(socket);
- nstreamThread->setFile(fileName);
- nstreamThread->start();
+ disconnect(&nstreamThread, 0, 0, 0);
+ nstreamThread.setSock(socket);
+ nstreamThread.setFile(fileName);
+ connect(&networkThread, SIGNAL(error(QString)), this, SLOT(onError(QString)));
+ connect(&nstreamThread, SIGNAL(progressSetup(bool, int, int, int)), this, SLOT(progressSetup(bool, int, int, int)));
+ connect(&nstreamThread, SIGNAL(progressValue(int)), this, SLOT(progressValue(int)));
+ connect(&nstreamThread, SIGNAL(statusMessage(QString)), this, SLOT(statusMessage(QString)));
+ connect(&nstreamThread, SIGNAL(done()), this, SLOT(slotDone()));
+ connect(&nstreamThread, SIGNAL(fail()), this, SLOT(slotFail()));
+ nstreamThread.start();
 }
 
 void MainForm::onState(QAbstractSocket::SocketState value)

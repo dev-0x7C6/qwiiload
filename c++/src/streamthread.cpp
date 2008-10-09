@@ -22,6 +22,7 @@
 
 #include <QDataStream>
 
+
 class QDataStream;
 class QFileInfo;
 
@@ -35,6 +36,8 @@ QStreamThread::QStreamThread(QObject *parent):QThread(parent){
 QStreamThread::~QStreamThread(){}
 
 void QStreamThread::run(){
+ emit statusMessage("Stream data...");
+ breakLoop = FALSE;
  unsigned char datagram[4];
  if (Network->peerPort() == 4299)
  {
@@ -44,13 +47,19 @@ void QStreamThread::run(){
   header[2] = 'X';
   header[3] = 'X';
   Network->write((const char *)&header, sizeof(header));
-  Network->waitForBytesWritten(-1);
+  if (Network->waitForBytesWritten(timeOut) == FALSE){
+   emit fail();
+   return;
+  }
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
-  Network->waitForBytesWritten(-1);
+  if (Network->waitForBytesWritten(timeOut) == FALSE){
+   emit fail();
+   return;
+  }
  }
  QFile file(sourceFile);
  if (!file.open(QIODevice::ReadOnly)) {
@@ -64,20 +73,27 @@ void QStreamThread::run(){
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
  Network->write((const char *)&datagram, sizeof(datagram));
- Network->waitForBytesWritten(-1);
- //emit setProgressBarState(TRUE, FileSize, 0, 0);
+ if (Network->waitForBytesWritten(timeOut) == FALSE){
+  emit fail();
+  return;
+ }
+ emit progressSetup(TRUE, FileSize, 0, 0);
 
  char buffer[256];
  int readed, total = 0;
  QDataStream readfile(&file);
 
  while (!readfile.atEnd()) {
+  if (breakLoop == TRUE) return;
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
   Network->write((const char *)&buffer, readed);
-  //emit setProgressBarValue(total);
+  if (Network->waitForBytesWritten(timeOut) == FALSE){
+   emit fail();
+   return;
+  }
+  emit progressValue(total);
  }
  Network->disconnectFromHost();
+ emit done();
 }
-
-void QStreamThread::onError(){}

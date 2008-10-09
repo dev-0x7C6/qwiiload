@@ -42,8 +42,8 @@ class MainForm: public QMainWindow
 Q_OBJECT
  private:
    QFileDialog *FileDialog;
-   QNetworkThread *networkThread;
-   QStreamThread *nstreamThread;
+   QNetworkThread networkThread;
+   QStreamThread nstreamThread;
    void defaultProgressBar(bool enabled, int max, int min, int value);
    void setReadyMode();
    void setCancelMode();
@@ -57,13 +57,13 @@ Q_OBJECT
    void onConnected(QTcpSocket *socket);
    void onState(QAbstractSocket::SocketState value);
    void onError(QString error);
-   //void slotError(QAbstractSocket::SocketError error);
-  // void slotStateChanged(QAbstractSocket::SocketState state);
+   void slotDone();
+   void slotFail();
 
  public slots:
-  // void onChangeStatus(QString status);
-  // void setProgressBarState(bool enabled, int max, int min, int value);
-  // void setProgressBarValue(int value);
+   void progressSetup(bool enabled, int max, int min, int value);
+   void progressValue(int value);
+   void statusMessage(QString msg){ ui.statusLabel->setText(msg); };
   // void transferDone();
   // void transferFail(QString error);
 // Form

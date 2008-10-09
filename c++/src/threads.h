@@ -28,6 +28,7 @@ class QThread;
 class QTcpSocket;
 class QFile;
 
+const quint16 timeOut = 5000;
 
 class QNetworkThread: public QThread
 {
@@ -60,6 +61,7 @@ Q_OBJECT
  private:
    QTcpSocket *Network;
    QString sourceFile;
+   bool breakLoop;
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread();
@@ -68,10 +70,14 @@ Q_OBJECT
  protected:
    void run();
  public slots:
-   void onError();
+   void cancel(){ breakLoop = TRUE; };
  signals:
    void done();
    void fail();
+ signals:
+   void progressSetup(bool enabled, int max, int min, int value);
+   void progressValue(int value);
+   void statusMessage(QString msg);
 };
 
 /*

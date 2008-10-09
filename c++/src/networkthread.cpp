@@ -37,4 +37,5 @@ void QNetworkThread::run(){
  connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
  Network->connectToHost(wiiHost, wiiPort);
  exec();
+ disconnect(Network, 0, 0, 0);
 }
