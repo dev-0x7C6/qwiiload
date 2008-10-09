@@ -38,7 +38,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 // MainMenu
  connect(ui.actionOpen, SIGNAL(triggered()), this, SLOT(slotOpenFileClicked()));
  connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(slotActionExit()));
- connect(ui.actionManagerRun, SIGNAL(triggered()), this, SLOT(slotActionManagerRun()));
+// connect(ui.actionManagerRun, SIGNAL(triggered()), this, SLOT(slotActionManagerRun()));
  connect(ui.actionAboutProgram, SIGNAL(triggered()), this, SLOT(slotAboutProgram()));
  connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }

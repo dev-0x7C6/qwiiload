@@ -43,7 +43,7 @@
       <item row="0" column="1" colspan="2" >
        <widget class="QLineEdit" name="wiiHostName" >
         <property name="statusTip" >
-         <string>Set wii hostname</string>
+         <string>Hostname</string>
         </property>
        </widget>
       </item>
@@ -57,14 +57,14 @@
       <item row="1" column="1" >
        <widget class="QLineEdit" name="localFile" >
         <property name="statusTip" >
-         <string>Chose file to send</string>
+         <string>Local file</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2" >
        <widget class="QToolButton" name="openFile" >
         <property name="statusTip" >
-         <string>Chose file to send</string>
+         <string>Chose local file to stream</string>
         </property>
         <property name="text" >
          <string>...</string>
@@ -81,7 +81,7 @@
       <item row="2" column="1" colspan="2" >
        <widget class="QComboBox" name="channelSelect" >
         <property name="statusTip" >
-         <string>Chose your channel</string>
+         <string>Select your channel</string>
         </property>
         <item>
          <property name="text" >
@@ -129,7 +129,7 @@
          </sizepolicy>
         </property>
         <property name="statusTip" >
-         <string>Connect and send file</string>
+         <string>Connect &amp; stream file</string>
         </property>
         <property name="text" >
          <string>ready</string>
@@ -180,14 +180,7 @@
     <addaction name="actionAboutQt" />
     <addaction name="actionAboutProgram" />
    </widget>
-   <widget class="QMenu" name="menuManager" >
-    <property name="title" >
-     <string>Manager</string>
-    </property>
-    <addaction name="actionManagerRun" />
-   </widget>
    <addaction name="menuFile" />
-   <addaction name="menuManager" />
    <addaction name="menuHelp" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
