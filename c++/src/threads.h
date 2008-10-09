@@ -21,37 +21,64 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QFile>
+#include <QMetaType>
 
 class QString;
 class QThread;
 class QTcpSocket;
 class QFile;
 
-class QConnectionThread: public QThread
+
+class QNetworkThread: public QThread
 {
 Q_OBJECT
  private:
    QString wiiHost;
-   QString wiiFile;
-   int wiiPort;
-   QString currentStatus;
- public:
+   quint16 wiiPort;
    QTcpSocket *Network;
-
-   QConnectionThread(QObject *parent = 0, QStreamThread *thread = 0);
-   ~QConnectionThread();
-
-   void setHost(QString Host){wiiHost = Host;};
-   void setFile(QString File){wiiFile = File;};
-   void setPort(int Port){wiiPort = Port;};
-   void disconnectAnyway();
+ public:
+   QNetworkThread(QObject *parent = 0);
+   ~QNetworkThread();
+   void setHost(QString host){ wiiHost = host; };
+   void setPort(quint16 port){ wiiPort = port; };
  protected:
     void run();
+ private slots:
+   void onConnected(){ emit connected(Network); };
+   void onError(){ emit error(Network->errorString()); };
+   void onState(QAbstractSocket::SocketState value){ emit state(value); };
  signals:
+   void connected(QTcpSocket *socket);
+   void state(QAbstractSocket::SocketState state);
+   void error(QString error);
+};
+
+
+class QStreamThread: public QThread
+{
+Q_OBJECT
+ private:
+   QTcpSocket *Network;
+   QString sourceFile;
+ public:
+   QStreamThread(QObject *parent = 0);
+   ~QStreamThread();
+   void setSock(QTcpSocket *socket){ Network = socket; };
+   void setFile(QString file){ sourceFile = file; };
+ protected:
+   void run();
+ public slots:
+   void onError();
+ signals:
+   void done();
+   void fail();
+};
+
+/*
+signals:
    void transferDone();
    void transferFail(QString error);
 
-   void onChangeStatus(QString status);
    void setProgressBarState(bool enabled, int max, int min, int value);
    void setProgressBarValue(int value);
-};
+*/

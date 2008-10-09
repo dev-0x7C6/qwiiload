@@ -18,62 +18,23 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ui_mainform.h"
 #include "threads.h"
-#include "manager.h"
-#include "about.h"
 
+#include <QMetaType>
 
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QTextCodec>
-#include <QTcpSocket>
+QNetworkThread::QNetworkThread(QObject *parent):QThread(parent){
+ qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
+ qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+ setTerminationEnabled(FALSE);
+}
 
-using namespace Ui;
+QNetworkThread::~QNetworkThread(){}
 
-class QDialog;
-class QThread;
-class QWidget;
-
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02svn (broken)";
-
-class MainForm: public QMainWindow
-{
-Q_OBJECT
- private:
-   QFileDialog *FileDialog;
-   QNetworkThread *networkThread;
-   QStreamThread *nstreamThread;
-   void defaultProgressBar(bool enabled, int max, int min, int value);
-   void setReadyMode();
-   void setCancelMode();
-
- public:
-   mainform ui;
-   MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
-   ~MainForm();
-
- private slots:
-   void onConnected(QTcpSocket *socket);
-   void onState(QAbstractSocket::SocketState value);
-   void onError(QString error);
-   //void slotError(QAbstractSocket::SocketError error);
-  // void slotStateChanged(QAbstractSocket::SocketState state);
-
- public slots:
-  // void onChangeStatus(QString status);
-  // void setProgressBarState(bool enabled, int max, int min, int value);
-  // void setProgressBarValue(int value);
-  // void transferDone();
-  // void transferFail(QString error);
-// Form
-   void slotReadyBtnClicked();
-   void slotOpenFileClicked();
-// Thread
-// MainMenu
-   void slotAboutProgram();
-   void slotActionExit();
-   void slotActionManagerRun();
-  signals:
-   //void disconnect();
-};
+void QNetworkThread::run(){
+ Network = new QTcpSocket();
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
+ connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
+ Network->connectToHost(wiiHost, wiiPort);
+ exec();
+}

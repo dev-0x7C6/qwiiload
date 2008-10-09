@@ -19,66 +19,24 @@
  ***************************************************************************/
 
 #include "threads.h"
-#include <QMetaType>
 
 #include <QDataStream>
-#include <QApplication>
 
 class QDataStream;
 class QFileInfo;
 
-QConnectionThread::QConnectionThread(QObject *parent, QStreamThread *thread):QThread(parent){
+
+QStreamThread::QStreamThread(QObject *parent):QThread(parent){
  qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
- StreamThread = thread;
+ setTerminationEnabled(FALSE);
 }
 
-QConnectionThread::~QConnectionThread(){}
+QStreamThread::~QStreamThread(){}
 
-void QConnectionThread::run(){
- Network = new QTcpSocket(this);
- connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
- connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
- Network->connectToHost(wiiHost, wiiPort);
- emit onChangeStatus("Resolving hostname...");
- exec();
-}
-
-void QConnectionThread::slotError(QAbstractSocket::SocketError error){
- QString strError = Network->errorString();
-
- emit transferFail(strError);
- terminate();
-}
-
-void QConnectionThread::disconnectAnyway(){
- if (StreamThread->isRunning() == TRUE)
- {
-  StreamThread->breakLoop();
-  StreamThread->setTerminationEnabled(TRUE);
- }
- Network->disconnectFromHost();
- emit transferFail(strError);
-}
-
-
-void QConnectionThread::slotStateChanged(QAbstractSocket::SocketState state){
- switch(state) {
-  case QAbstractSocket::UnconnectedState: currentStatus = "Disconnected"; break;
-  case QAbstractSocket::HostLookupState: currentStatus = "Resolving hostname..."; break;
-  case QAbstractSocket::ConnectingState: currentStatus = "Connecting..."; break;
-  case QAbstractSocket::ConnectedState: currentStatus = "Connected"; break;
-  case QAbstractSocket::ClosingState: currentStatus = "Waiting for close connection..."; break;
- }
- emit onChangeStatus(currentStatus);
-}
-
-
-void QConnectionThread::slotConnected()
-{
- connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
+void QStreamThread::run(){
  unsigned char datagram[4];
- if (wiiPort == 4299)
+ if (Network->peerPort() == 4299)
  {
   char header[4];
   header[0] = 'H';
@@ -94,27 +52,32 @@ void QConnectionThread::slotConnected()
   Network->write((const char *)&datagram, sizeof(datagram));
   Network->waitForBytesWritten(-1);
  }
-
- QFile *file;
- file = new QFile(wiiFile);
- if (!file->open(QIODevice::ReadOnly)) {
-  emit transferFail("Can't open file to the read");
+ QFile file(sourceFile);
+ if (!file.open(QIODevice::ReadOnly)) {
+  emit fail();
   return;
  }
 
- int FileSize = file->size();
+ int FileSize = file.size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
  Network->write((const char *)&datagram, sizeof(datagram));
  Network->waitForBytesWritten(-1);
- emit setProgressBarState(TRUE, FileSize, 0, 0);
+ //emit setProgressBarState(TRUE, FileSize, 0, 0);
 
- currentStatus = "Stream data...";
- emit onChangeStatus(currentStatus);
+ char buffer[256];
+ int readed, total = 0;
+ QDataStream readfile(&file);
 
- StreamThread->setFile(file);
- StreamThread->setSocket(Network);
- StreamThread->start();
+ while (!readfile.atEnd()) {
+  readed = readfile.readRawData(buffer, sizeof(buffer));
+  total += readed;
+  Network->write((const char *)&buffer, readed);
+  //emit setProgressBarValue(total);
+ }
+ Network->disconnectFromHost();
 }
+
+void QStreamThread::onError(){}
