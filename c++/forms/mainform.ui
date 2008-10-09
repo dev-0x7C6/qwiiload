@@ -64,7 +64,7 @@
       <item row="1" column="2" >
        <widget class="QToolButton" name="openFile" >
         <property name="statusTip" >
-         <string>Chose local file to stream</string>
+         <string>Open</string>
         </property>
         <property name="text" >
          <string>...</string>
