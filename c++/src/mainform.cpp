@@ -128,9 +128,11 @@ void MainForm::slotReadyBtnClicked()
   disconnect(&networkThread, 0, 0, 0);
   disconnect(&nstreamThread, 0, 0, 0);
 
-  networkThread.start();
   connect(&networkThread, SIGNAL(connected(QTcpSocket*)), this, SLOT(onConnected(QTcpSocket*)));
   connect(&networkThread, SIGNAL(state(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
+  connect(&networkThread, SIGNAL(error(QString)), this, SLOT(onError(QString)));
+
+  networkThread.start();
 
  } else {
   disconnect(&networkThread, 0, 0, 0);
@@ -177,7 +179,6 @@ void MainForm::onConnected(QTcpSocket *socket)
  disconnect(&nstreamThread, 0, 0, 0);
  nstreamThread.setSock(socket);
  nstreamThread.setFile(fileName);
- connect(&networkThread, SIGNAL(error(QString)), this, SLOT(onError(QString)));
  connect(&nstreamThread, SIGNAL(progressSetup(bool, int, int, int)), this, SLOT(progressSetup(bool, int, int, int)));
  connect(&nstreamThread, SIGNAL(progressValue(int)), this, SLOT(progressValue(int)));
  connect(&nstreamThread, SIGNAL(statusMessage(QString)), this, SLOT(statusMessage(QString)));
@@ -200,6 +201,14 @@ void MainForm::onState(QAbstractSocket::SocketState value)
 
 void MainForm::onError(QString error)
 {
+ disconnect(&networkThread, 0, 0, 0);
+ disconnect(&nstreamThread, 0, 0, 0);
  QMessageBox::critical(this, trUtf8("Critical"), error);
+ nstreamThread.cancel();
+ nstreamThread.wait();
+ networkThread.quit();
+ networkThread.wait();
+ ui.statusLabel->setText("Disconnected");
  defaultProgressBar(FALSE, 100, 0, 0);
+ setReadyMode();
 }

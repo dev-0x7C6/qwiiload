@@ -55,8 +55,8 @@ Q_OBJECT
 
  private slots:
    void onConnected(QTcpSocket *socket);
-   void onState(QAbstractSocket::SocketState value);
    void onError(QString error);
+   void onState(QAbstractSocket::SocketState value);
    void slotDone();
    void slotFail();
 
