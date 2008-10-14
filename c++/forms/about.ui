@@ -46,76 +46,6 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="1" >
-    <layout class="QGridLayout" >
-     <item row="0" column="0" colspan="2" >
-      <widget class="QLabel" name="label_2" >
-       <property name="font" >
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>WiiTCPLoadGUI</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2" >
-      <widget class="QLabel" name="label_4" >
-       <property name="text" >
-        <string>Bartłomiej Burdukiewicz &lt;strikeu@poczta.linux.pl></string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3" >
-      <widget class="QLabel" name="label_5" >
-       <property name="font" >
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>Version: 0.02 </string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" >
-      <widget class="QLabel" name="label_7" >
-       <property name="font" >
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>Webside:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="2" >
-      <widget class="QLabel" name="label_8" >
-       <property name="text" >
-        <string>http://sourceforge.net/projects/wiitcpload/</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" >
-      <widget class="QLabel" name="label_6" >
-       <property name="font" >
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>License:</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item rowspan="2" row="0" column="2" >
     <layout class="QHBoxLayout" >
      <item>
@@ -125,7 +55,7 @@
        </property>
        <property name="sizeHint" >
         <size>
-         <width>40</width>
+         <width>20</width>
          <height>20</height>
         </size>
        </property>
@@ -135,10 +65,13 @@
    </item>
    <item row="1" column="1" >
     <layout class="QGridLayout" >
-     <item row="0" column="1" >
+     <item row="0" column="2" >
       <widget class="QLabel" name="label_3" >
        <property name="text" >
         <string>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</string>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
        </property>
        <property name="alignment" >
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -147,7 +80,7 @@
         <bool>true</bool>
        </property>
        <property name="textInteractionFlags" >
-        <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextEditable</set>
+        <set>Qt::NoTextInteraction</set>
        </property>
       </widget>
      </item>
@@ -216,6 +149,112 @@
         </size>
        </property>
       </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="1" >
+    <layout class="QGridLayout" >
+     <property name="horizontalSpacing" >
+      <number>-1</number>
+     </property>
+     <property name="verticalSpacing" >
+      <number>-1</number>
+     </property>
+     <item row="0" column="0" colspan="2" >
+      <widget class="QLabel" name="label_2" >
+       <property name="font" >
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>WiiTCPLoadGUI</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2" >
+      <widget class="QLabel" name="label_4" >
+       <property name="text" >
+        <string>Bartłomiej Burdukiewicz &lt;dev.strikeu@gmail.com></string>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="textInteractionFlags" >
+        <set>Qt::LinksAccessibleByMouse</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="3" >
+      <widget class="QLabel" name="label_5" >
+       <property name="font" >
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Version: 0.02 </string>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" >
+      <widget class="QLabel" name="label_7" >
+       <property name="font" >
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Webside:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="2" >
+      <widget class="QLabel" name="label_8" >
+       <property name="text" >
+        <string>http://sourceforge.net/projects/wiitcpload/</string>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap" >
+        <bool>false</bool>
+       </property>
+       <property name="textInteractionFlags" >
+        <set>Qt::NoTextInteraction</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" >
+      <widget class="QLabel" name="label_6" >
+       <property name="font" >
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" >
+        <string>License:</string>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <property name="textInteractionFlags" >
+        <set>Qt::NoTextInteraction</set>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

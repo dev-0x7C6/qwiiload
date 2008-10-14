@@ -40,7 +40,6 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
  connect(ui.actionExit, SIGNAL(triggered()), this, SLOT(slotActionExit()));
 // connect(ui.actionManagerRun, SIGNAL(triggered()), this, SLOT(slotActionManagerRun()));
  connect(ui.actionAboutProgram, SIGNAL(triggered()), this, SLOT(slotAboutProgram()));
- connect(ui.actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 MainForm::~MainForm(){

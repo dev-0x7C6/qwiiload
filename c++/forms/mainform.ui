@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>207</height>
+    <width>615</width>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -158,7 +158,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>583</width>
+     <width>615</width>
      <height>26</height>
     </rect>
    </property>
@@ -207,11 +207,23 @@
    </property>
   </action>
   <action name="actionAboutQt" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>About Qt</string>
    </property>
    <property name="statusTip" >
     <string>About Qt</string>
+   </property>
+   <property name="autoRepeat" >
+    <bool>false</bool>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+   <property name="iconVisibleInMenu" stdset="0" >
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionAboutProgram" >
@@ -223,6 +235,12 @@
    </property>
    <property name="statusTip" >
     <string>About WiiTCPLoadGUI</string>
+   </property>
+   <property name="visible" >
+    <bool>true</bool>
+   </property>
+   <property name="iconVisibleInMenu" stdset="0" >
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionManagerRun" >
