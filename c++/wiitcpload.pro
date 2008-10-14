@@ -7,7 +7,7 @@ TARGET =
 DEPENDPATH += . forms src
 INCLUDEPATH += . src
 QT += network
-RC_FILE = icon.rc wiitcpload.icns
+RC_FILE = wiitcpload.rc wiitcpload.icns
 
 # Input
 HEADERS += src/about.h src/mainform.h src/manager.h src/threads.h
