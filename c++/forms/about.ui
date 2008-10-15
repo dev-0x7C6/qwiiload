@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>537</width>
-    <height>209</height>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -69,36 +69,26 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="2" column="0" >
-      <widget class="QLabel" name="label_5" >
-       <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Thanks for&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" >
       <widget class="QLabel" name="label_2" >
        <property name="text" >
         <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
 p, li { white-space: pre-wrap; }
 &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">  * Patron of MacOSX version&lt;/span>: tinman &amp;lt;xero1.tinman@gmail.com&amp;gt;&lt;/p>&lt;/body>&lt;/html></string>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Patron of MacOSX version&lt;/span>: tinman &amp;lt;xero1.tinman@gmail.com&amp;gt;&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0" >
+     <item row="3" column="0" >
       <widget class="QLabel" name="label_4" >
        <property name="text" >
         <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
 p, li { white-space: pre-wrap; }
 &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">  * Website editor:&lt;/span> Jarek Bojko &amp;lt;vazir.pl@gmail.com&amp;gt;&lt;/p>&lt;/body>&lt;/html></string>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Website editor:&lt;/span> Jarek Bojko &amp;lt;vazir.pl@gmail.com&amp;gt;&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0" >
+     <item row="4" column="0" >
       <widget class="QLabel" name="label_3" >
        <property name="text" >
         <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
