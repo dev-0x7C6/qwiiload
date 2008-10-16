@@ -1,0 +1,3 @@
+v0.02a
+
+- better support for MacOSX/Windows
