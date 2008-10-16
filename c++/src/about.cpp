@@ -26,11 +26,16 @@ AboutForm::AboutForm(QWidget * parent, Qt::WFlags f):QDialog(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
  ui.setupUi(this);
+ connect(ui.confirmBtn, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
+ //connect(this, SIGNAL(show()), this, SLOT(onShow()));
+}
+
+void AboutForm::show()
+{
  setMaximumHeight(height());
  setMinimumHeight(height());
  setMaximumWidth(width());
  setMinimumWidth(width());
- connect(ui.confirmBtn, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
 }
 
 void AboutForm::slotConfirmButton()

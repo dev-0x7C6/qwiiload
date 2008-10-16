@@ -9,7 +9,6 @@
     </qresource>
     <qresource prefix="/console" >
         <file>icons/console/console128.png</file>
-        <file>icons/console/console196.png</file>
-        <file>icons/console/console64.png</file>
+        <file>icons/console/console152.png</file>
     </qresource>
 </RCC>
