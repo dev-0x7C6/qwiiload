@@ -5,10 +5,10 @@ QT += network gui core
 CONFIG += warn_on thread qt resources release
 RESOURCES += resource.qrc
 
-UI_DIR = tmp
-MOC_DIR = tmp
-RCC_DIR = tmp
-OBJECTS_DIR = tmp
+UI_DIR = src
+MOC_DIR = src
+RCC_DIR = src
+OBJECTS_DIR = src
 
 win32 {
  RC_FILE = win/icon.rc
@@ -21,7 +21,9 @@ unix {
 }
 
 macx {
- CONFIG +=  x86 ppc
+ QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.5.sdk
+ CONFIG-=app_bundle
+ CONFIG+=x86 ppc
  ICON =  macx/icon.icns
 }
 
