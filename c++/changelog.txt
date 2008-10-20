@@ -1,6 +1,0 @@
-WiiTCPLoad Changelog
-====================
-
-v0.02c
-
-- better support for MacOSX/Windows

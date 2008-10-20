@@ -21,14 +21,16 @@
 #include "mainform.h"
 
 #include <QFileInfo>
+#include <QCoreApplication>
 
 class QFileInfo;
 
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
- QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); 
-
+ QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
  ui.setupUi(this);
+ if (QCoreApplication::arguments().count() > 1)
+  ui.localFile->setText(QCoreApplication::arguments().at(1));
  setMaximumHeight(height());
  setMinimumHeight(height());
  setWindowTitle(mainWindowTitle);
