@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Actions=WiiSend;
+Name=Send to Homebrew/TCPLoader Channel
+GenericName=Send to Homebrew/TCPLoader Channel
+Icon=/usr/share/icons/wiitcpload-48.png
+ServiceTypes=all/allfiles
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+Type=Service
+
+[Desktop Action WiiSend]
+Name=Send to Homebrew/TCPLoader Channel
+Exec=wiitcpload %F
+Icon=/usr/share/icons/wiitcpload-48.png
