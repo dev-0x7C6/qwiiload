@@ -20,7 +20,6 @@
 
 #include "ui_mainform.h"
 #include "threads.h"
-#include "manager.h"
 #include "about.h"
 
 
@@ -71,5 +70,4 @@ Q_OBJECT
 // MainMenu
    void slotAboutProgram();
    void slotActionExit();
-   void slotActionManagerRun();
 };
