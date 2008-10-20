@@ -19,6 +19,8 @@ unix {
  target.path =  $${INSTALL_PREFIX}/bin
  icons.path =  /usr/share/icons
  icons.files =  icons/$${TARGET}.png  icons/$${TARGET}48.png  icons/$${TARGET}128.png 
+ doc.path = /usr/share/doc/wiitcpload
+ doc.files = doc/*.*
  desktop.path =  /usr/share/applications
  desktop.files =  res/$${TARGET}.desktop
  dolphin_integration.path =  /usr/share/apps/dolphin/servicemenus
@@ -30,6 +32,7 @@ unix {
  kde4_integration.path =  /usr/lib/kde4/share/kde4/services/ServiceMenus
  kde4_integration.files = res/$${TARGET}-send.desktop
  INSTALLS =  target \ 
+  doc \
   icons \
   desktop \
   dolphin_integration \
