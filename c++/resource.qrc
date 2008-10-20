@@ -7,7 +7,7 @@
         <file>icons/actions/exit.png</file>
     </qresource>
     <qresource prefix="/console" >
-        <file>icons/console/console128.png</file>
-        <file>icons/console/console152.png</file>
+        <file>icons/wiitcpload128.png</file>
+        <file>icons/wiitcpload152.png</file>
     </qresource>
 </RCC>

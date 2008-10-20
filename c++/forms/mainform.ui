@@ -25,7 +25,7 @@
          <string/>
         </property>
         <property name="pixmap" >
-         <pixmap resource="../resource.qrc" >:/console/icons/console/console152.png</pixmap>
+         <pixmap resource="../resource.qrc" >:/console/icons/wiitcpload152.png</pixmap>
         </property>
        </widget>
       </item>
@@ -248,7 +248,7 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="../resource.qrc" >:/actions/icons/actions/controller.png</iconset>
+    <iconset/>
    </property>
    <property name="text" >
     <string>Run Manager</string>
