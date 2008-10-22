@@ -61,13 +61,6 @@ void MainForm::slotAboutProgram(){
  delete window;
 }
 
-void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
- ui.progressBar->setMaximum(max);
- ui.progressBar->setMinimum(min);
- ui.progressBar->setEnabled(enabled);
- ui.progressBar->setValue(value);
-}
-
 void MainForm::progressSetup(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
 void MainForm::progressValue(int value){ ui.progressBar->setValue(value); }
 
@@ -104,7 +97,12 @@ void MainForm::slotReadyBtnClicked()
   }
 
   setCancelMode();
-  defaultProgressBar(FALSE, 100, 0, 0);
+
+  ui.progressBar->setMaximum(100);
+  ui.progressBar->setMinimum(0);
+  ui.progressBar->setValue(0);
+  ui.progressBar->setEnabled(FALSE);
+
 
   disconnect(&thread, 0, 0, 0);
   connect(&thread, SIGNAL(pbSetEnabled(bool)), this, SLOT(pbSetEnabled(bool)));

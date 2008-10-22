@@ -109,8 +109,9 @@ void QNetworkThread::connected()
  }
  emit pbSetValue(total);
 
- disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
  connect(Network, SIGNAL(disconnected()), this, SLOT(disconnectedFromHost()));
+ disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
+
 }
 
 void QNetworkThread::disconnectedFromHost()
