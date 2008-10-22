@@ -18,65 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QThread>
-#include <QTcpSocket>
-#include <QFile>
+#include "thread.h"
+
 #include <QMetaType>
 
-class QString;
-class QThread;
-class QTcpSocket;
-class QFile;
+QNetworkThread::QNetworkThread(QObject *parent):QThread(parent){
+ qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
+ qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
+ setTerminationEnabled(FALSE);
+}
 
-const quint16 timeOut = 5000;
+QNetworkThread::~QNetworkThread(){}
 
-class QNetworkThread: public QThread
+void QNetworkThread::run(){
+ Network = new QTcpSocket();
+ connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
+ connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
+ Network->connectToHost(wiiHost, wiiPort);
+ exec();
+ disconnect(Network, 0, 0, 0);
+}
+
+void QNetworkThread::onConnected()
 {
-Q_OBJECT
- private:
-   QString wiiHost;
-   quint16 wiiPort;
-   QTcpSocket *Network;
- public:
-   QNetworkThread(QObject *parent = 0);
-   ~QNetworkThread();
-   void setHost(QString host){ wiiHost = host; };
-   void setPort(quint16 port){ wiiPort = port; };
- protected:
-    void run();
- private slots:
-   void onConnected(){ emit connected(Network); };
-   void onError(){ emit error(Network->errorString()); };
-   void onState(QAbstractSocket::SocketState value){ emit state(value); };
- signals:
-   void connected(QTcpSocket *socket);
-   void state(QAbstractSocket::SocketState state);
-   void error(QString error);
-};
+ 
+}
 
-
-class QStreamThread: public QThread
+void QNetworkThread::onError(QAbstractSocket::SocketError id)
 {
-Q_OBJECT
- private:
-   QTcpSocket *Network;
-   QString sourceFile;
-   bool breakLoop;
- public:
-   QStreamThread(QObject *parent = 0);
-   ~QStreamThread();
-   void setSock(QTcpSocket *socket){ Network = socket; };
-   void setFile(QString file){ sourceFile = file; };
- protected:
-   void run();
- public slots:
-   void cancel(){ breakLoop = TRUE; };
- signals:
-   void done();
-   void fail();
- signals:
-   void progressSetup(bool enabled, int max, int min, int value);
-   void progressValue(int value);
-   void statusMessage(QString msg);
-};
+}
 
+void QNetworkThread::onState(QAbstractSocket::SocketState id)
+{
+}

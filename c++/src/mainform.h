@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "ui_mainform.h"
-#include "threads.h"
+#include "thread.h"
 #include "about.h"
 
 
@@ -34,15 +34,13 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02c";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.02e (broken)";
 
 class MainForm: public QMainWindow
 {
 Q_OBJECT
  private:
    QFileDialog *FileDialog;
-   QNetworkThread networkThread;
-   QStreamThread nstreamThread;
    void defaultProgressBar(bool enabled, int max, int min, int value);
    void setReadyMode();
    void setCancelMode();

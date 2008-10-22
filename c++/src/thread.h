@@ -18,24 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "threads.h"
-
+#include <QThread>
+#include <QTcpSocket>
+#include <QFile>
 #include <QMetaType>
+#include <QMutex>
 
-QNetworkThread::QNetworkThread(QObject *parent):QThread(parent){
- qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
- qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
- setTerminationEnabled(FALSE);
-}
+class QString;
+class QThread;
+class QTcpSocket;
+class QFile;
+class QMutex;
 
-QNetworkThread::~QNetworkThread(){}
+const quint16 timeOut = 5000;
 
-void QNetworkThread::run(){
- Network = new QTcpSocket();
- connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
- connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
- connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
- Network->connectToHost(wiiHost, wiiPort);
- exec();
- disconnect(Network, 0, 0, 0);
-}
+class QNetworkThread: public QThread
+{
+Q_OBJECT
+ private:
+   QString wiiHost;
+   quint16 wiiPort;
+   QTcpSocket *Network;
+   QMutex mutex;
+ public:
+   QNetworkThread(QObject *parent = 0);
+   ~QNetworkThread();
+   void setHost(QString host){ wiiHost = host; };
+   void setPort(quint16 port){ wiiPort = port; };
+ protected:
+    void run();
+ private slots:
+  void onConnected();
+  void onError(QAbstractSocket::SocketError id);
+  void onState(QAbstractSocket::SocketState id);
+ signals:
+};
