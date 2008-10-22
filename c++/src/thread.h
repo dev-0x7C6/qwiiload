@@ -36,7 +36,7 @@ class QNetworkThread: public QThread
 {
 Q_OBJECT
  private:
-   QString wiiHost;
+   QString wiiHost, sourceFile;
    quint16 wiiPort;
    QTcpSocket *Network;
    QMutex mutex;
@@ -45,16 +45,17 @@ Q_OBJECT
    ~QNetworkThread();
    void setHost(QString host){ wiiHost = host; };
    void setPort(quint16 port){ wiiPort = port; };
+   void setFile(QString file){ sourceFile = file; };
  protected:
    void run();
  private slots:
-   void onConnected();
+   void connected();
+   void disconnectedFromHost();
    void onError(QAbstractSocket::SocketError id);
    void onState(QAbstractSocket::SocketState id);
  signals:
    void sendMessage(QString msg);
    void setStatus(QString msg);
-
    void pbSetEnabled(bool opt);
    void pbSetRange(quint64 min, quint64 max);
    void pbSetValue(quint64 value);

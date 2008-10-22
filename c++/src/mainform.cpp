@@ -86,8 +86,8 @@ QString fileName;
 void MainForm::slotReadyBtnClicked()
 {
  if (ui.readyBtn->text() == QString("ready")) {
-  QString Hostname = ui.wiiHostName->text();
-  if (Hostname == QString("")) {
+  QString hostName = ui.wiiHostName->text();
+  if (hostName == QString("")) {
    QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Hostname is empty"));
    return;
   }
@@ -106,36 +106,37 @@ void MainForm::slotReadyBtnClicked()
   setCancelMode();
   defaultProgressBar(FALSE, 100, 0, 0);
 
+  disconnect(&thread, 0, 0, 0);
+  connect(&thread, SIGNAL(pbSetEnabled(bool)), this, SLOT(pbSetEnabled(bool)));
+  connect(&thread, SIGNAL(pbSetValue(quint64)), this, SLOT(pbSetValue(quint64)));
+  connect(&thread, SIGNAL(pbSetRange(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+  connect(&thread, SIGNAL(sendMessage(QString)), this, SLOT(sendMessage(QString)));
 
-  //switch(ui.channelSelect->currentIndex()) {
-  // case 0: networkThread.setPort(4299); break;
-  // case 1: networkThread.setPort(8080); break;
- // }
+  switch(ui.channelSelect->currentIndex()) {
+   case 0: thread.setPort(4299); break;
+   case 1: thread.setPort(8080); break;
+  }
 
+  thread.setHost(hostName);
+  thread.setFile(fileName);
+  thread.start();
 
  } else {
+  disconnect(&thread, 0, 0, 0);
+  ui.progressBar->setMaximum(100);
+  ui.progressBar->setMinimum(0);
+  ui.progressBar->setValue(0);
+  ui.progressBar->setEnabled(FALSE);
  }
 }
 
-void MainForm::slotDone()
-{
+void MainForm::pbSetEnabled(bool opt){ ui.progressBar->setEnabled(opt); }
+void MainForm::pbSetValue(quint64 value){ ui.progressBar->setValue(value); }
+void MainForm::pbSetRange(quint64 min, quint64 max){
+ ui.progressBar->setMaximum(max);
+ ui.progressBar->setMinimum(min);
 }
 
-void MainForm::slotFail()
-{
-
-}
-
-void MainForm::onConnected(QTcpSocket *socket)
-{
-}
-
-void MainForm::onState(QAbstractSocket::SocketState value)
-{
-
-}
-
-
-void MainForm::onError(QString error)
-{
-}
+void MainForm::sendMessage(QString msg){
+ QMessageBox::critical(this, trUtf8("Critical"), msg);
+};

@@ -52,13 +52,15 @@ Q_OBJECT
    ~MainForm();
 
  private slots:
-   void onConnected(QTcpSocket *socket);
-   void onError(QString error);
-   void onState(QAbstractSocket::SocketState value);
-   void slotDone();
-   void slotFail();
+// Progress Bar
+   void pbSetEnabled(bool opt);
+   void pbSetRange(quint64 min, quint64 max);
+   void pbSetValue(quint64 value);
+// Messages
+   void sendMessage(QString msg);
 
  public slots:
+
    void progressSetup(bool enabled, int max, int min, int value);
    void progressValue(int value);
    void statusMessage(QString msg){ ui.statusLabel->setText(msg); };

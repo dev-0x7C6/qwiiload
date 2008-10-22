@@ -39,17 +39,21 @@ void QNetworkThread::run(){
  Network = new QTcpSocket();
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
- connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
+ connect(Network, SIGNAL(connected()), this, SLOT(connected()));
 
  Network->connectToHost(hostname, destport);
  exec();
  disconnect(Network, 0, 0, 0);
 }
 
-void QNetworkThread::onConnected()
+void QNetworkThread::connected()
 {
+ mutex.lock();
+ QString filename = sourceFile;
+ mutex.unlock();
+
  emit setStatus("Stream data...");
- QFile file(sourceFile);
+ QFile file(filename);
  if (!file.open(QIODevice::ReadOnly)) {
   emit sendMessage("Can't open file to read");
   return;
@@ -90,7 +94,7 @@ void QNetworkThread::onConnected()
  emit pbSetValue(0);
  emit pbSetEnabled(TRUE);
 
- unsigned char buffer[1023];
+ char buffer[1023];
  quint64 readed, total = 0;
 
  QDataStream readfile(&file);
@@ -103,10 +107,14 @@ void QNetworkThread::onConnected()
   }
   emit pbSetValue(total);
  }
- disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
- Network->waitForDisconnected(-1);
- Network->disconnectFromHost();
+ emit pbSetValue(total);
 
+ disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
+ connect(Network, SIGNAL(disconnected()), this, SLOT(disconnectedFromHost()));
+}
+
+void QNetworkThread::disconnectedFromHost()
+{
  emit sendMessage("Done");
 }
 
