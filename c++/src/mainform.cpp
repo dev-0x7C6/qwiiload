@@ -61,9 +61,6 @@ void MainForm::slotAboutProgram(){
  delete window;
 }
 
-void MainForm::progressSetup(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
-void MainForm::progressValue(int value){ ui.progressBar->setValue(value); }
-
 void MainForm::setReadyMode(){
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
  ui.readyBtn->setText("ready");

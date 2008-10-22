@@ -59,9 +59,6 @@ Q_OBJECT
    void sendMessage(QString msg);
 
  public slots:
-
-   void progressSetup(bool enabled, int max, int min, int value);
-   void progressValue(int value);
    void statusMessage(QString msg){ ui.statusLabel->setText(msg); };
 // Form
    void slotReadyBtnClicked();

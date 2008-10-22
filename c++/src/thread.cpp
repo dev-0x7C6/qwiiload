@@ -39,14 +39,14 @@ void QNetworkThread::run(){
  Network = new QTcpSocket();
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
- connect(Network, SIGNAL(connected()), this, SLOT(connected()));
+ connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
 
  Network->connectToHost(hostname, destport);
  exec();
  disconnect(Network, 0, 0, 0);
 }
 
-void QNetworkThread::connected()
+void QNetworkThread::onConnected()
 {
  mutex.lock();
  QString filename = sourceFile;
@@ -67,28 +67,31 @@ void QNetworkThread::connected()
   header[1] = 'A';
   header[2] = 'X';
   header[3] = 'X';
-  if (!Network->write((const char *)&header, sizeof(header)))
-  {
-   return;
-  }
+  Network->write((const char *)&header, sizeof(header));
+  //if (!Network->write((const char *)&header, sizeof(header))
+  //{
+  // return;
+  //}
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
-  if (!Network->write((const char *)&datagram, sizeof(datagram)))
-  {
-   return;
-  }
+  Network->write((const char *)&datagram, sizeof(datagram));
+  //if (!Network->write((const char *)&datagram, sizeof(datagram)))
+  //{
+  // return;
+ // }
  }
  int FileSize = file.size();
  datagram[0] = FileSize >> 24;
  datagram[1] = FileSize >> 16;
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
- if (!Network->write((const char *)&datagram, sizeof(datagram)))
- {
-  return;
- }
+ Network->write((const char *)&datagram, sizeof(datagram));
+ //if (!Network->write((const char *)&datagram, sizeof(datagram)))
+ //{
+ // return;
+ //}
 
  emit pbSetRange(0, FileSize);
  emit pbSetValue(0);
@@ -101,10 +104,10 @@ void QNetworkThread::connected()
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
-  if (!Network->write((const char *)&buffer, readed))
-  {
-   return;
-  }
+  Network->write((const char *)&buffer, readed);
+  //{
+  // return;
+  //}
   emit pbSetValue(total);
  }
  emit pbSetValue(total);

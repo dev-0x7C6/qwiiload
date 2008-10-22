@@ -49,7 +49,7 @@ Q_OBJECT
  protected:
    void run();
  private slots:
-   void connected();
+   void onConnected();
    void disconnectedFromHost();
    void onError(QAbstractSocket::SocketError id);
    void onState(QAbstractSocket::SocketState id);
