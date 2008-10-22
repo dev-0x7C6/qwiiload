@@ -46,10 +46,16 @@ Q_OBJECT
    void setHost(QString host){ wiiHost = host; };
    void setPort(quint16 port){ wiiPort = port; };
  protected:
-    void run();
+   void run();
  private slots:
-  void onConnected();
-  void onError(QAbstractSocket::SocketError id);
-  void onState(QAbstractSocket::SocketState id);
+   void onConnected();
+   void onError(QAbstractSocket::SocketError id);
+   void onState(QAbstractSocket::SocketState id);
  signals:
+   void sendMessage(QString msg);
+   void setStatus(QString msg);
+
+   void pbSetEnabled(bool opt);
+   void pbSetRange(quint64 min, quint64 max);
+   void pbSetValue(quint64 value);
 };

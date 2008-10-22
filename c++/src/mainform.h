@@ -41,6 +41,7 @@ class MainForm: public QMainWindow
 Q_OBJECT
  private:
    QFileDialog *FileDialog;
+   QNetworkThread thread;
    void defaultProgressBar(bool enabled, int max, int min, int value);
    void setReadyMode();
    void setCancelMode();
