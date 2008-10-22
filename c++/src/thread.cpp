@@ -38,7 +38,7 @@ void QNetworkThread::run(){
 
  Network = new QTcpSocket();
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
- connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
  connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
 
  Network->connectToHost(hostname, destport);
@@ -68,43 +68,42 @@ void QNetworkThread::onConnected()
   header[2] = 'X';
   header[3] = 'X';
   Network->write((const char *)&header, sizeof(header));
-  //if (!Network->write((const char *)&header, sizeof(header))
-  //{
-  // return;
-  //}
+  //
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
+
   //if (!Network->write((const char *)&datagram, sizeof(datagram)))
   //{
   // return;
  // }
  }
- int FileSize = file.size();
- datagram[0] = FileSize >> 24;
- datagram[1] = FileSize >> 16;
- datagram[2] = FileSize >> 8;
- datagram[3] = FileSize;
+ datagram[0] = file.size() >> 24;
+ datagram[1] = file.size() >> 16;
+ datagram[2] = file.size() >> 8;
+ datagram[3] = file.size();
  Network->write((const char *)&datagram, sizeof(datagram));
- //if (!Network->write((const char *)&datagram, sizeof(datagram)))
+ Network->waitForBytesWritten(-1);
+//if (!Network->write((const char *)&datagram, sizeof(datagram)))
  //{
  // return;
  //}
 
- emit pbSetRange(0, FileSize);
+ emit pbSetRange(0, file.size());
  emit pbSetValue(0);
  emit pbSetEnabled(TRUE);
 
  char buffer[1023];
- quint64 readed, total = 0;
+ int readed, total = 0;
 
  QDataStream readfile(&file);
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
   Network->write((const char *)&buffer, readed);
+  Network->waitForBytesWritten(-1);
   //{
   // return;
   //}
@@ -112,18 +111,20 @@ void QNetworkThread::onConnected()
  }
  emit pbSetValue(total);
 
- connect(Network, SIGNAL(disconnected()), this, SLOT(disconnectedFromHost()));
- disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
+// connect(Network, SIGNAL(disconnected()), this, SLOT(disconnectedFromHost()));
+// disconnect(Network, SIGNAL(error(QAbstractSocket::SocketError)), 0, 0);
 
 }
 
 void QNetworkThread::disconnectedFromHost()
 {
- emit sendMessage("Done");
+ //emit sendMessage("Done");
 }
 
 void QNetworkThread::onError(QAbstractSocket::SocketError id)
 {
+emit sendMessage(Network->errorString());
+ //printf("%s\n",Network->errorString());
 }
 
 void QNetworkThread::onState(QAbstractSocket::SocketState id)
