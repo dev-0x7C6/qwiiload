@@ -67,6 +67,8 @@ void QStreamThread::run(){
  datagram[2] = FileSize >> 8;
  datagram[3] = FileSize;
  Network->write((const char *)&datagram, sizeof(datagram));
+ Network->flush();
+ msleep(1);
 // Network->waitForBytesWritten(-1);
 
  emit progressSetup(TRUE, FileSize, 0, 0);
@@ -81,6 +83,7 @@ void QStreamThread::run(){
   total += readed;
   Network->write((const char *)&buffer, readed);
   Network->flush();
+  msleep(1);
   //waitForBytesWritten(-1);
 // if (Network->bytesToWrite() != 0)
 //  {
