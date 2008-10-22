@@ -48,7 +48,7 @@ macx {
  ICON =  macx/icon.icns
 }
 
-HEADERS += src/about.h src/mainform.h src/thread.h
+HEADERS += src/about.h src/mainform.h src/threads.h src/networkthread.cpp
 FORMS += forms/about.ui forms/mainform.ui
-SOURCES += src/main.cpp src/about.cpp src/mainform.cpp src/thread.cpp
+SOURCES += src/main.cpp src/about.cpp src/mainform.cpp src/streamthread.cpp 
 
