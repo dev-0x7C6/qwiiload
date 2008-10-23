@@ -36,14 +36,17 @@ class QNetworkThread: public QThread
 {
 Q_OBJECT
  private:
-   QString wiiHost;
-   quint16 wiiPort;
+   quint16 destPort;
+   QString hostName;
+   QString fileName;
    QTcpSocket *Network;
  public:
    QNetworkThread(QObject *parent = 0);
    ~QNetworkThread();
-   void setHost(QString host){ wiiHost = host; };
-   void setPort(quint16 port){ wiiPort = port; };
+   void setDestPort(quint16 port);
+   void setFilename(QString file);
+   void setHostname(QString host);
+
  protected:
    void run();
  private slots:
@@ -56,8 +59,6 @@ Q_OBJECT
    void pbSetEnabledSig(bool opt);
    void pbSetRangeSig(quint64 min, quint64 max);
    void pbSetValueSig(quint64 value);
-
-
 
  private slots:
    void onConnected(){ emit connected(Network); };
@@ -81,8 +82,8 @@ Q_OBJECT
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread();
-   void setSock(QTcpSocket *socket){ pSocket = socket; };
-   void setFile(QString fileName){ pFileName = fileName; };
+   void setSock(QTcpSocket *socket);
+   void setFile(QString fileName);
  protected:
    void run();
  public slots:

@@ -29,8 +29,7 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
  QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
  ui.setupUi(this);
- if (QCoreApplication::arguments().count() > 1)
-  ui.localFile->setText(QCoreApplication::arguments().at(1));
+ if (QCoreApplication::arguments().count() > 1) ui.localFile->setText(QCoreApplication::arguments().at(1));
  setMaximumHeight(height());
  setMinimumHeight(height());
  setWindowTitle(mainWindowTitle);
@@ -111,9 +110,8 @@ void MainForm::slotReadyBtnClicked()
    case 0: networkThread.setPort(4299); break;
    case 1: networkThread.setPort(8080); break;
   }
+
   disconnect(&networkThread, 0, 0, 0);
-
-
   connect(&networkThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
   connect(&networkThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
   connect(&networkThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));

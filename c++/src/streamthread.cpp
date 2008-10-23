@@ -35,7 +35,23 @@ QStreamThread::QStreamThread(QObject *parent):QThread(parent){
 
 QStreamThread::~QStreamThread(){}
 
-void QStreamThread::run()
+void QStreamThread::setSock(QTcpSocket *socket)
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ pSocket = socket;
+ mutexLock.unlock();
+}
+
+void QStreamThread::setFile(QString fileName)
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ pFileName = fileName;
+ mutexLock.unlock();
+}
+
+void crun()
 {
  QMutex mutexLock;
 
@@ -95,7 +111,6 @@ void QStreamThread::run()
  quint64 readed, total = 0;
 
  while (!readfile.atEnd()) {
-  if (breakLoop == TRUE) return;
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
   Network->write((const char *)&buffer, readed);

@@ -30,19 +30,53 @@ QNetworkThread::QNetworkThread(QObject *parent):QThread(parent){
 
 QNetworkThread::~QNetworkThread(){}
 
-void QNetworkThread::run(){
+void QNetworkThread::setDestPort(quint16 port)
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ destPort = port;
+ mutexLock.unlock();
+}
+
+void QNetworkThread::setFilename(QString file)
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ fileName = file;
+ mutexLock.unlock();
+}
+
+void QNetworkThread::setHostname(QString host)
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ hostName = host;
+ mutexLock.unlock();
+}
+
+void QNetworkThread::run()
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ QString hostname = hostName;
+ QString filename = fileName;
+ quint16 destport = destPort;
+ mutexLock.unlock();
+
  Network = new QTcpSocket();
  QStreamThread streamThread;
  streamThread.setSock(Network);
- //nstreamThread.setFile(); 
+ streamThread.setFile(filename);
+
  connect(&streamThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
  connect(&streamThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
  connect(&streamThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
 
+
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
  connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
- Network->connectToHost(wiiHost, wiiPort);
+ Network->connectToHost(hostname, destport);
  exec();
  disconnect(Network, 0, 0, 0);
  disconnect(&streamThread, 0, 0, 0);
