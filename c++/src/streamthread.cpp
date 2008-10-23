@@ -62,7 +62,7 @@ void QStreamThread::run()
 
  QFile file(fileName);
  if (!file.open(QIODevice::ReadOnly)) {
-  emit fail();
+  emit done(FALSE, "Can't open file to read");
   return;
  }
  QDataStream readfile(&file);
@@ -95,7 +95,7 @@ void QStreamThread::run()
 #ifdef Q_OS_UNIX
  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
  {
-  emit fail();
+  emit done(FALSE, "");
   return;
  }
 #else
@@ -117,7 +117,7 @@ void QStreamThread::run()
 #ifdef Q_OS_UNIX
  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
  {
-  emit fail();
+  emit done(FALSE, "");
   return;
  }
 #else
@@ -131,5 +131,5 @@ void QStreamThread::run()
  Network->waitForDisconnected(-1);
 #endif 
  Network->disconnectFromHost();
- emit done();
+ emit done(TRUE, "");
 }

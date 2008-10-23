@@ -53,10 +53,9 @@ Q_OBJECT
    void pbSetEnabledSig(bool opt);
    void pbSetRangeSig(quint64 min, quint64 max);
    void pbSetValueSig(quint64 value);
- signals:
-   void done();
-   void fail();
 //
+   void done(bool result, QString msg);
+ signals:
    void statusMessage(QString msg);
 };
 
