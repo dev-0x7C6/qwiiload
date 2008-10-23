@@ -70,6 +70,7 @@ void QNetworkThread::run()
  connect(&streamThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
  connect(&streamThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
  connect(&streamThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+ connect(&streamThread, SIGNAL(done(bool)), this, SLOT(slotDone(bool)));
 
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
@@ -84,4 +85,17 @@ void QNetworkThread::run()
 void QNetworkThread::slotConnected()
 {
  streamThread.start();
+}
+
+void QNetworkThread::slotDone(bool result)
+{
+ QString msg;
+ if (result == TRUE)
+ {
+  msg = "Transfer done.";
+ } else {
+  msg = "Transfer failed. " + Network->errorString();
+ }
+ emit endWork(result, msg);
+ quit();
 }

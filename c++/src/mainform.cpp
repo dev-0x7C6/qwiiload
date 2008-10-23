@@ -119,6 +119,7 @@ void MainForm::slotReadyBtnClicked()
   connect(&networkThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
   connect(&networkThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
   connect(&networkThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+  connect(&networkThread, SIGNAL(endWork(bool, QString)), this, SLOT(slotDone(bool, QString)));
 //
 
   networkThread.start();
@@ -132,6 +133,13 @@ void MainForm::slotReadyBtnClicked()
   setReadyMode();
   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Transfer interrupted"));
  }
+}
+
+void MainForm::slotDone(bool result, QString msg)
+{
+ if (result == TRUE) 
+  QMessageBox::information(this, trUtf8("Information"), msg); else
+  QMessageBox::critical(this, trUtf8("Critical"), msg);
 }
 
 void MainForm::pbSetEnabled(bool opt){ ui.progressBar->setEnabled(opt); }

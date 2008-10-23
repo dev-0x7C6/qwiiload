@@ -38,7 +38,6 @@ Q_OBJECT
  private:
    QTcpSocket *pSocket;
    QString pFileName;
-   bool breakLoop;
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread();
@@ -46,15 +45,13 @@ Q_OBJECT
    void setFile(QString fileName);
  protected:
    void run();
- public slots:
-   void cancel(){ breakLoop = TRUE; };
  signals:
 // Progress Bar
    void pbSetEnabledSig(bool opt);
    void pbSetRangeSig(quint64 min, quint64 max);
    void pbSetValueSig(quint64 value);
 //
-   void done(bool result, QString msg);
+   void done(bool result);
  signals:
    void statusMessage(QString msg);
 };
@@ -85,7 +82,7 @@ Q_OBJECT
 //
    void slotConnected();
    void slotStateChanged(QAbstractSocket::SocketState state){ emit updateState(state); };
-
+   void slotDone(bool);
  signals:
 // Progress Bar
    void pbSetEnabledSig(bool opt);
@@ -93,6 +90,7 @@ Q_OBJECT
    void pbSetValueSig(quint64 value);
 // Informations
    void updateState(QAbstractSocket::SocketState state);
+   void endWork(bool result, QString msg);
 
 // private slots:
 //   void onState(QAbstractSocket::SocketState value){ emit state(value); };
@@ -102,5 +100,4 @@ Q_OBJECT
 //   void state(QAbstractSocket::SocketState state);
 //   void error(QString error);
 };
-
 

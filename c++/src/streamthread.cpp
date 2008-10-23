@@ -62,14 +62,13 @@ void QStreamThread::run()
 
  QFile file(fileName);
  if (!file.open(QIODevice::ReadOnly)) {
-  emit done(FALSE, "Can't open file to read");
+  emit done(FALSE);
   return;
  }
  QDataStream readfile(&file);
 
  emit statusMessage("Stream data...");
 
- breakLoop = FALSE;
  unsigned char datagram[4];
  if (Network->peerPort() == 4299)
  {
@@ -79,11 +78,13 @@ void QStreamThread::run()
   header[2] = 'X';
   header[3] = 'X';
   Network->write((const char *)&header, sizeof(header));
+  if (Network->state() != QAbstractSocket::ConnectedState) return;
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
+  if (Network->state() != QAbstractSocket::ConnectedState) return;
  }
 
  datagram[0] = file.size() >> 24;
@@ -95,13 +96,14 @@ void QStreamThread::run()
 #ifdef Q_OS_UNIX
  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
  {
-  emit done(FALSE, "");
+  emit done(FALSE);
   return;
  }
 #else
  Network->flush();
  msleep(1);
 #endif
+ if (Network->state() != QAbstractSocket::ConnectedState) return;
 
  emit pbSetRangeSig(0, file.size());
  emit pbSetValueSig(0);
@@ -113,11 +115,12 @@ void QStreamThread::run()
  while (!readfile.atEnd()) {
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
+  if (Network->state() != QAbstractSocket::ConnectedState) return;
   Network->write((const char *)&buffer, readed);
 #ifdef Q_OS_UNIX
  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
  {
-  emit done(FALSE, "");
+  emit done(FALSE);
   return;
  }
 #else
@@ -131,5 +134,5 @@ void QStreamThread::run()
  Network->waitForDisconnected(-1);
 #endif 
  Network->disconnectFromHost();
- emit done(TRUE, "");
+ emit done(TRUE);
 }
