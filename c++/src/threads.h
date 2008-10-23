@@ -32,46 +32,6 @@ class QMutex;
 
 const quint16 timeOut = 5000;
 
-class QNetworkThread: public QThread
-{
-Q_OBJECT
- private:
-   quint16 destPort;
-   QString hostName;
-   QString fileName;
-   QTcpSocket *Network;
- public:
-   QNetworkThread(QObject *parent = 0);
-   ~QNetworkThread();
-   void setDestPort(quint16 port);
-   void setFilename(QString file);
-   void setHostname(QString host);
-
- protected:
-   void run();
- private slots:
-// Progress Bar
-   void pbSetEnabled(bool opt){ emit pbSetEnabledSig(opt); };
-   void pbSetRange(quint64 min, quint64 max){ emit pbSetRangeSig(min, max); };
-   void pbSetValue(quint64 value){ emit pbSetValueSig(value); };
-//
- signals:
-   void pbSetEnabledSig(bool opt);
-   void pbSetRangeSig(quint64 min, quint64 max);
-   void pbSetValueSig(quint64 value);
-
- private slots:
-   void onConnected(){ emit connected(Network); };
-   void onError(){ emit error(Network->errorString()); };
-   void onState(QAbstractSocket::SocketState value){ emit state(value); };
-
- signals:
-   void connected(QTcpSocket *socket);
-   void state(QAbstractSocket::SocketState state);
-   void error(QString error);
-};
-
-
 class QStreamThread: public QThread
 {
 Q_OBJECT
@@ -99,4 +59,49 @@ Q_OBJECT
 //
    void statusMessage(QString msg);
 };
+
+class QNetworkThread: public QThread
+{
+Q_OBJECT
+ private:
+   quint16 destPort;
+   QString hostName;
+   QString fileName;
+   QTcpSocket *Network;
+   QStreamThread streamThread;
+ public:
+   QNetworkThread(QObject *parent = 0);
+   ~QNetworkThread();
+   void setDestPort(quint16 port);
+   void setFilename(QString file);
+   void setHostname(QString host);
+
+ protected:
+   void run();
+ private slots:
+// Progress Bar
+   void pbSetEnabled(bool opt){ emit pbSetEnabledSig(opt); };
+   void pbSetRange(quint64 min, quint64 max){ emit pbSetRangeSig(min, max); };
+   void pbSetValue(quint64 value){ emit pbSetValueSig(value); };
+//
+   void slotConnected();
+   void slotStateChanged(QAbstractSocket::SocketState state){ emit updateState(state); };
+
+ signals:
+// Progress Bar
+   void pbSetEnabledSig(bool opt);
+   void pbSetRangeSig(quint64 min, quint64 max);
+   void pbSetValueSig(quint64 value);
+// Informations
+   void updateState(QAbstractSocket::SocketState state);
+
+// private slots:
+//   void onState(QAbstractSocket::SocketState value){ emit state(value); };
+
+// signals:
+//   void connected(QTcpSocket *socket);
+//   void state(QAbstractSocket::SocketState state);
+//   void error(QString error);
+};
+
 

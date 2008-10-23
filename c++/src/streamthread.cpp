@@ -51,7 +51,7 @@ void QStreamThread::setFile(QString fileName)
  mutexLock.unlock();
 }
 
-void crun()
+void QStreamThread::run()
 {
  QMutex mutexLock;
 

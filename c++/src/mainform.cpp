@@ -104,17 +104,22 @@ void MainForm::slotReadyBtnClicked()
 
   setCancelMode();
   defaultProgressBar(FALSE, 100, 0, 0);
-  networkThread.setHost(Hostname);
 
   switch(ui.channelSelect->currentIndex()) {
-   case 0: networkThread.setPort(4299); break;
-   case 1: networkThread.setPort(8080); break;
+   case 0: networkThread.setDestPort(4299); break;
+   case 1: networkThread.setDestPort(8080); break;
   }
+  networkThread.setHostname(Hostname);
+  networkThread.setFilename(fileName);
 
   disconnect(&networkThread, 0, 0, 0);
+// Informations
+  connect(&networkThread, SIGNAL(updateState(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
+// Progress Bar
   connect(&networkThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
   connect(&networkThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
   connect(&networkThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+//
 
   networkThread.start();
 
@@ -136,7 +141,7 @@ void MainForm::pbSetRange(quint64 min, quint64 max){
  ui.progressBar->setMinimum(min);
 }
 
-/*void MainForm::onState(QAbstractSocket::SocketState value)
+void MainForm::onState(QAbstractSocket::SocketState value)
 {
  switch(value) {
   case QAbstractSocket::UnconnectedState: ui.statusLabel->setText("Disconnected"); break;
@@ -145,4 +150,4 @@ void MainForm::pbSetRange(quint64 min, quint64 max){
   case QAbstractSocket::ConnectedState: ui.statusLabel->setText("Connected"); break;
   case QAbstractSocket::ClosingState: ui.statusLabel->setText("Waiting for close connection..."); break;
  }
-}*/
+}
