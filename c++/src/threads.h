@@ -45,11 +45,25 @@ Q_OBJECT
    void setHost(QString host){ wiiHost = host; };
    void setPort(quint16 port){ wiiPort = port; };
  protected:
-    void run();
+   void run();
+ private slots:
+// Progress Bar
+   void pbSetEnabled(bool opt){ emit pbSetEnabledSig(opt); };
+   void pbSetRange(quint64 min, quint64 max){ emit pbSetRangeSig(min, max); };
+   void pbSetValue(quint64 value){ emit pbSetValueSig(value); };
+//
+ signals:
+   void pbSetEnabledSig(bool opt);
+   void pbSetRangeSig(quint64 min, quint64 max);
+   void pbSetValueSig(quint64 value);
+
+
+
  private slots:
    void onConnected(){ emit connected(Network); };
    void onError(){ emit error(Network->errorString()); };
    void onState(QAbstractSocket::SocketState value){ emit state(value); };
+
  signals:
    void connected(QTcpSocket *socket);
    void state(QAbstractSocket::SocketState state);
@@ -74,16 +88,14 @@ Q_OBJECT
  public slots:
    void cancel(){ breakLoop = TRUE; };
  signals:
+// Progress Bar
+   void pbSetEnabledSig(bool opt);
+   void pbSetRangeSig(quint64 min, quint64 max);
+   void pbSetValueSig(quint64 value);
+ signals:
    void done();
    void fail();
- signals:
-// Progress Bar
-   void pbSetEnabled(bool opt);
-   void pbSetRange(quint64 min, quint64 max);
-   void pbSetValue(quint64 value);
 //
-   void progressSetup(bool enabled, int max, int min, int value);
-   void progressValue(int value);
    void statusMessage(QString msg);
 };
 

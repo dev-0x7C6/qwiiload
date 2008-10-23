@@ -32,10 +32,18 @@ QNetworkThread::~QNetworkThread(){}
 
 void QNetworkThread::run(){
  Network = new QTcpSocket();
+ QStreamThread streamThread;
+ streamThread.setSock(Network);
+ //nstreamThread.setFile(); 
+ connect(&streamThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
+ connect(&streamThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
+ connect(&streamThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
  connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
  connect(Network, SIGNAL(connected()), this, SLOT(onConnected()));
  Network->connectToHost(wiiHost, wiiPort);
  exec();
  disconnect(Network, 0, 0, 0);
+ disconnect(&streamThread, 0, 0, 0);
 }

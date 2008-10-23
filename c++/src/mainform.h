@@ -34,7 +34,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev-20%";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev-25% (broken)";
 
 class MainForm: public QMainWindow
 {
@@ -42,7 +42,6 @@ Q_OBJECT
  private:
    QFileDialog *FileDialog;
    QNetworkThread networkThread;
-   QStreamThread nstreamThread;
    void defaultProgressBar(bool enabled, int max, int min, int value);
    void setReadyMode();
    void setCancelMode();
@@ -52,6 +51,14 @@ Q_OBJECT
    MainForm(QWidget * parent = 0, Qt::WFlags f = 0 );
    ~MainForm();
 
+ public slots:
+// Form
+   void slotReadyBtnClicked();
+   void slotOpenFileClicked();
+// MainMenu
+   void slotAboutProgram();
+   void slotActionExit();
+
  private slots:
 // Progress Bar
    void pbSetEnabled(bool opt);
@@ -59,19 +66,4 @@ Q_OBJECT
    void pbSetValue(quint64 value);
 //
 
-   void onConnected(QTcpSocket *socket);
-   void onError(QString error);
-   void onState(QAbstractSocket::SocketState value);
-   void slotDone();
-   void slotFail();
-
- public slots:
-   void statusMessage(QString msg){ ui.statusLabel->setText(msg); };
-// Form
-   void slotReadyBtnClicked();
-   void slotOpenFileClicked();
-// Thread
-// MainMenu
-   void slotAboutProgram();
-   void slotActionExit();
 };

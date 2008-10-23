@@ -45,12 +45,8 @@ MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 
 MainForm::~MainForm(){
  disconnect(&networkThread, 0, 0, 0);
- disconnect(&nstreamThread, 0, 0, 0);
- nstreamThread.cancel();
- nstreamThread.wait();
  networkThread.quit();
  networkThread.wait();
- 
  delete FileDialog;
 }
 
@@ -116,19 +112,16 @@ void MainForm::slotReadyBtnClicked()
    case 1: networkThread.setPort(8080); break;
   }
   disconnect(&networkThread, 0, 0, 0);
-  disconnect(&nstreamThread, 0, 0, 0);
 
-  connect(&networkThread, SIGNAL(connected(QTcpSocket*)), this, SLOT(onConnected(QTcpSocket*)));
-  connect(&networkThread, SIGNAL(state(QAbstractSocket::SocketState)), this, SLOT(onState(QAbstractSocket::SocketState)));
-  connect(&networkThread, SIGNAL(error(QString)), this, SLOT(onError(QString)));
+
+  connect(&networkThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
+  connect(&networkThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
+  connect(&networkThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
 
   networkThread.start();
 
  } else {
   disconnect(&networkThread, 0, 0, 0);
-  disconnect(&nstreamThread, 0, 0, 0);
-  nstreamThread.cancel();
-  nstreamThread.wait();
   networkThread.quit();
   networkThread.wait();
   ui.statusLabel->setText("Disconnected");
@@ -138,49 +131,6 @@ void MainForm::slotReadyBtnClicked()
  }
 }
 
-void MainForm::slotDone()
-{
- disconnect(&networkThread, 0, 0, 0);
- disconnect(&nstreamThread, 0, 0, 0);
- QMessageBox::information(this, trUtf8("Information"), trUtf8("Transfer successful"));
- defaultProgressBar(FALSE, 100, 0, 0);
- ui.statusLabel->setText("Disconnected");
- networkThread.quit();
- networkThread.wait();
- setReadyMode();
-}
-
-void MainForm::slotFail()
-{
- disconnect(&networkThread, 0, 0, 0);
- disconnect(&nstreamThread, 0, 0, 0);
- QMessageBox::critical(this, trUtf8("Critical"), trUtf8("Transfer failed"));
- nstreamThread.cancel();
- nstreamThread.wait();
- networkThread.quit();
- networkThread.wait();
- ui.statusLabel->setText("Disconnected");
- defaultProgressBar(FALSE, 100, 0, 0);
- setReadyMode();
-}
-
-void MainForm::onConnected(QTcpSocket *socket)
-{
- disconnect(&nstreamThread, 0, 0, 0);
- nstreamThread.setSock(socket);
- nstreamThread.setFile(fileName);
-
-
- connect(&nstreamThread, SIGNAL(pbSetEnabled(bool)), this, SLOT(pbSetEnabled(bool)));
- connect(&nstreamThread, SIGNAL(pbSetValue(quint64)), this, SLOT(pbSetValue(quint64)));
- connect(&nstreamThread, SIGNAL(pbSetRange(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
-
- connect(&nstreamThread, SIGNAL(statusMessage(QString)), this, SLOT(statusMessage(QString)));
- connect(&nstreamThread, SIGNAL(done()), this, SLOT(slotDone()));
- connect(&nstreamThread, SIGNAL(fail()), this, SLOT(slotFail()));
- nstreamThread.start();
-}
-
 void MainForm::pbSetEnabled(bool opt){ ui.progressBar->setEnabled(opt); }
 void MainForm::pbSetValue(quint64 value){ ui.progressBar->setValue(value); }
 void MainForm::pbSetRange(quint64 min, quint64 max){
@@ -188,7 +138,7 @@ void MainForm::pbSetRange(quint64 min, quint64 max){
  ui.progressBar->setMinimum(min);
 }
 
-void MainForm::onState(QAbstractSocket::SocketState value)
+/*void MainForm::onState(QAbstractSocket::SocketState value)
 {
  switch(value) {
   case QAbstractSocket::UnconnectedState: ui.statusLabel->setText("Disconnected"); break;
@@ -197,19 +147,4 @@ void MainForm::onState(QAbstractSocket::SocketState value)
   case QAbstractSocket::ConnectedState: ui.statusLabel->setText("Connected"); break;
   case QAbstractSocket::ClosingState: ui.statusLabel->setText("Waiting for close connection..."); break;
  }
-}
-
-
-void MainForm::onError(QString error)
-{
- disconnect(&networkThread, 0, 0, 0);
- disconnect(&nstreamThread, 0, 0, 0);
- QMessageBox::critical(this, trUtf8("Critical"), error);
- nstreamThread.cancel();
- nstreamThread.wait();
- networkThread.quit();
- networkThread.wait();
- ui.statusLabel->setText("Disconnected");
- defaultProgressBar(FALSE, 100, 0, 0);
- setReadyMode();
-}
+}*/

@@ -87,9 +87,9 @@ void QStreamThread::run()
  msleep(1);
 #endif
 
- emit pbSetRange(0, file.size());
- emit pbSetValue(0);
- emit pbSetEnabled(TRUE);
+ emit pbSetRangeSig(0, file.size());
+ emit pbSetValueSig(0);
+ emit pbSetEnabledSig(TRUE);
 
  char buffer[1023];
  quint64 readed, total = 0;
@@ -109,9 +109,9 @@ void QStreamThread::run()
  Network->flush();
  msleep(1);
 #endif
-  emit pbSetValue(total);
+  emit pbSetValueSig(total);
  }
- emit pbSetValue(total);
+ emit pbSetValueSig(total);
 #ifndef Q_OS_UNIX
  Network->waitForDisconnected(-1);
 #endif 
