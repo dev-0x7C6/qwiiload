@@ -137,9 +137,15 @@ void MainForm::slotReadyBtnClicked()
 
 void MainForm::slotDone(bool result, QString msg)
 {
+ disconnect(&networkThread, 0, 0, 0);
  if (result == TRUE) 
   QMessageBox::information(this, trUtf8("Information"), msg); else
   QMessageBox::critical(this, trUtf8("Critical"), msg);
+ networkThread.quit();
+ networkThread.wait();
+ ui.statusLabel->setText("Disconnected");
+ defaultProgressBar(FALSE, 100, 0, 0);
+ setReadyMode();
 }
 
 void MainForm::pbSetEnabled(bool opt){ ui.progressBar->setEnabled(opt); }

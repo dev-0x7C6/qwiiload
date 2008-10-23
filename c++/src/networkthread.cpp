@@ -78,6 +78,8 @@ void QNetworkThread::run()
 
  Network->connectToHost(hostname, destport);
  exec();
+ Network->disconnectFromHost();
+ streamThread.wait();
  disconnect(Network, 0, 0, 0);
  disconnect(&streamThread, 0, 0, 0);
 }

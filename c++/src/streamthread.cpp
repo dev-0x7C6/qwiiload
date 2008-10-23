@@ -130,9 +130,10 @@ void QStreamThread::run()
   emit pbSetValueSig(total);
  }
  emit pbSetValueSig(total);
+
 #ifndef Q_OS_UNIX
  Network->waitForDisconnected(-1);
-#endif 
- Network->disconnectFromHost();
+#endif
+
  emit done(TRUE);
 }
