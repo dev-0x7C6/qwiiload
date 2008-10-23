@@ -35,8 +35,24 @@ QStreamThread::QStreamThread(QObject *parent):QThread(parent){
 
 QStreamThread::~QStreamThread(){}
 
-void QStreamThread::run(){
+void QStreamThread::run()
+{
+ QMutex mutexLock;
+
+ mutexLock.lock();
+ QTcpSocket *Network = pSocket;
+ QString fileName = pFileName;
+ mutexLock.unlock();
+
+ QFile file(fileName);
+ if (!file.open(QIODevice::ReadOnly)) {
+  emit fail();
+  return;
+ }
+ QDataStream readfile(&file);
+
  emit statusMessage("Stream data...");
+
  breakLoop = FALSE;
  unsigned char datagram[4];
  if (Network->peerPort() == 4299)
@@ -47,55 +63,58 @@ void QStreamThread::run(){
   header[2] = 'X';
   header[3] = 'X';
   Network->write((const char *)&header, sizeof(header));
-  //waitForBytesWritten(-1);
   datagram[0] = 0;
   datagram[1] = 3;
   datagram[2] = (0 >> 8) && 0xFF;
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
-  //Network->waitForBytesWritten(-1);
  }
- QFile file(sourceFile);
- if (!file.open(QIODevice::ReadOnly)) {
-//  emit fail();
+
+ datagram[0] = file.size() >> 24;
+ datagram[1] = file.size() >> 16;
+ datagram[2] = file.size() >> 8;
+ datagram[3] = file.size();
+ Network->write((const char *)&datagram, sizeof(datagram));
+
+#ifdef Q_OS_UNIX
+ if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
+ {
+  emit fail();
   return;
  }
-
- int FileSize = file.size();
- datagram[0] = FileSize >> 24;
- datagram[1] = FileSize >> 16;
- datagram[2] = FileSize >> 8;
- datagram[3] = FileSize;
- Network->write((const char *)&datagram, sizeof(datagram));
+#else
  Network->flush();
  msleep(1);
-// Network->waitForBytesWritten(-1);
+#endif
 
- emit progressSetup(TRUE, FileSize, 0, 0);
+ emit pbSetRange(0, file.size());
+ emit pbSetValue(0);
+ emit pbSetEnabled(TRUE);
 
  char buffer[1023];
- int readed, total = 0;
- QDataStream readfile(&file);
+ quint64 readed, total = 0;
 
  while (!readfile.atEnd()) {
   if (breakLoop == TRUE) return;
   readed = readfile.readRawData(buffer, sizeof(buffer));
   total += readed;
   Network->write((const char *)&buffer, readed);
-  Network->flush();
-  msleep(1);
-  //waitForBytesWritten(-1);
-// if (Network->bytesToWrite() != 0)
-//  {
-//   if (!Network->waitForBytesWritten(timeOut))
-//   {
-//    emit fail();
-//    return;
-//   }
-//  }
-  emit progressValue(total);
+#ifdef Q_OS_UNIX
+ if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
+ {
+  emit fail();
+  return;
  }
+#else
+ Network->flush();
+ msleep(1);
+#endif
+  emit pbSetValue(total);
+ }
+ emit pbSetValue(total);
+#ifndef Q_OS_UNIX
  Network->waitForDisconnected(-1);
+#endif 
  Network->disconnectFromHost();
  emit done();
 }

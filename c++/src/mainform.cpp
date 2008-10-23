@@ -75,9 +75,6 @@ void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
  ui.progressBar->setValue(value);
 }
 
-void MainForm::progressSetup(bool enabled, int max, int min, int value){ defaultProgressBar(enabled, max, min, value); }
-void MainForm::progressValue(int value){ ui.progressBar->setValue(value); }
-
 void MainForm::setReadyMode(){
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
  ui.readyBtn->setText("ready");
@@ -172,12 +169,23 @@ void MainForm::onConnected(QTcpSocket *socket)
  disconnect(&nstreamThread, 0, 0, 0);
  nstreamThread.setSock(socket);
  nstreamThread.setFile(fileName);
- connect(&nstreamThread, SIGNAL(progressSetup(bool, int, int, int)), this, SLOT(progressSetup(bool, int, int, int)));
- connect(&nstreamThread, SIGNAL(progressValue(int)), this, SLOT(progressValue(int)));
+
+
+ connect(&nstreamThread, SIGNAL(pbSetEnabled(bool)), this, SLOT(pbSetEnabled(bool)));
+ connect(&nstreamThread, SIGNAL(pbSetValue(quint64)), this, SLOT(pbSetValue(quint64)));
+ connect(&nstreamThread, SIGNAL(pbSetRange(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+
  connect(&nstreamThread, SIGNAL(statusMessage(QString)), this, SLOT(statusMessage(QString)));
  connect(&nstreamThread, SIGNAL(done()), this, SLOT(slotDone()));
  connect(&nstreamThread, SIGNAL(fail()), this, SLOT(slotFail()));
  nstreamThread.start();
+}
+
+void MainForm::pbSetEnabled(bool opt){ ui.progressBar->setEnabled(opt); }
+void MainForm::pbSetValue(quint64 value){ ui.progressBar->setValue(value); }
+void MainForm::pbSetRange(quint64 min, quint64 max){
+ ui.progressBar->setMaximum(max);
+ ui.progressBar->setMinimum(min);
 }
 
 void MainForm::onState(QAbstractSocket::SocketState value)

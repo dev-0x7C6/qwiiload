@@ -22,11 +22,13 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QMetaType>
+#include <QMutex>
 
 class QString;
 class QThread;
 class QTcpSocket;
 class QFile;
+class QMutex;
 
 const quint16 timeOut = 5000;
 
@@ -59,14 +61,14 @@ class QStreamThread: public QThread
 {
 Q_OBJECT
  private:
-   QTcpSocket *Network;
-   QString sourceFile;
+   QTcpSocket *pSocket;
+   QString pFileName;
    bool breakLoop;
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread();
-   void setSock(QTcpSocket *socket){ Network = socket; };
-   void setFile(QString file){ sourceFile = file; };
+   void setSock(QTcpSocket *socket){ pSocket = socket; };
+   void setFile(QString fileName){ pFileName = fileName; };
  protected:
    void run();
  public slots:
@@ -75,6 +77,11 @@ Q_OBJECT
    void done();
    void fail();
  signals:
+// Progress Bar
+   void pbSetEnabled(bool opt);
+   void pbSetRange(quint64 min, quint64 max);
+   void pbSetValue(quint64 value);
+//
    void progressSetup(bool enabled, int max, int min, int value);
    void progressValue(int value);
    void statusMessage(QString msg);

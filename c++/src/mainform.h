@@ -34,7 +34,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.02d";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev-20%";
 
 class MainForm: public QMainWindow
 {
@@ -53,6 +53,12 @@ Q_OBJECT
    ~MainForm();
 
  private slots:
+// Progress Bar
+   void pbSetEnabled(bool opt);
+   void pbSetRange(quint64 min, quint64 max);
+   void pbSetValue(quint64 value);
+//
+
    void onConnected(QTcpSocket *socket);
    void onError(QString error);
    void onState(QAbstractSocket::SocketState value);
@@ -60,8 +66,6 @@ Q_OBJECT
    void slotFail();
 
  public slots:
-   void progressSetup(bool enabled, int max, int min, int value);
-   void progressValue(int value);
    void statusMessage(QString msg){ ui.statusLabel->setText(msg); };
 // Form
    void slotReadyBtnClicked();

@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>WiiTCPLoadGUI v0.02d</string>
+   <string>WiiTCPLoadGUI v0.03</string>
   </property>
   <property name="windowIcon" >
    <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
