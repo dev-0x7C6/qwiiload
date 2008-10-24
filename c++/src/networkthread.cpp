@@ -61,6 +61,7 @@ void QNetworkThread::run()
  QString hostname = hostName;
  QString filename = fileName;
  quint16 destport = destPort;
+ mainResult = FALSE;
  mutexLock.unlock();
 
  Network = new QTcpSocket();
@@ -74,12 +75,20 @@ void QNetworkThread::run()
 
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));
  connect(Network, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(slotStateChanged(QAbstractSocket::SocketState)));
- //connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError()));
+ connect(Network, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
  Network->connectToHost(hostname, destport);
  exec();
  Network->disconnectFromHost();
  streamThread.wait();
+ QString msg;
+ if (mainResult == TRUE)
+ {
+  msg = "Transfer done.";
+ } else {
+  msg = "Transfer failed. " + Network->errorString();
+ }
+ emit endWork(mainResult, msg);
  disconnect(Network, 0, 0, 0);
  disconnect(&streamThread, 0, 0, 0);
 }
@@ -91,13 +100,14 @@ void QNetworkThread::slotConnected()
 
 void QNetworkThread::slotDone(bool result)
 {
- QString msg;
- if (result == TRUE)
- {
-  msg = "Transfer done.";
- } else {
-  msg = "Transfer failed. " + Network->errorString();
- }
- emit endWork(result, msg);
+ QMutex mutexLock;
+ mutexLock.lock();
+ mainResult = result;
+ mutexLock.unlock();
+ quit();
+}
+
+void QNetworkThread::onError(QAbstractSocket::SocketError error)
+{
  quit();
 }

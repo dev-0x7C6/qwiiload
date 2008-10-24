@@ -65,6 +65,7 @@ Q_OBJECT
    QString fileName;
    QTcpSocket *Network;
    QStreamThread streamThread;
+   bool mainResult;
  public:
    QNetworkThread(QObject *parent = 0);
    ~QNetworkThread();
@@ -81,6 +82,7 @@ Q_OBJECT
    void pbSetValue(quint64 value){ emit pbSetValueSig(value); };
 //
    void slotConnected();
+   void onError(QAbstractSocket::SocketError error);
    void slotStateChanged(QAbstractSocket::SocketState state){ emit updateState(state); };
    void slotDone(bool);
  signals:
