@@ -100,8 +100,9 @@ void QStreamThread::run()
   return;
  }
 #else
- Network->flush();
- msleep(1);
+// Network->flush();
+// msleep(1);
+ while (socket::bytesToWrite() != 0);
 #endif
  if (Network->state() != QAbstractSocket::ConnectedState) return;
 
@@ -124,8 +125,9 @@ void QStreamThread::run()
   return;
  }
 #else
- Network->flush();
- msleep(1);
+// Network->flush();
+ //msleep(1);
+ while (socket::bytesToWrite() != 0);
 #endif
   emit pbSetValueSig(total);
  }
