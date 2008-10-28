@@ -44,6 +44,7 @@ Q_OBJECT
    ~QStreamThread();
    void setSock(QTcpSocket *socket);
    void setFile(QString fileName);
+   void acceptTransfer();
  protected:
    void run();
  signals:
@@ -75,7 +76,7 @@ Q_OBJECT
    void setDestPort(quint16 port);
    void setFilename(QString file);
    void setHostname(QString host);
-
+   void acceptTransfer(){ streamThread.acceptTransfer(); };
  protected:
    void run();
  private slots:

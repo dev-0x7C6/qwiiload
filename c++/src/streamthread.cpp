@@ -51,6 +51,14 @@ void QStreamThread::setFile(QString fileName)
  mutexLock.unlock();
 }
 
+void QStreamThread::acceptTransfer()
+{
+ QMutex mutexLock;
+ mutexLock.lock();
+ accepted = TRUE;
+ mutexLock.unlock();
+}
+
 void QStreamThread::run()
 {
  QMutex mutexLock;
@@ -89,10 +97,12 @@ void QStreamThread::run()
  {
   accepted = FALSE;
   emit waitForAccepted();
-  //while ( accepted == FALSE )
- // {
- //  msleep(10);
- // }
+
+  while ( accepted == FALSE )
+  {
+   msleep(10);
+  }
+
  }
 
  datagram[0] = file.size() >> 24;

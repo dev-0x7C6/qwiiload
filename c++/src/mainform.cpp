@@ -170,4 +170,5 @@ void MainForm::onState(QAbstractSocket::SocketState value)
 void MainForm::slotWaitForAccepted()
 {
  QMessageBox::information(this, trUtf8("Information"), trUtf8("Accept connection and confirm"));
+ networkThread.acceptTransfer();
 }
