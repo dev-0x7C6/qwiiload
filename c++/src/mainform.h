@@ -34,7 +34,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev status: 60% (untested)";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev status: 70% (untested)";
 
 class MainForm: public QMainWindow
 {
@@ -65,6 +65,7 @@ Q_OBJECT
    void pbSetRange(quint64 min, quint64 max);
    void pbSetValue(quint64 value);
 //
+   void slotWaitForAccepted();
 //
    void onState(QAbstractSocket::SocketState value);
    void slotDone(bool result, QString msg);

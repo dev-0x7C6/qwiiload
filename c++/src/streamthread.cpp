@@ -85,6 +85,14 @@ void QStreamThread::run()
   datagram[3] = 0 && 0xFF;
   Network->write((const char *)&datagram, sizeof(datagram));
   if (Network->state() != QAbstractSocket::ConnectedState) return;
+ } else 
+ {
+  accepted = FALSE;
+  emit waitForAccepted();
+  //while ( accepted == FALSE )
+ // {
+ //  msleep(10);
+ // }
  }
 
  datagram[0] = file.size() >> 24;

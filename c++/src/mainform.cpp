@@ -120,6 +120,7 @@ void MainForm::slotReadyBtnClicked()
   connect(&networkThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
   connect(&networkThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
   connect(&networkThread, SIGNAL(endWork(bool, QString)), this, SLOT(slotDone(bool, QString)));
+  connect(&networkThread, SIGNAL(waitForAccepted()), this, SLOT(slotWaitForAccepted()));
 //
 
   networkThread.start();
@@ -164,4 +165,9 @@ void MainForm::onState(QAbstractSocket::SocketState value)
   case QAbstractSocket::ConnectedState: ui.statusLabel->setText("Connected"); break;
   case QAbstractSocket::ClosingState: ui.statusLabel->setText("Waiting for close connection..."); break;
  }
+}
+
+void MainForm::slotWaitForAccepted()
+{
+ QMessageBox::information(this, trUtf8("Information"), trUtf8("Accept connection and confirm"));
 }

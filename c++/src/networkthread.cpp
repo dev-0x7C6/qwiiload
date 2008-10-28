@@ -71,6 +71,7 @@ void QNetworkThread::run()
  connect(&streamThread, SIGNAL(pbSetEnabledSig(bool)), this, SLOT(pbSetEnabled(bool)));
  connect(&streamThread, SIGNAL(pbSetValueSig(quint64)), this, SLOT(pbSetValue(quint64)));
  connect(&streamThread, SIGNAL(pbSetRangeSig(quint64,quint64)), this, SLOT(pbSetRange(quint64,quint64)));
+ connect(&streamThread, SIGNAL(waitForAccepted()), this, SLOT(slotWaitForAccepted()));
  connect(&streamThread, SIGNAL(done(bool)), this, SLOT(slotDone(bool)));
 
  connect(Network, SIGNAL(connected()), this, SLOT(slotConnected()));

@@ -38,6 +38,7 @@ Q_OBJECT
  private:
    QTcpSocket *pSocket;
    QString pFileName;
+   bool accepted;
  public:
    QStreamThread(QObject *parent = 0);
    ~QStreamThread();
@@ -52,6 +53,8 @@ Q_OBJECT
    void pbSetValueSig(quint64 value);
 //
    void done(bool result);
+   void waitForAccepted();
+
  signals:
    void statusMessage(QString msg);
 };
@@ -81,6 +84,7 @@ Q_OBJECT
    void pbSetRange(quint64 min, quint64 max){ emit pbSetRangeSig(min, max); };
    void pbSetValue(quint64 value){ emit pbSetValueSig(value); };
 //
+   void slotWaitForAccepted(){ emit waitForAccepted(); };
    void slotConnected();
    void onError(QAbstractSocket::SocketError error);
    void slotStateChanged(QAbstractSocket::SocketState state){ emit updateState(state); };
@@ -91,6 +95,8 @@ Q_OBJECT
    void pbSetRangeSig(quint64 min, quint64 max);
    void pbSetValueSig(quint64 value);
 // Informations
+   void waitForAccepted();
+//
    void updateState(QAbstractSocket::SocketState state);
    void endWork(bool result, QString msg);
 
