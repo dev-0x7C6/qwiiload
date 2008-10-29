@@ -22,7 +22,6 @@
 
 #include <QDataStream>
 
-
 class QDataStream;
 class QFileInfo;
 
@@ -76,7 +75,7 @@ void QStreamThread::run()
  QDataStream readfile(&file);
 
  emit statusMessage("Stream data...");
-
+//Network->socketDescriptor()
  unsigned char datagram[4];
  if (Network->peerPort() == 4299)
  {
@@ -118,9 +117,8 @@ void QStreamThread::run()
   return;
  }
 #else
-// Network->flush();
-// msleep(1);
- while (socket::bytesToWrite() != 0);
+ Network->flush();
+ msleep(1);
 #endif
  if (Network->state() != QAbstractSocket::ConnectedState) return;
 
@@ -143,9 +141,8 @@ void QStreamThread::run()
   return;
  }
 #else
-// Network->flush();
- //msleep(1);
- while (socket::bytesToWrite() != 0);
+ Network->flush();
+ msleep(1);
 #endif
   emit pbSetValueSig(total);
  }
