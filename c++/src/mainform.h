@@ -34,7 +34,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 dev status: 70% (untested)";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.03 (untested)";
 
 class MainForm: public QMainWindow
 {
