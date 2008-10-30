@@ -1,8 +1,26 @@
 WiiTCPLoad Changelog
 ====================
 
-v0.03
- - integration with konqueror, dolphin (kde3/kde4)
- - icon in menu (gnome/kde3/kde4(?))
- - make install now working (linux/other)
- - fixes in Mac version
+version 0.03:
+
+- GUI fixes in main/about window. (GUI looks correct on MacOSX/Windows)
+- make install now working.
+- integration with common desktop environments. (KDE3/4, GNOME)
+- integration with konqueror, dolphin. ("Send to Homebrew/TCPLoader" action added)
+- fixed TCPLoader protocol, now application wait for accept connection.
+- Various bug fixes in source code.
+
+version 0.02a:
+
+- GUI fixes in main/about window. (GUI looks correct on Windows)
+- windows version should work now.
+
+version 0.02:
+
+- support for threads.
+- Various bug fixes in source code.
+
+version 0.01(first version):
+
+- support for Homebrew Channel
+- support for TCPLoader Channel
