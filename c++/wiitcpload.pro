@@ -42,7 +42,7 @@ unix {
 }
 
 macx {
- #QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.5.sdk
+ QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.5.sdk
  CONFIG-=app_bundle
  CONFIG+=x86 ppc
  ICON =  macx/icon.icns
