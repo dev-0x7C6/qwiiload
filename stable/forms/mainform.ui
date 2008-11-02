@@ -1,0 +1,262 @@
+<ui version="4.0" >
+ <class>mainform</class>
+ <widget class="QMainWindow" name="mainform" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>615</width>
+    <height>235</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>WiiTCPLoadGUI v0.03</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" >
+    <item rowspan="2" row="0" column="0" >
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_5" >
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="pixmap" >
+         <pixmap resource="../resource.qrc" >:/console/icons/wiitcpload152.png</pixmap>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="1" >
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_6" >
+        <property name="text" >
+         <string>Hostname</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2" >
+       <widget class="QLineEdit" name="wiiHostName" >
+        <property name="statusTip" >
+         <string>Hostname</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_7" >
+        <property name="text" >
+         <string>Local file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QLineEdit" name="localFile" >
+        <property name="statusTip" >
+         <string>Local file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QToolButton" name="openFile" >
+        <property name="statusTip" >
+         <string>Open</string>
+        </property>
+        <property name="text" >
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label_8" >
+        <property name="text" >
+         <string>Channel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2" >
+       <widget class="QComboBox" name="channelSelect" >
+        <property name="statusTip" >
+         <string>Select your channel</string>
+        </property>
+        <item>
+         <property name="text" >
+          <string>Homebrew Channel</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>TCPLoader Channel</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3" >
+       <widget class="Line" name="line" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Status:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2" >
+       <widget class="QLabel" name="statusLabel" >
+        <property name="text" >
+         <string>Disconnected</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="1" >
+     <layout class="QGridLayout" >
+      <item row="0" column="1" >
+       <widget class="QPushButton" name="readyBtn" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="statusTip" >
+         <string>Connect &amp; stream file</string>
+        </property>
+        <property name="text" >
+         <string>ready</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="../resource.qrc" >:/actions/icons/actions/button_ok.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" >
+       <widget class="QProgressBar" name="progressBar" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="value" >
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>615</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="statusTip" >
+    <string/>
+   </property>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen" />
+    <addaction name="separator" />
+    <addaction name="actionExit" />
+   </widget>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionAboutQt" />
+    <addaction name="actionAboutProgram" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="menuHelp" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="actionExit" >
+   <property name="icon" >
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/exit.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Exit</string>
+   </property>
+   <property name="statusTip" >
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpen" >
+   <property name="icon" >
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/document_open_folder.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Open</string>
+   </property>
+   <property name="statusTip" >
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionAboutQt" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>About Qt</string>
+   </property>
+   <property name="statusTip" >
+    <string>About Qt</string>
+   </property>
+   <property name="autoRepeat" >
+    <bool>false</bool>
+   </property>
+   <property name="visible" >
+    <bool>false</bool>
+   </property>
+   <property name="iconVisibleInMenu" stdset="0" >
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionAboutProgram" >
+   <property name="icon" >
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
+   </property>
+   <property name="text" >
+    <string>About WiiTCPLoadGUI</string>
+   </property>
+   <property name="statusTip" >
+    <string>About WiiTCPLoadGUI</string>
+   </property>
+   <property name="visible" >
+    <bool>true</bool>
+   </property>
+   <property name="iconVisibleInMenu" stdset="0" >
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionManagerRun" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="icon" >
+    <iconset/>
+   </property>
+   <property name="text" >
+    <string>Run Manager</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../resource.qrc" />
+ </resources>
+ <connections/>
+</ui>
