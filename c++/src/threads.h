@@ -30,7 +30,7 @@ class QTcpSocket;
 class QFile;
 class QMutex;
 
-const quint16 timeOut = 5000;
+const int timeOut = 3000;
 
 class QStreamThread: public QThread
 {

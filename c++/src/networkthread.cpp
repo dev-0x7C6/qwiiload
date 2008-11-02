@@ -80,6 +80,7 @@ void QNetworkThread::run()
 
  Network->connectToHost(hostname, destport);
  exec();
+ if (mainResult == TRUE) Network->waitForDisconnected(-1);
  Network->disconnectFromHost();
  streamThread.wait();
  QString msg;

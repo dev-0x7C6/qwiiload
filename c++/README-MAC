@@ -1,8 +1,0 @@
-Build as a universal binary with Darwin 9.5.0 llvm GCC 4.2.1.
-
-To compile type:
-
-qmake -macx
-xcodebuild
-
-Done.

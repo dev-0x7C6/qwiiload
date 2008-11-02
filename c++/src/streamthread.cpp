@@ -118,7 +118,9 @@ void QStreamThread::run()
  }
 #else
  Network->flush();
- msleep(1);
+ Network->waitForBytesWritten(timeOut);
+ //Network->flush();
+ //msleep(1);
 #endif
  if (Network->state() != QAbstractSocket::ConnectedState) return;
 
@@ -126,7 +128,7 @@ void QStreamThread::run()
  emit pbSetValueSig(0);
  emit pbSetEnabledSig(TRUE);
 
- char buffer[1023];
+ char buffer[4095];
  quint64 readed, total = 0;
 
  while (!readfile.atEnd()) {
@@ -142,15 +144,10 @@ void QStreamThread::run()
  }
 #else
  Network->flush();
- msleep(1);
+ Network->waitForBytesWritten(timeOut);
 #endif
   emit pbSetValueSig(total);
  }
  emit pbSetValueSig(total);
-
-#ifndef Q_OS_UNIX
- Network->waitForDisconnected(-1);
-#endif
-
  emit done(TRUE);
 }
