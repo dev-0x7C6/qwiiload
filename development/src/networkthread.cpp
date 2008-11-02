@@ -80,9 +80,16 @@ void QNetworkThread::run()
 
  Network->connectToHost(hostname, destport);
  exec();
- if (mainResult == TRUE) Network->waitForDisconnected(-1);
+ if (mainResult == TRUE)
+ {
+  Network->waitForDisconnected(-1);
+ }
  Network->disconnectFromHost();
  streamThread.wait();
+
+ disconnect(Network, 0, 0, 0);
+ disconnect(&streamThread, 0, 0, 0);
+
  QString msg;
  if (mainResult == TRUE)
  {
@@ -91,8 +98,6 @@ void QNetworkThread::run()
   msg = "Transfer failed. " + Network->errorString();
  }
  emit endWork(mainResult, msg);
- disconnect(Network, 0, 0, 0);
- disconnect(&streamThread, 0, 0, 0);
 }
 
 void QNetworkThread::slotConnected()

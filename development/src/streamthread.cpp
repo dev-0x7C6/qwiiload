@@ -119,8 +119,6 @@ void QStreamThread::run()
 #else
  Network->flush();
  Network->waitForBytesWritten(timeOut);
- //Network->flush();
- //msleep(1);
 #endif
  if (Network->state() != QAbstractSocket::ConnectedState) return;
 
@@ -136,16 +134,16 @@ void QStreamThread::run()
   total += readed;
   if (Network->state() != QAbstractSocket::ConnectedState) return;
   Network->write((const char *)&buffer, readed);
-#ifdef Q_OS_UNIX
- if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
- {
-  emit done(FALSE);
-  return;
- }
-#else
- Network->flush();
- Network->waitForBytesWritten(timeOut);
-#endif
+ #ifdef Q_OS_UNIX
+  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
+  {
+   emit done(FALSE);
+   return;
+  }
+ #else
+  Network->flush();
+  Network->waitForBytesWritten(timeOut);
+ #endif
   emit pbSetValueSig(total);
  }
  emit pbSetValueSig(total);

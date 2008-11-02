@@ -47,6 +47,8 @@ Q_OBJECT
    void acceptTransfer();
  protected:
    void run();
+ public slots:
+   
  signals:
 // Progress Bar
    void pbSetEnabledSig(bool opt);
@@ -90,6 +92,10 @@ Q_OBJECT
    void onError(QAbstractSocket::SocketError error);
    void slotStateChanged(QAbstractSocket::SocketState state){ emit updateState(state); };
    void slotDone(bool);
+ 
+ public slots:
+   void cancelTransfer() { streamThread.terminate(); };
+   
  signals:
 // Progress Bar
    void pbSetEnabledSig(bool opt);

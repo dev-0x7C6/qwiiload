@@ -127,6 +127,7 @@ void MainForm::slotReadyBtnClicked()
 
  } else {
   disconnect(&networkThread, 0, 0, 0);
+  networkThread.cancelTransfer();
   networkThread.quit();
   networkThread.wait();
   ui.statusLabel->setText("Disconnected");
