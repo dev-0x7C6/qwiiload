@@ -106,13 +106,5 @@ Q_OBJECT
 //
    void updateState(QAbstractSocket::SocketState state);
    void endWork(bool result, QString msg);
-
-// private slots:
-//   void onState(QAbstractSocket::SocketState value){ emit state(value); };
-
-// signals:
-//   void connected(QTcpSocket *socket);
-//   void state(QAbstractSocket::SocketState state);
-//   void error(QString error);
 };
 

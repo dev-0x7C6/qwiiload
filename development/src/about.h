@@ -35,5 +35,4 @@ Q_OBJECT
    ~AboutForm(){};
  public slots:
    void slotConfirmButton();
-   void show();
 };
