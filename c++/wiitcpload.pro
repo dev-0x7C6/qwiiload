@@ -20,7 +20,7 @@ unix {
  icons.path =  /usr/share/icons
  icons.files =  icons/$${TARGET}.png  icons/$${TARGET}48.png  icons/$${TARGET}128.png 
  doc.path = /usr/share/doc/wiitcpload
- doc.files = doc/*.*
+ doc.files = doc/CHANGELOG doc/COPYING doc/README
  desktop.path =  /usr/share/applications
  desktop.files =  res/$${TARGET}.desktop
  dolphin_integration.path =  /usr/share/apps/dolphin/servicemenus
