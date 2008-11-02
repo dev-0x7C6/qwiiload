@@ -8,6 +8,7 @@ Version 0.03:
 - Integration with common desktop environments. (KDE3/4, GNOME)
 - Integration with konqueror, dolphin. ("Send to Homebrew/TCPLoader" action added)
 - Fixed TCPLoader protocol, now application wait for accept connection.
+- Improved windows version.
 - Various bug fixes in source code.
 
 Version 0.02a:
