@@ -1,9 +1,0 @@
-@echo off
-rm wiitcpload.exe
-rm wiitcpload
-rm wiiconnect.dll
-rm wiiconnect.so
-rm *.compiled
-rm *.ppu
-rm *.bak
-rm *.o

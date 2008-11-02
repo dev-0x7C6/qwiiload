@@ -1,0 +1,8 @@
+WiiTCPLoad Changelog
+====================
+
+v0.03
+ - integration with konqueror, dolphin (kde3/kde4)
+ - icon in menu (gnome/kde3/kde4(?))
+ - make install now working (linux/other)
+ - fixes in Mac version
