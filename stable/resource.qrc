@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/actions" >
+        <file>icons/actions/button_cancel.png</file>
+        <file>icons/actions/button_ok.png</file>
+        <file>icons/actions/console.png</file>
+        <file>icons/actions/document_open_folder.png</file>
+        <file>icons/actions/exit.png</file>
+    </qresource>
+    <qresource prefix="/console" >
+        <file>icons/wiitcpload128.png</file>
+        <file>icons/wiitcpload152.png</file>
+    </qresource>
+</RCC>
