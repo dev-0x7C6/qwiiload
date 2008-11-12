@@ -20,7 +20,7 @@ Requirements:
 To install type:
 
 # qmake
-# make all -j2 // (-jX; X - number of CPUs + 1)
+# make all -j2
 # make install
 
 ============================
@@ -36,8 +36,8 @@ Requirements:
 
 To compile type:
 
-qmake -macx
-xcodebuild
+# qmake -macx
+# xcodebuild
 
 =============================
 3. Compilation under Windows

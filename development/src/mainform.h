@@ -34,7 +34,7 @@ class QDialog;
 class QThread;
 class QWidget;
 
-const QString mainWindowTitle = "WiiTCPLoadGUI v0.03";
+const QString mainWindowTitle = "WiiTCPLoadGUI v0.04 (development version)";
 
 class MainForm: public QMainWindow
 {
@@ -70,5 +70,4 @@ Q_OBJECT
    void onState(QAbstractSocket::SocketState value);
    void slotDone(bool result, QString msg);
 //
-
 };

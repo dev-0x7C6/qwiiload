@@ -1,6 +1,10 @@
 WiiTCPLoad Changelog
 ====================
 
+Version 0.04(dev):
+
+- Various bug fixes in source code.
+
 Version 0.03:
 
 - GUI fixes in main/about window. (GUI looks correct on MacOSX/Windows)
@@ -10,6 +14,7 @@ Version 0.03:
 - Fixed TCPLoader protocol, now application wait for accept connection.
 - Improved windows version.
 - Various bug fixes in source code.
+- Support for FreeBSD (x86, x86_64).
 - MacOSX build is now a Universal Binary.
 
 Version 0.02a:
