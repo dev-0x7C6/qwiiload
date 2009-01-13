@@ -13,8 +13,7 @@
    <string>WiiTCPLoadGUI v0.03</string>
   </property>
   <property name="windowIcon" >
-   <iconset resource="../resource.qrc" >
-    <normaloff>:/actions/icons/actions/console.png</normaloff>:/actions/icons/actions/console.png</iconset>
+   <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
@@ -136,8 +135,7 @@
          <string>ready</string>
         </property>
         <property name="icon" >
-         <iconset resource="../resource.qrc" >
-          <normaloff>:/actions/icons/actions/button_ok.png</normaloff>:/actions/icons/actions/button_ok.png</iconset>
+         <iconset resource="../resource.qrc" >:/actions/icons/actions/button_ok.png</iconset>
         </property>
        </widget>
       </item>
@@ -188,8 +186,7 @@
   <widget class="QStatusBar" name="statusbar" />
   <action name="actionExit" >
    <property name="icon" >
-    <iconset resource="../resource.qrc" >
-     <normaloff>:/actions/icons/actions/exit.png</normaloff>:/actions/icons/actions/exit.png</iconset>
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/exit.png</iconset>
    </property>
    <property name="text" >
     <string>Exit</string>
@@ -200,8 +197,7 @@
   </action>
   <action name="actionOpen" >
    <property name="icon" >
-    <iconset resource="../resource.qrc" >
-     <normaloff>:/actions/icons/actions/document_open_folder.png</normaloff>:/actions/icons/actions/document_open_folder.png</iconset>
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/document_open_folder.png</iconset>
    </property>
    <property name="text" >
     <string>Open</string>
@@ -226,14 +222,13 @@
    <property name="visible" >
     <bool>false</bool>
    </property>
-   <property name="iconVisibleInMenu" >
+   <property name="iconVisibleInMenu" stdset="0" >
     <bool>false</bool>
    </property>
   </action>
   <action name="actionAboutProgram" >
    <property name="icon" >
-    <iconset resource="../resource.qrc" >
-     <normaloff>:/actions/icons/actions/console.png</normaloff>:/actions/icons/actions/console.png</iconset>
+    <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
    </property>
    <property name="text" >
     <string>About WiiTCPLoadGUI</string>
@@ -244,7 +239,7 @@
    <property name="visible" >
     <bool>true</bool>
    </property>
-   <property name="iconVisibleInMenu" >
+   <property name="iconVisibleInMenu" stdset="0" >
     <bool>true</bool>
    </property>
   </action>
@@ -253,9 +248,7 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset>
-     <normaloff/>
-    </iconset>
+    <iconset/>
    </property>
    <property name="text" >
     <string>Run Manager</string>
