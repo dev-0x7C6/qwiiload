@@ -25,9 +25,32 @@
 
 class QFileInfo;
 
+const
+ QString messageConfirmConnection = "Information: Confirm connection on your Wii first";
+ QString messageFileNotFound = "Critical: File not found";
+ QString messageHostnameEmpty = "Warning: Hostname field is empty";
+ QString messageTransferInterrupted = "Critical: Transfer Interrupted";
+
+const 
+ QString readyButtonCancel = "cancel";
+ QString readyButtonReady = "ready";
+
+const
+ QString msgBoxCritical = "Critical"; 
+ QString msgBoxInformation = "Information";
+ QString msgBoxWarning = "Warning";
+
+const
+ QString statusDisconnected = "Disconnected";
+ QString statusHostLockup = "Resolving hostname...";
+ QString statusConnecting = "Connecting...";
+ QString statusConnected = "Connected";
+ QString statusClosing = "Waiting for close connection...";
+
+
+
 MainForm::MainForm(QWidget * parent, Qt::WFlags f):QMainWindow(parent, f)
 {
- QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
  ui.setupUi(this);
  if (QCoreApplication::arguments().count() > 1) ui.localFile->setText(QCoreApplication::arguments().at(1));
  setMaximumHeight(height());
@@ -72,22 +95,22 @@ void MainForm::defaultProgressBar(bool enabled, int max, int min, int value){
 
 void MainForm::setReadyMode(){
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_ok.png")));
- ui.readyBtn->setText("ready");
+ ui.readyBtn->setText(readyButtonReady);
 }
 
 void MainForm::setCancelMode(){
  ui.readyBtn->setIcon(QIcon(QString::fromUtf8(":/actions/icons/actions/button_cancel.png")));
- ui.readyBtn->setText("cancel");
+ ui.readyBtn->setText(readyButtonCancel);
 }
 
 QString fileName;
 
 void MainForm::slotReadyBtnClicked()
 {
- if (ui.readyBtn->text() == QString("ready")) {
+ if (ui.readyBtn->text() == QString(readyButtonReady)) {
   QString Hostname = ui.wiiHostName->text();
   if (Hostname == QString("")) {
-   QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Hostname is empty"));
+   QMessageBox::warning(this, msgBoxWarning, messageHostnameEmpty);
    return;
   }
 
@@ -98,7 +121,7 @@ void MainForm::slotReadyBtnClicked()
   delete FileInfo;
 
   if (fileExists == FALSE) {
-   QMessageBox::critical(this, trUtf8("Critical"), trUtf8("File not found"));
+   QMessageBox::critical(this, msgBoxCritical, messageFileNotFound);
    return;
   }
 
@@ -130,10 +153,10 @@ void MainForm::slotReadyBtnClicked()
   networkThread.cancelTransfer();
   networkThread.quit();
   networkThread.wait();
-  ui.statusLabel->setText("Disconnected");
+  ui.statusLabel->setText(statusDisconnected);
   defaultProgressBar(FALSE, 100, 0, 0);
   setReadyMode();
-  QMessageBox::warning(this, trUtf8("Warning"), trUtf8("Transfer interrupted"));
+  QMessageBox::warning(this, msgBoxWarning, messageTransferInterrupted);
  }
 }
 
@@ -141,11 +164,11 @@ void MainForm::slotDone(bool result, QString msg)
 {
  disconnect(&networkThread, 0, 0, 0);
  if (result == TRUE) 
-  QMessageBox::information(this, trUtf8("Information"), msg); else
-  QMessageBox::critical(this, trUtf8("Critical"), msg);
+  QMessageBox::information(this, msgBoxInformation, msg); else
+  QMessageBox::critical(this, msgBoxCritical, msg);
  networkThread.quit();
  networkThread.wait();
- ui.statusLabel->setText("Disconnected");
+ ui.statusLabel->setText(statusDisconnected);
  defaultProgressBar(FALSE, 100, 0, 0);
  setReadyMode();
 }
@@ -160,16 +183,16 @@ void MainForm::pbSetRange(quint64 min, quint64 max){
 void MainForm::onState(QAbstractSocket::SocketState value)
 {
  switch(value) {
-  case QAbstractSocket::UnconnectedState: ui.statusLabel->setText("Disconnected"); break;
-  case QAbstractSocket::HostLookupState: ui.statusLabel->setText("Resolving hostname..."); break;
-  case QAbstractSocket::ConnectingState: ui.statusLabel->setText("Connecting..."); break;
-  case QAbstractSocket::ConnectedState: ui.statusLabel->setText("Connected"); break;
-  case QAbstractSocket::ClosingState: ui.statusLabel->setText("Waiting for close connection..."); break;
+  case QAbstractSocket::UnconnectedState: ui.statusLabel->setText(statusDisconnected); break;
+  case QAbstractSocket::HostLookupState: ui.statusLabel->setText(statusHostLockup); break;
+  case QAbstractSocket::ConnectingState: ui.statusLabel->setText(statusConnecting); break;
+  case QAbstractSocket::ConnectedState: ui.statusLabel->setText(statusConnected); break;
+  case QAbstractSocket::ClosingState: ui.statusLabel->setText(statusClosing); break;
  }
 }
 
 void MainForm::slotWaitForAccepted()
 {
- QMessageBox::information(this, trUtf8("Information"), trUtf8("Accept connection and confirm"));
+ QMessageBox::information(this, msgBoxInformation, messageConfirmConnection);
  networkThread.acceptTransfer();
 }
