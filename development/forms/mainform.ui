@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>WiiTCPLoadGUI v0.03</string>
+   <string>WiiTCPLoadGUI</string>
   </property>
   <property name="windowIcon" >
    <iconset resource="../resource.qrc" >:/actions/icons/actions/console.png</iconset>
@@ -43,28 +43,31 @@
       <item row="0" column="1" colspan="2" >
        <widget class="QLineEdit" name="wiiHostName" >
         <property name="statusTip" >
-         <string>Hostname</string>
+         <string>Fill by the your Nintendo Wii hostname/ip</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_7" >
         <property name="text" >
-         <string>Local file</string>
+         <string>File path</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" >
        <widget class="QLineEdit" name="localFile" >
+        <property name="toolTip" >
+         <string/>
+        </property>
         <property name="statusTip" >
-         <string>Local file</string>
+         <string>Path to file</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2" >
        <widget class="QToolButton" name="openFile" >
         <property name="statusTip" >
-         <string>Open</string>
+         <string>Open file</string>
         </property>
         <property name="text" >
          <string>...</string>
@@ -81,7 +84,7 @@
       <item row="2" column="1" colspan="2" >
        <widget class="QComboBox" name="channelSelect" >
         <property name="statusTip" >
-         <string>Select your channel</string>
+         <string>Select communication protocol</string>
         </property>
         <item>
          <property name="text" >
@@ -111,6 +114,9 @@
       </item>
       <item row="4" column="1" colspan="2" >
        <widget class="QLabel" name="statusLabel" >
+        <property name="statusTip" >
+         <string>Show actual status</string>
+        </property>
         <property name="text" >
          <string>Disconnected</string>
         </property>
@@ -143,6 +149,9 @@
        <widget class="QProgressBar" name="progressBar" >
         <property name="enabled" >
          <bool>false</bool>
+        </property>
+        <property name="statusTip" >
+         <string>Shows actual progress</string>
         </property>
         <property name="value" >
          <number>0</number>
@@ -203,7 +212,7 @@
     <string>Open</string>
    </property>
    <property name="statusTip" >
-    <string>Open</string>
+    <string>Open file</string>
    </property>
   </action>
   <action name="actionAboutQt" >

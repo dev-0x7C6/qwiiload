@@ -22,7 +22,6 @@
 
 class QDialog;
 class QWidget;
-class QTextCodec;
 
 using namespace Ui;
 
