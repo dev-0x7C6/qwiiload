@@ -22,7 +22,7 @@ unix {
  doc.path = /usr/share/doc/wiitcpload
  doc.files = doc/CHANGELOG doc/COPYING doc/README
  desktop.path =  /usr/share/applications
- desktop.files =  res/$${TARGET}.desktop
+ desktop.files =  res/$${TARGET}.desktop res/$${TARGET}-Action.desktop
  dolphin_integration.path =  /usr/share/apps/dolphin/servicemenus
  dolphin_integration.files =  res/$${TARGET}-send.desktop
  d3lphin_integration.path =  /usr/share/apps/d3lphin/servicemenus
@@ -31,6 +31,7 @@ unix {
  konqueror_integration.files =  res/$${TARGET}-send.desktop
  kde4_integration.path =  /usr/lib/kde4/share/kde4/services/ServiceMenus
  kde4_integration.files = res/$${TARGET}-send.desktop
+
  INSTALLS =  target \ 
   doc \
   icons \
