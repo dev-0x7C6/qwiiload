@@ -127,7 +127,7 @@ void QStreamThread::run()
  emit pbSetEnabledSig(TRUE);
 
 #ifdef Q_OS_UNIX
- char buffer[4095];
+ char buffer[1000];
 #else
  char buffer[2047];
 #endif
@@ -139,11 +139,12 @@ void QStreamThread::run()
   if (Network->state() != QAbstractSocket::ConnectedState) return;
   Network->write((const char *)&buffer, readed);
  #ifdef Q_OS_UNIX
-  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
-  {
-   emit done(FALSE);
-   return;
-  }
+//  if ((!Network->waitForBytesWritten(timeOut)) && (Network->bytesToWrite() != 0))
+//  {
+//   emit done(FALSE);
+//   return;
+//  }
+  msleep(5);
  #else
   Network->flush();
   msleep(10);

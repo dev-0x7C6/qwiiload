@@ -6,7 +6,7 @@
  </data>
  <data>
   <variable>RunConfiguration0-ProFile</variable>
-  <value type="QString" >/development/projekty/linux/qt4/wiitcpload/development/wiitcpload.pro</value>
+  <value type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload/wiitcpload.pro</value>
  </data>
  <data>
   <variable>RunConfiguration0-RunConfiguration.name</variable>
@@ -34,7 +34,7 @@
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString" >Debug</value>
    <value key="QtVersionId" type="int" >0</value>
    <value key="addQDumper" type="" ></value>
-   <value key="buildDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/development</value>
+   <value key="buildDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload</value>
   </valuemap>
  </data>
  <data>
@@ -59,7 +59,7 @@
     <value type="QString" >CONFIG_PROTECT=/usr/kde/3.5/share/config /usr/kde/3.5/env /usr/kde/3.5/shutdown /usr/share/config</value>
     <value type="QString" >CONFIG_PROTECT_MASK=/etc/udev/rules.d /etc/fonts/fonts.conf /etc/terminfo /etc/ca-certificates.conf /etc/revdep-rebuild</value>
     <value type="QString" >CVS_RSH=ssh</value>
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-NoJ7GGZrGR,guid=47895258214f66c9cddd180a49bae6b1</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-3b4JVEQcVH,guid=d8ee50b49fc52ba369e53a9949c3b148</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
     <value type="QString" >EDITOR=/bin/nano</value>
@@ -93,7 +93,7 @@
     <value type="QString" >QMAKESPEC=linux-g++</value>
     <value type="QString" >QTDIR=/usr</value>
     <value type="QString" >ROOTPATH=/usr/kde/3.5/sbin:/usr/kde/3.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin:/usr/x86_64-pc-linux-gnu/gcc-bin/4.3.3:/usr/qt/3/bin</value>
-    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7503,unix/localhost:/tmp/.ICE-unix/7503</value>
+    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7509,unix/localhost:/tmp/.ICE-unix/7509</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SHLVL=3</value>
     <value type="QString" >TERM=linux</value>
@@ -107,7 +107,7 @@
     <value type="QString" >_=/usr/kde/3.5/bin/start_kdeinit_wrapper</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList" >
-    <value type="QString" >/development/projekty/linux/qt4/wiitcpload/development/wiitcpload.pro</value>
+    <value type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload/wiitcpload.pro</value>
     <value type="QString" >-spec</value>
     <value type="QString" >/usr/share/qt4/mkspecs/linux-g++-64</value>
     <value type="QString" >-r</value>
@@ -116,7 +116,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool" >false</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/development</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload</value>
    <value key="buildConfiguration" type="int" >10</value>
   </valuemap>
  </data>
@@ -128,7 +128,7 @@
     <value type="QString" >CONFIG_PROTECT=/usr/kde/3.5/share/config /usr/kde/3.5/env /usr/kde/3.5/shutdown /usr/share/config</value>
     <value type="QString" >CONFIG_PROTECT_MASK=/etc/udev/rules.d /etc/fonts/fonts.conf /etc/terminfo /etc/ca-certificates.conf /etc/revdep-rebuild</value>
     <value type="QString" >CVS_RSH=ssh</value>
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-NoJ7GGZrGR,guid=47895258214f66c9cddd180a49bae6b1</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-3b4JVEQcVH,guid=d8ee50b49fc52ba369e53a9949c3b148</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
     <value type="QString" >EDITOR=/bin/nano</value>
@@ -162,7 +162,7 @@
     <value type="QString" >QMAKESPEC=linux-g++</value>
     <value type="QString" >QTDIR=/usr</value>
     <value type="QString" >ROOTPATH=/usr/kde/3.5/sbin:/usr/kde/3.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin:/usr/x86_64-pc-linux-gnu/gcc-bin/4.3.3:/usr/qt/3/bin</value>
-    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7503,unix/localhost:/tmp/.ICE-unix/7503</value>
+    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7509,unix/localhost:/tmp/.ICE-unix/7509</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SHLVL=3</value>
     <value type="QString" >TERM=linux</value>
@@ -181,7 +181,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/development</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload</value>
    <valuelist key="makeargs" type="QVariantList" >
     <value type="QString" >debug</value>
    </valuelist>
@@ -201,7 +201,7 @@
     <value type="QString" >CONFIG_PROTECT=/usr/kde/3.5/share/config /usr/kde/3.5/env /usr/kde/3.5/shutdown /usr/share/config</value>
     <value type="QString" >CONFIG_PROTECT_MASK=/etc/udev/rules.d /etc/fonts/fonts.conf /etc/terminfo /etc/ca-certificates.conf /etc/revdep-rebuild</value>
     <value type="QString" >CVS_RSH=ssh</value>
-    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-NoJ7GGZrGR,guid=47895258214f66c9cddd180a49bae6b1</value>
+    <value type="QString" >DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-3b4JVEQcVH,guid=d8ee50b49fc52ba369e53a9949c3b148</value>
     <value type="QString" >DESKTOP_STARTUP_ID=</value>
     <value type="QString" >DISPLAY=:0.0</value>
     <value type="QString" >EDITOR=/bin/nano</value>
@@ -235,7 +235,7 @@
     <value type="QString" >QMAKESPEC=linux-g++</value>
     <value type="QString" >QTDIR=/usr</value>
     <value type="QString" >ROOTPATH=/usr/kde/3.5/sbin:/usr/kde/3.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin:/usr/x86_64-pc-linux-gnu/gcc-bin/4.3.3:/usr/qt/3/bin</value>
-    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7503,unix/localhost:/tmp/.ICE-unix/7503</value>
+    <value type="QString" >SESSION_MANAGER=local/localhost:@/tmp/.ICE-unix/7509,unix/localhost:/tmp/.ICE-unix/7509</value>
     <value type="QString" >SHELL=/bin/bash</value>
     <value type="QString" >SHLVL=3</value>
     <value type="QString" >TERM=linux</value>
@@ -254,7 +254,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString" >/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool" >true</value>
-   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/development</value>
+   <value key="abstractProcess.workingDirectory" type="QString" >/development/projekty/linux/qt4/wiitcpload/wiitcpload</value>
   </valuemap>
  </data>
  <data>
