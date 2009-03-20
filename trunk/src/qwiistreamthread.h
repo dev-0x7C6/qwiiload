@@ -41,10 +41,15 @@ private:
 
    QTcpSocket *tcpSocket;
    QFile *fileStream;
+   QDataStream *readFile;
    QString errorName;
 
    qint8 status;
-   char buffer[1400];
+   qint64 readed, total;
+
+
+private slots:
+   void bytesWritten(qint64 value);
 
 public slots:
    void slotConnected();
