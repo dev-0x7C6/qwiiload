@@ -52,12 +52,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    if (QCoreApplication::arguments().count() > 1)
+        ui->fileEdit->setText(QCoreApplication::arguments().at(1));
+
 
     QSettings *configFile = new QSettings(configPath, QSettings::IniFormat);
 
     configFile->beginGroup("settings");
     ui->hostEdit->setText(configFile->value("Hostname", "").toString());
-    ui->fileEdit->setText(configFile->value("Filename", "").toString());
+    if (ui->fileEdit->text().count() == 0)
+        ui->fileEdit->setText(configFile->value("Filename", "").toString());
     configFile->endGroup();
 
     delete configFile;
