@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=wiitcpload
 Name=WiiTCPLoad
-Icon=/usr/share/icons/wiitcpload48.png
+Icon=wiitcpload48.png
 Type=Application
 Categories=Qt;KDE;Network
 Comment=Homebrew/TCPLoader channel client
