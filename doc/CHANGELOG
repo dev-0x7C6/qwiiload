@@ -1,35 +1,32 @@
 WiiTCPLoad Changelog
 ====================
 
-WiiTCPLoad 0.05:
+WiiTCPLoad 0.05: (2009/03/20)
+general: fully rewritten
+added: save settings in ini file
+removed: support for TCPLoader protocol
 
-- fully rewritten
-- save settings in ini file
+WiiTCPLoad 0.03: (2008/11/02)
+general: GUI fixes in main/about window (GUI looks correct on MacOSX/Windows)
+general: MacOSX build is now a Universal Binary
+general: improved windows version
+added: integration with common desktop environments (KDE3/4, GNOME)
+added: integration with konqueror, dolphin
+fixed: make install now working
+fixed: fixed TCPLoader protocol, now application wait for accept connection
+fixed: various bug fixes in source code
+added: support for FreeBSD(x86, x86_64)
 
 
-WiiTCPLoad 0.03:
+WiiTCPLoad 0.02a: (2008/10/10)
+general: GUI fixes in main/about window (GUI looks correct on Windows)
+general: windows version should work now
 
-- GUI fixes in main/about window. (GUI looks correct on MacOSX/Windows)
-- Make install now working.
-- Integration with common desktop environments. (KDE3/4, GNOME)
-- Integration with konqueror, dolphin. ("Send to Homebrew/TCPLoader" action added)
-- Fixed TCPLoader protocol, now application wait for accept connection.
-- Improved windows version.
-- Various bug fixes in source code.
-- Support for FreeBSD(x86, x86_64).
-- MacOSX build is now a Universal Binary.
+WiiTCPLoad 0.02: (2008/10/09)
+added: support for threads
+fixed: various bug fixes in source code
 
-WiiTCPLoad 0.02a:
-
-- GUI fixes in main/about window. (GUI looks correct on Windows)
-- Windows version should work now.
-
-WiiTCPLoad 0.02:
-
-- Support for threads.
-- Various bug fixes in source code.
-
-WiiTCPLoad 0.01:
-
-- Support for Homebrew Channel
-- Support for TCPLoader Channel
+WiiTCPLoad 0.01: (2008/09/26)
+general: first release
+added: support for Homebrew Channel
+added: support for TCPLoader Channel
