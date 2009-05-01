@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartlomiej Burdukiewicz                         *
+ *   Copyright (C) 2008-2009 by Bartlomiej Burdukiewicz                    *
  *   dev.strikeu@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
