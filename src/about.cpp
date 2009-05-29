@@ -23,7 +23,7 @@
 AboutForm::AboutForm(QWidget *parent) :QDialog(parent), ui(new Ui::AboutFormClass)
 {
     ui->setupUi(this);
-    connect(ui->confirmBtn, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
 }
 
 AboutForm::~AboutForm()

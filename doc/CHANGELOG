@@ -1,6 +1,9 @@
 WiiTCPLoad Changelog
 ====================
 
+WiiTCPLoad 0.05a: (2009/05/02)
+general: fixes in protocol
+
 WiiTCPLoad 0.05: (2009/03/20)
 general: fully rewritten
 added: save settings in ini file
