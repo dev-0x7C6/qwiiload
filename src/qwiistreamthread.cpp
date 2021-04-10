@@ -21,6 +21,7 @@
 #include "qwiistreamthread.h"
 
 #include <QAbstractSocket>
+#include <QDataStream>
 #include <QMetaType>
 
 
@@ -60,38 +61,40 @@ void QWiiStreamThread::run()
 void QWiiStreamThread::slotConnected()
 {
     readFile = new QDataStream(fileStream);
-    readed, total = 0;
 
-    unsigned char datagram[4];
-    datagram[0] = 'H';
-    datagram[1] = 'A';
-    datagram[2] = 'X';
-    datagram[3] = 'X';
-    if (tcpSocket->write((const char *) &datagram, sizeof(datagram)) == -1)
-        return;
-    tcpSocket->flush();
+    auto args_length = 0;
+
+    std::array<unsigned char, 4> datagram{'H', 'A', 'X', 'X'};
+
+    auto write_datagram = [&]() {
+        tcpSocket->write(reinterpret_cast<const char*>(datagram.data()), datagram.size());
+        tcpSocket->flush();
+    };
+
+    write_datagram();
 
     datagram[0] = 0;
-    datagram[1] = 4;
-    datagram[2] = (0 >> 8) & 0xff;
-    datagram[3] = 0 & 0xff;
-    if (tcpSocket->write((const char *) &datagram, sizeof(datagram)) == -1)
-        return;
-    tcpSocket->flush();
+    datagram[1] = 5;
+    datagram[2] = (args_length >> 8) & 0xff;
+    datagram[3] = args_length & 0xff;
+    write_datagram();
 
-    datagram[0] = (fileStream->size() >> 24) & 0xff;
-    datagram[1] = (fileStream->size() >> 16) & 0xff;
-    datagram[2] = (fileStream->size() >> 8) & 0xff;
-    datagram[3] = fileStream->size() & 0xff;
+    const auto size = fileStream->size();
+    datagram[0] = (size >> 24) & 0xff;
+    datagram[1] = (size >> 16) & 0xff;
+    datagram[2] = (size >> 8) & 0xff;
+    datagram[3] = size & 0xff;
+    write_datagram();
 
+    datagram[0] = 0;
+    datagram[1] = 0;
+    datagram[2] = 0;
+    datagram[3] = 0;
     connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
-
-    if (tcpSocket->write((const char *) &datagram, sizeof(datagram)) == -1)
-        return;
-    tcpSocket->flush();
+    write_datagram();
 }
 
-void QWiiStreamThread::bytesWritten(qint64 value)
+void QWiiStreamThread::bytesWritten(qint64)
 {
     emit progressBarPosition(total);
     if (readFile->atEnd() == true)
@@ -109,7 +112,7 @@ void QWiiStreamThread::bytesWritten(qint64 value)
     tcpSocket->write(buffer, readed);
 }
 
-void QWiiStreamThread::slotError(QAbstractSocket::SocketError socketError)
+void QWiiStreamThread::slotError(QAbstractSocket::SocketError)
 {
     errorName = tcpSocket->errorString();
     status = -1;

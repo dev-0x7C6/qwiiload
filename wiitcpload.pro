@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-03-20T00:00:12
 # -------------------------------------------------
-QT += network
+QT += network gui widgets
 TARGET = wiitcpload
 TEMPLATE = app
 SOURCES += src/main.cpp \
