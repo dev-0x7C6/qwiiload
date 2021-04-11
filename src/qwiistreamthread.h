@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Bartlomiej Burdukiewicz                    *
+ *   Copyright (C) 2008-2021 by Bartlomiej Burdukiewicz                    *
  *   dev.strikeu@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,48 +18,33 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef QWIISTREAMTHREAD_H
-#define QWIISTREAMTHREAD_H
+#pragma once
 
 #include <QThread>
-#include <QTcpSocket>
-#include <QFile>
 
-const qint8 HOMEBREW_PROTO = 0x00;
-const qint16 HOMEBREW_PORT = 4299;
+class QAbstractSocket;
 
-class QWiiStreamThread : public QThread {
+class QWiiStreamThread final : public QThread {
 	Q_OBJECT
 public:
-	QWiiStreamThread(QString host, qint8 proto, QFile *file);
-	~QWiiStreamThread();
-
-private:
-	QString hostname;
-	qint8 protocol;
-
-	QTcpSocket *tcpSocket;
-	QFile *fileStream;
-	QDataStream *readFile;
-	QString errorName;
-
-	qint8 status;
-	qint64 readed, total;
-
-private slots:
-	void bytesWritten(qint64 value);
-
-public slots:
-	void slotConnected();
-	void slotError(QAbstractSocket::SocketError socketError);
+	QWiiStreamThread(const QString &hostname, QByteArray &&blob);
+	virtual ~QWiiStreamThread();
 
 protected:
-	void run();
+	void run() final;
+
+private:
+	void write_datagram(QAbstractSocket *socket, std::array<unsigned char, 4> data);
+
+private:
+	const QString m_hostname;
+	const QByteArray m_blob;
+
+	QString errorName;
+	qint8 status{};
 
 signals:
 	void transferDone();
 	void transferFail(QString error);
 	void progressBarPosition(int);
 };
-
-#endif // QWIISTREAMTHREAD_H

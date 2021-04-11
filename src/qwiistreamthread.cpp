@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Bartlomiej Burdukiewicz                    *
+ *   Copyright (C) 2008-2021 by Bartlomiej Burdukiewicz                    *
  *   dev.strikeu@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,94 +20,97 @@
 
 #include "qwiistreamthread.h"
 
-#include <QAbstractSocket>
 #include <QDataStream>
-#include <QMetaType>
+#include <QTcpSocket>
 
-QWiiStreamThread::QWiiStreamThread(QString host, qint8 proto, QFile *file) {
-	qRegisterMetaType<QAbstractSocket::SocketError>("QAbstractSocket::SocketError");
-	qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
-	this->setTerminationEnabled(true);
-	hostname = host;
-	protocol = proto;
-	status = 0;
-	fileStream = file;
-	errorName = QString("");
+#include <memory>
+
+namespace homebrew {
+namespace protocol {
+constexpr auto major = 0;
+constexpr auto minor = 5;
+constexpr auto port = 4299;
+constexpr auto mtu = 1400;
+} // namespace protocol
+} // namespace homebrew
+
+constexpr auto CONNECT_TIMEOUT = 10000;
+
+struct packets {
+	QVector<QByteArray> data;
+	std::uint64_t size{};
+};
+
+auto split_blob(const QByteArray &blob) noexcept -> packets {
+	QDataStream stream(blob);
+
+	packets ret;
+
+	while (!stream.atEnd()) {
+		QByteArray array;
+		array.resize(homebrew::protocol::mtu);
+		array.resize(stream.readRawData(array.data(), array.size()));
+		ret.size += array.size();
+		ret.data.push_back(std::move(array));
+	}
+
+	return ret;
+}
+
+auto block_write_qt(QAbstractSocket *socket, const QByteArray &data, const int timeout = 3000) -> int {
+	socket->write(data);
+	socket->flush();
+	socket->waitForBytesWritten(timeout);
+
+	return data.size();
+}
+
+auto block_write(QAbstractSocket *socket, const char *data, int size, const int timeout = 3000) -> int {
+	return block_write_qt(socket, QByteArray::fromRawData(data, size), timeout);
+}
+
+QWiiStreamThread::QWiiStreamThread(const QString &hostname, QByteArray &&blob)
+		: m_hostname(hostname)
+		, m_blob(blob) {
 }
 
 QWiiStreamThread::~QWiiStreamThread() {
+	wait();
+}
+
+void QWiiStreamThread::write_datagram(QAbstractSocket *socket, const std::array<unsigned char, 4> datagram) {
+	block_write(socket, reinterpret_cast<const char *>(datagram.data()), datagram.size());
 }
 
 void QWiiStreamThread::run() {
-	tcpSocket = new QTcpSocket();
-	connect(tcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-	connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
-	tcpSocket->connectToHost(hostname, HOMEBREW_PORT);
-	exec();
-	if (status == 0)
-		tcpSocket->waitForDisconnected(3000);
-	errorName = tcpSocket->errorString();
-	delete tcpSocket;
+	auto socket = std::make_unique<QTcpSocket>();
+
+	socket->connectToHost(m_hostname, homebrew::protocol::port);
+	if (!socket->waitForConnected(CONNECT_TIMEOUT))
+		return;
+
+	auto packets = split_blob(m_blob);
+	auto calc_size = [&](auto &&size) {
+		std::array<unsigned char, 4> ret;
+		ret[0] = (size >> 24) & 0xff;
+		ret[1] = (size >> 16) & 0xff;
+		ret[2] = (size >> 8) & 0xff;
+		ret[3] = (size >> 0) & 0xff;
+		return ret;
+	};
+
+	write_datagram(socket.get(), {'H', 'A', 'X', 'X'});
+	write_datagram(socket.get(), {homebrew::protocol::major, homebrew::protocol::minor, 0, 0});
+	write_datagram(socket.get(), calc_size(packets.size));
+	write_datagram(socket.get(), calc_size(0));
+
+	for (auto total = 0; auto &&datagram : packets.data) {
+		total += block_write_qt(socket.get(), datagram);
+		emit progressBarPosition(total);
+	}
 
 	if (status == 0)
 		transferDone();
 	else
 		transferFail(errorName);
-}
-
-void QWiiStreamThread::slotConnected() {
-	readFile = new QDataStream(fileStream);
-
-	auto args_length = 0;
-
-	std::array<unsigned char, 4> datagram{'H', 'A', 'X', 'X'};
-
-	auto write_datagram = [&]() {
-		tcpSocket->write(reinterpret_cast<const char *>(datagram.data()), datagram.size());
-		tcpSocket->flush();
-	};
-
-	write_datagram();
-
-	datagram[0] = 0;
-	datagram[1] = 5;
-	datagram[2] = (args_length >> 8) & 0xff;
-	datagram[3] = args_length & 0xff;
-	write_datagram();
-
-	const auto size = fileStream->size();
-	datagram[0] = (size >> 24) & 0xff;
-	datagram[1] = (size >> 16) & 0xff;
-	datagram[2] = (size >> 8) & 0xff;
-	datagram[3] = size & 0xff;
-	write_datagram();
-
-	datagram[0] = 0;
-	datagram[1] = 0;
-	datagram[2] = 0;
-	datagram[3] = 0;
-	connect(tcpSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
-	write_datagram();
-}
-
-void QWiiStreamThread::bytesWritten(qint64) {
-	emit progressBarPosition(total);
-	if (readFile->atEnd() == true) {
-		delete readFile;
-		disconnect(tcpSocket, 0, 0, 0);
-		status = 0;
-		quit();
-		return;
-	}
-
-	char buffer[4 * 1024];
-	readed = readFile->readRawData(buffer, sizeof(buffer));
-	total += readed;
-	tcpSocket->write(buffer, readed);
-}
-
-void QWiiStreamThread::slotError(QAbstractSocket::SocketError) {
-	errorName = tcpSocket->errorString();
-	status = -1;
-	quit();
 }

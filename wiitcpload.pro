@@ -2,6 +2,7 @@
 # Project created by QtCreator 2009-03-20T00:00:12
 # -------------------------------------------------
 QT += network gui widgets
+QMAKE_CXXFLAGS += -std=c++20
 TARGET = wiitcpload
 TEMPLATE = app
 SOURCES += src/main.cpp \

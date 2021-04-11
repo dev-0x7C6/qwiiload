@@ -18,7 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "about.h"
 #include "mainwindow.h"
+#include "qwiistreamthread.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -29,118 +31,98 @@
 const QString FILE_NOT_FOUND = "%1: File not found !";
 const QString CANT_OPEN_TO_READ = "%1: Cannot open file to read !";
 const QString FILE_IS_EMPTY = "%1: File is empty !";
-//const QString
 
 MainWindow::MainWindow(QWidget *parent)
 		: QMainWindow(parent)
-		, ui(new Ui::MainWindowClass) {
-	QDir *directory = new QDir;
+		, m_ui(std::make_unique<Ui::MainWindowClass>()) {
+	m_ui->setupUi(this);
+	m_ui->actionQuit->setShortcut(QKeySequence::Close);
+	connect(m_ui->actionQuit, &QAction::triggered, this, &MainWindow::actionQuit);
+	connect(m_ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout);
+	connect(m_ui->openFile, &QPushButton::clicked, this, &MainWindow::openFile);
+	connect(m_ui->streamButton, &QPushButton::clicked, this, &MainWindow::stream);
 
-	appPath = QDir::homePath() + QString("/.wiitcpload/");
-	configPath = appPath + QString("config.ini");
-
-	if (directory->exists(appPath) != true) {
-		if (directory->mkdir(appPath) != true) {
-			QMessageBox::critical(this, tr("Critical"), QString("Can't create %1 directory").arg(appPath));
-			return;
-		}
-	}
-
-	delete directory;
-
-	ui->setupUi(this);
+	loadSettings();
 
 	if (QCoreApplication::arguments().count() > 1)
-		ui->fileEdit->setText(QCoreApplication::arguments().at(1));
-
-	QSettings *configFile = new QSettings(configPath, QSettings::IniFormat);
-
-	configFile->beginGroup("settings");
-	ui->hostEdit->setText(configFile->value("Hostname", "").toString());
-	if (ui->fileEdit->text().count() == 0)
-		ui->fileEdit->setText(configFile->value("Filename", "").toString());
-	configFile->endGroup();
-
-	delete configFile;
-
-	ui->actionQuit->setShortcut(QKeySequence::Close);
-
-	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(actionQuit()));
-	connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(actionAbout()));
-	connect(ui->openFile, SIGNAL(clicked()), this, SLOT(openFile()));
+		m_ui->fileEdit->setText(QCoreApplication::arguments().at(1));
 }
 
 MainWindow::~MainWindow() {
-	QSettings *configFile = new QSettings(configPath, QSettings::IniFormat);
-
-	configFile->beginGroup("settings");
-	configFile->setValue("Hostname", ui->hostEdit->text());
-	configFile->setValue("Filename", ui->fileEdit->text());
-	configFile->endGroup();
-
-	delete configFile;
-
-	delete ui;
+	saveSettings();
 }
 
 void MainWindow::actionAbout() {
-	aboutForm = new AboutForm(this);
-	aboutForm->exec();
-	delete aboutForm;
+	AboutForm about(this);
+	about.exec();
 }
 
 void MainWindow::openFile() {
-	QFileDialog *fileOpenDialog = new QFileDialog(this);
-	QString fileName = fileOpenDialog->getOpenFileName();
+	QFileDialog fileOpenDialog(this);
+	QString fileName = fileOpenDialog.getOpenFileName();
 	if (fileName.count() != 0)
-		ui->fileEdit->setText(fileName);
-	delete fileOpenDialog;
+		m_ui->fileEdit->setText(fileName);
 }
 
 void MainWindow::progressBarPosition(int value) {
-	ui->progressBar->setValue(value);
+	m_ui->progressBar->setValue(value);
+}
+
+void MainWindow::loadSettings() {
+	QSettings settings("homebrew", "qwiiload");
+	settings.beginGroup("settings");
+	m_ui->hostEdit->setText(settings.value("Hostname", "").toString());
+	m_ui->fileEdit->setText(settings.value("Filename", "").toString());
+	settings.endGroup();
+}
+
+void MainWindow::saveSettings() {
+	QSettings settings("homebrew", "qwiiload");
+	settings.beginGroup("settings");
+	settings.setValue("Hostname", m_ui->hostEdit->text());
+	settings.setValue("Filename", m_ui->fileEdit->text());
+	settings.endGroup();
 }
 
 void MainWindow::transferDone() {
 	QMessageBox::information(this, "Information", "Data written successful");
-	ui->streamButton->setEnabled(true);
-	ui->progressBar->setEnabled(false);
-	ui->progressBar->setValue(0);
+	m_ui->streamButton->setEnabled(true);
+	m_ui->progressBar->setEnabled(false);
+	m_ui->progressBar->setValue(0);
 }
 
 void MainWindow::transferFail(QString errorName) {
 	QMessageBox::critical(this, "Critical", errorName);
-	ui->streamButton->setEnabled(true);
-	ui->progressBar->setEnabled(false);
-	ui->progressBar->setValue(0);
+	m_ui->streamButton->setEnabled(true);
+	m_ui->progressBar->setEnabled(false);
+	m_ui->progressBar->setValue(0);
 }
 
-void MainWindow::on_streamButton_clicked() {
-	if (QFile::exists(ui->fileEdit->text()) != true) {
-		QMessageBox::critical(this, "Critical", QString(FILE_NOT_FOUND).arg(ui->fileEdit->text()));
+void MainWindow::stream() {
+	if (QFile::exists(m_ui->fileEdit->text()) != true) {
+		QMessageBox::critical(this, "Critical", QString(FILE_NOT_FOUND).arg(m_ui->fileEdit->text()));
 		return;
 	}
 
-	QFile *file = new QFile(ui->fileEdit->text());
-	if (!file->open(QIODevice::ReadOnly)) {
-		delete file;
-		QMessageBox::critical(this, "Critical", QString(CANT_OPEN_TO_READ).arg(ui->fileEdit->text()));
+	QFile file(m_ui->fileEdit->text());
+
+	if (!file.open(QIODevice::ReadOnly)) {
+		QMessageBox::critical(this, "Critical", QString(CANT_OPEN_TO_READ).arg(m_ui->fileEdit->text()));
 		return;
 	}
 
-	if (file->size() == 0) {
-		file->close();
-		delete file;
-		QMessageBox::critical(this, "Critical", QString(FILE_IS_EMPTY).arg(ui->fileEdit->text()));
+	if (file.size() == 0) {
+		QMessageBox::critical(this, "Critical", QString(FILE_IS_EMPTY).arg(m_ui->fileEdit->text()));
+		return;
 	}
 
-	ui->progressBar->setMaximum(file->size());
-	ui->progressBar->setEnabled(true);
+	m_ui->progressBar->setMaximum(file.size());
+	m_ui->progressBar->setEnabled(true);
 
-	wiiStreamThread = new QWiiStreamThread(ui->hostEdit->text(), HOMEBREW_PROTO, file);
-	connect(wiiStreamThread, SIGNAL(transferFail(QString)), this, SLOT(transferFail(QString)));
-	connect(wiiStreamThread, SIGNAL(transferDone()), this, SLOT(transferDone()));
-	connect(wiiStreamThread, SIGNAL(progressBarPosition(int)), this, SLOT(progressBarPosition(int)));
-	wiiStreamThread->start();
-	ui->streamButton->setEnabled(false);
+	m_stream = std::make_unique<QWiiStreamThread>(m_ui->hostEdit->text(), file.readAll());
+	connect(m_stream.get(), &QWiiStreamThread::transferFail, this, &MainWindow::transferFail);
+	connect(m_stream.get(), &QWiiStreamThread::transferDone, this, &MainWindow::transferDone);
+	connect(m_stream.get(), &QWiiStreamThread::progressBarPosition, this, &MainWindow::progressBarPosition);
+	m_stream->start();
+	m_ui->streamButton->setEnabled(false);
 }

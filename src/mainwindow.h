@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Bartlomiej Burdukiewicz                    *
+ *   Copyright (C) 2008-2021 by Bartlomiej Burdukiewicz                    *
  *   dev.strikeu@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,13 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
-#include "qwiistreamthread.h"
-#include "about.h"
+class QWiiStreamThread;
 
 namespace Ui {
 class MainWindowClass;
@@ -37,25 +35,23 @@ public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
-	QWiiStreamThread *wiiStreamThread;
-	AboutForm *aboutForm;
+	std::unique_ptr<QWiiStreamThread> m_stream;
 
-	QString appPath, configPath;
-
-public slots:
+public:
 	void transferDone();
 	void transferFail(QString errorName);
 	void progressBarPosition(int value);
 
 private:
-	Ui::MainWindowClass *ui;
+	void loadSettings();
+	void saveSettings();
 
-private slots:
-	void on_streamButton_clicked();
-
+	void stream();
 	void actionQuit() { close(); };
 	void actionAbout();
 	void openFile();
+
+private:
+	std::unique_ptr<Ui::MainWindowClass> m_ui;
 };
 
-#endif // MAINWINDOW_H
