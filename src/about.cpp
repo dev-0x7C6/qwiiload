@@ -20,18 +20,17 @@
 
 #include "about.h"
 
-AboutForm::AboutForm(QWidget *parent) :QDialog(parent), ui(new Ui::AboutFormClass)
-{
-    ui->setupUi(this);
-    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
+AboutForm::AboutForm(QWidget *parent)
+		: QDialog(parent)
+		, ui(new Ui::AboutFormClass) {
+	ui->setupUi(this);
+	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(slotConfirmButton()));
 }
 
-AboutForm::~AboutForm()
-{
-    delete ui;
+AboutForm::~AboutForm() {
+	delete ui;
 }
 
-void AboutForm::slotConfirmButton()
-{
-    close();
+void AboutForm::slotConfirmButton() {
+	close();
 }

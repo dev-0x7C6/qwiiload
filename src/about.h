@@ -21,23 +21,21 @@
 #include <QDialog>
 #include "ui_about.h"
 
-namespace Ui
-{
-    class AboutFormClass;
+namespace Ui {
+class AboutFormClass;
 }
 
 using namespace Ui;
 
-class AboutForm: public QDialog {
-    Q_OBJECT
+class AboutForm : public QDialog {
+	Q_OBJECT
 public:
-   AboutForm(QWidget * parent = 0);
-   ~AboutForm();
+	AboutForm(QWidget *parent = 0);
+	~AboutForm();
 
 private:
-   Ui::AboutFormClass *ui;
+	Ui::AboutFormClass *ui;
 
 public slots:
-   void slotConfirmButton();
-
+	void slotConfirmButton();
 };

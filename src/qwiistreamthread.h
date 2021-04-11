@@ -28,41 +28,38 @@
 const qint8 HOMEBREW_PROTO = 0x00;
 const qint16 HOMEBREW_PORT = 4299;
 
-class QWiiStreamThread : public QThread
-{
-    Q_OBJECT
+class QWiiStreamThread : public QThread {
+	Q_OBJECT
 public:
-    QWiiStreamThread(QString host, qint8 proto, QFile *file);
-   ~QWiiStreamThread();
+	QWiiStreamThread(QString host, qint8 proto, QFile *file);
+	~QWiiStreamThread();
 
 private:
-   QString hostname;
-   qint8 protocol;
+	QString hostname;
+	qint8 protocol;
 
-   QTcpSocket *tcpSocket;
-   QFile *fileStream;
-   QDataStream *readFile;
-   QString errorName;
+	QTcpSocket *tcpSocket;
+	QFile *fileStream;
+	QDataStream *readFile;
+	QString errorName;
 
-   qint8 status;
-   qint64 readed, total;
-
+	qint8 status;
+	qint64 readed, total;
 
 private slots:
-   void bytesWritten(qint64 value);
+	void bytesWritten(qint64 value);
 
 public slots:
-   void slotConnected();
-   void slotError(QAbstractSocket::SocketError socketError);
+	void slotConnected();
+	void slotError(QAbstractSocket::SocketError socketError);
 
 protected:
-   void run();
+	void run();
 
 signals:
-   void transferDone();
-   void transferFail(QString error);
-   void progressBarPosition(int);
-
+	void transferDone();
+	void transferFail(QString error);
+	void progressBarPosition(int);
 };
 
 #endif // QWIISTREAMTHREAD_H

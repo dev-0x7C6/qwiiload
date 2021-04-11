@@ -26,38 +26,36 @@
 #include "qwiistreamthread.h"
 #include "about.h"
 
-namespace Ui
-{
-    class MainWindowClass;
+namespace Ui {
+class MainWindowClass;
 }
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+	Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	MainWindow(QWidget *parent = 0);
+	~MainWindow();
 
-    QWiiStreamThread *wiiStreamThread;
-    AboutForm *aboutForm;
+	QWiiStreamThread *wiiStreamThread;
+	AboutForm *aboutForm;
 
-    QString appPath, configPath;
+	QString appPath, configPath;
 
 public slots:
-    void transferDone();
-    void transferFail(QString errorName);
-    void progressBarPosition(int value);
+	void transferDone();
+	void transferFail(QString errorName);
+	void progressBarPosition(int value);
 
 private:
-    Ui::MainWindowClass *ui;
+	Ui::MainWindowClass *ui;
 
 private slots:
-    void on_streamButton_clicked();
+	void on_streamButton_clicked();
 
-    void actionQuit(){ close(); };
-    void actionAbout();
-    void openFile();
+	void actionQuit() { close(); };
+	void actionAbout();
+	void openFile();
 };
 
 #endif // MAINWINDOW_H
