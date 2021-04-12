@@ -23,6 +23,10 @@
 
 int main(int argc, char *argv[]) {
 	QApplication application(argc, argv);
+	application.setApplicationDisplayName("QWiiLoad");
+	application.setApplicationName("qwiiload");
+	application.setApplicationVersion("0.80");
+	application.setOrganizationName("homebrew");
 	MainWindow window;
 	window.show();
 	return application.exec();

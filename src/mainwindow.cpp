@@ -92,7 +92,7 @@ void MainWindow::openFile() {
 }
 
 void MainWindow::loadSettings() {
-	QSettings settings("homebrew", "qwiiload");
+	QSettings settings;
 	settings.beginGroup("settings");
 	m_ui->hostEdit->setText(settings.value("Hostname", "").toString());
 	m_ui->fileEdit->setText(settings.value("Filename", "").toString());
@@ -100,7 +100,7 @@ void MainWindow::loadSettings() {
 }
 
 void MainWindow::saveSettings() {
-	QSettings settings("homebrew", "qwiiload");
+	QSettings settings;
 	settings.beginGroup("settings");
 	settings.setValue("Hostname", m_ui->hostEdit->text());
 	settings.setValue("Filename", m_ui->fileEdit->text());
