@@ -28,6 +28,7 @@
 namespace homebrew {
 namespace connection {
 constexpr auto timeout = 4000;
+constexpr auto send_timeout = 10000;
 }
 
 namespace protocol {
@@ -59,15 +60,17 @@ auto split_blob(const QByteArray &blob) noexcept -> packets {
 	return ret;
 }
 
-auto block_write_qt(QAbstractSocket *socket, const QByteArray &data, const int timeout = homebrew::connection::timeout) -> int {
+auto block_write_qt(QAbstractSocket *socket, const QByteArray &data, const int timeout = homebrew::connection::send_timeout) -> int {
 	socket->write(data);
 	socket->flush();
-	socket->waitForBytesWritten(timeout);
+
+	if (socket->bytesToWrite() && !socket->waitForBytesWritten(timeout))
+		return 0;
 
 	return data.size();
 }
 
-auto block_write(QAbstractSocket *socket, const char *data, int size, const int timeout = homebrew::connection::timeout) -> int {
+auto block_write(QAbstractSocket *socket, const char *data, int size, const int timeout = homebrew::connection::send_timeout) -> int {
 	return block_write_qt(socket, QByteArray::fromRawData(data, size), timeout);
 }
 
