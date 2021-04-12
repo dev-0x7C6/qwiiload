@@ -3,7 +3,7 @@
 # -------------------------------------------------
 QT += network gui widgets
 QMAKE_CXXFLAGS += -std=c++20
-TARGET = wiitcpload
+TARGET = qwiiload
 TEMPLATE = app
 SOURCES += src/main.cpp \
     src/dialogs.cpp \
@@ -32,7 +32,7 @@ unix {
  target.path =  $${INSTALL_PREFIX}/bin
  icons.path =  $${INSTALL_PREFIX}/share/icons
  icons.files =  images/$${TARGET}.png  images/$${TARGET}48.png  images/$${TARGET}128.png
- doc.path = $${INSTALL_PREFIX}/share/doc/wiitcpload
+ doc.path = $${INSTALL_PREFIX}/share/doc/qwiiload
  doc.files = doc/CHANGELOG doc/COPYING doc/README
  desktop.path =  $${INSTALL_PREFIX}/share/applications
  desktop.files =  res/$${TARGET}.desktop
