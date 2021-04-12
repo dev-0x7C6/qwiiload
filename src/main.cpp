@@ -25,8 +25,9 @@ int main(int argc, char *argv[]) {
 	QApplication application(argc, argv);
 	application.setApplicationDisplayName("QWiiLoad");
 	application.setApplicationName("qwiiload");
-	application.setApplicationVersion("0.80");
+	application.setApplicationVersion("0.81");
 	application.setOrganizationName("homebrew");
+	application.setWindowIcon(QIcon(":/logo/images/wiitcpload128.png"));
 	MainWindow window;
 	window.show();
 	return application.exec();
