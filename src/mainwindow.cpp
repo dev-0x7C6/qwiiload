@@ -20,7 +20,7 @@
 
 #include "about.h"
 #include "mainwindow.h"
-#include "qwiistreamthread.h"
+#include "uploadthread.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -120,7 +120,7 @@ void MainWindow::stream() {
 	if (file.atEnd())
 		return dialogs::critical::file_empty(this, path);
 
-	m_stream = std::make_unique<QWiiStreamThread>(m_ui->hostEdit->text(), file.readAll());
+	m_stream = std::make_unique<UploadThread>(m_ui->hostEdit->text(), file.readAll());
 	m_stream->start();
 	transactionUpdate();
 }

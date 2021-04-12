@@ -22,7 +22,7 @@
 
 #include <QMainWindow>
 
-class QWiiStreamThread;
+class UploadThread;
 
 namespace Ui {
 class MainWindowClass;
@@ -35,7 +35,7 @@ public:
 	MainWindow(QWidget *parent = 0);
 	virtual ~MainWindow();
 
-	std::unique_ptr<QWiiStreamThread> m_stream;
+	std::unique_ptr<UploadThread> m_stream;
 
 public:
 	void transactionUpdate();

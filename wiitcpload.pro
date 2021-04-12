@@ -8,12 +8,12 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/dialogs.cpp \
     src/mainwindow.cpp \
-    src/qwiistreamthread.cpp \
-    src/about.cpp
+    src/about.cpp \
+    src/uploadthread.cpp
 HEADERS += src/mainwindow.h \
     src/dialogs.hpp \
-    src/qwiistreamthread.h \
-    src/about.h
+    src/about.h \
+    src/uploadthread.h
 FORMS += ui/mainwindow.ui \
     ui/about.ui
 RESOURCES += resource.qrc

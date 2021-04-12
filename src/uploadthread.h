@@ -40,11 +40,11 @@ struct upload_progress {
 	std::atomic<std::int32_t> size{};
 };
 
-class QWiiStreamThread final : public QThread {
+class UploadThread final : public QThread {
 	Q_OBJECT
 public:
-	QWiiStreamThread(const QString &hostname, QByteArray &&blob);
-	virtual ~QWiiStreamThread();
+	UploadThread(const QString &hostname, QByteArray &&blob);
+	virtual ~UploadThread();
 
 	auto progress() const noexcept -> const upload_progress & { return m_progress; }
 

@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "qwiistreamthread.h"
+#include "uploadthread.h"
 
 #include <QDataStream>
 #include <QTcpSocket>
@@ -71,17 +71,17 @@ auto block_write(QAbstractSocket *socket, const char *data, int size, const int 
 	return block_write_qt(socket, QByteArray::fromRawData(data, size), timeout);
 }
 
-QWiiStreamThread::QWiiStreamThread(const QString &hostname, QByteArray &&blob)
+UploadThread::UploadThread(const QString &hostname, QByteArray &&blob)
 		: m_hostname(hostname)
 		, m_blob(blob) {
 	m_progress.size = blob.size();
 }
 
-QWiiStreamThread::~QWiiStreamThread() {
+UploadThread::~UploadThread() {
 	wait();
 }
 
-auto QWiiStreamThread::upload() noexcept -> upload_status {
+auto UploadThread::upload() noexcept -> upload_status {
 	auto socket = std::make_unique<QTcpSocket>();
 
 	socket->connectToHost(m_hostname, homebrew::protocol::port);
@@ -117,10 +117,10 @@ auto QWiiStreamThread::upload() noexcept -> upload_status {
 	return upload_status::successful;
 }
 
-auto QWiiStreamThread::write_datagram(QAbstractSocket *socket, const std::array<unsigned char, 4> datagram) noexcept -> bool {
+auto UploadThread::write_datagram(QAbstractSocket *socket, const std::array<unsigned char, 4> datagram) noexcept -> bool {
 	return block_write(socket, reinterpret_cast<const char *>(datagram.data()), datagram.size()) == datagram.size();
 }
 
-void QWiiStreamThread::run() {
+void UploadThread::run() {
 	m_progress.status = upload();
 }
