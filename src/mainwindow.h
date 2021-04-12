@@ -38,9 +38,7 @@ public:
 	std::unique_ptr<QWiiStreamThread> m_stream;
 
 public:
-	void transferDone();
-	void transferFail(const QString &errorName);
-	void progressBarPosition(int value);
+	void transactionUpdate();
 
 private:
 	void loadSettings();

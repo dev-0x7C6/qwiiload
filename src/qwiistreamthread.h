@@ -22,7 +22,23 @@
 
 #include <QThread>
 
+#include <atomic>
+#include <cstdint>
+
 class QAbstractSocket;
+
+enum class upload_status {
+	progress,
+	connection_timeout,
+	error,
+	successful,
+};
+
+struct upload_progress {
+	std::atomic<upload_status> status{upload_status::progress};
+	std::atomic<std::int32_t> uploaded{};
+	std::atomic<std::int32_t> size{};
+};
 
 class QWiiStreamThread final : public QThread {
 	Q_OBJECT
@@ -30,21 +46,18 @@ public:
 	QWiiStreamThread(const QString &hostname, QByteArray &&blob);
 	virtual ~QWiiStreamThread();
 
+	auto progress() const noexcept -> const upload_progress & { return m_progress; }
+
 protected:
+	auto upload() noexcept -> upload_status;
 	void run() final;
 
 private:
-	void write_datagram(QAbstractSocket *socket, std::array<unsigned char, 4> data);
+	auto write_datagram(QAbstractSocket *socket, std::array<unsigned char, 4> data) noexcept -> bool;
 
 private:
 	const QString m_hostname;
 	const QByteArray m_blob;
 
-	QString errorName;
-	qint8 status{};
-
-signals:
-	void transferDone();
-	void transferFail(QString error);
-	void progressBarPosition(int);
+	upload_progress m_progress;
 };

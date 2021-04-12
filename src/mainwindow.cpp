@@ -24,8 +24,8 @@
 #include "ui_mainwindow.h"
 
 #include <QFile>
-#include <QFileDialog>
 #include <QSettings>
+#include <QTimer>
 
 #include <src/dialogs.hpp>
 
@@ -43,10 +43,42 @@ MainWindow::MainWindow(QWidget *parent)
 
 	if (QCoreApplication::arguments().count() > 1)
 		m_ui->fileEdit->setText(QCoreApplication::arguments().at(1));
+
+	auto timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, this, &MainWindow::transactionUpdate);
+	timer->start(10);
 }
 
 MainWindow::~MainWindow() {
 	saveSettings();
+}
+
+void MainWindow::transactionUpdate() {
+	if (!m_stream)
+		return;
+
+	const std::int32_t size = m_stream->progress().size;
+	const std::int32_t uploaded = m_stream->progress().uploaded;
+	const upload_status status = m_stream->progress().status;
+
+	m_ui->progressBar->setEnabled(upload_status::progress == status);
+	m_ui->streamButton->setEnabled(upload_status::progress != status);
+	m_ui->progressBar->setMaximum(size);
+	m_ui->progressBar->setValue(upload_status::progress == status ? uploaded : 0);
+
+	if (upload_status::progress != status)
+		m_stream.reset();
+
+	switch (status) {
+		case upload_status::progress:
+			break;
+		case upload_status::connection_timeout:
+			return dialogs::critical::transfer_failed(this, "connection timeout");
+		case upload_status::error:
+			return dialogs::critical::transfer_failed(this, "communication error");
+		case upload_status::successful:
+			return dialogs::information::data_written_successful(this);
+	}
 }
 
 void MainWindow::actionAbout() {
@@ -57,10 +89,6 @@ void MainWindow::actionAbout() {
 void MainWindow::openFile() {
 	if (auto fileName = dialogs::ask::open_file(this); !fileName.isEmpty())
 		m_ui->fileEdit->setText(fileName);
-}
-
-void MainWindow::progressBarPosition(int value) {
-	m_ui->progressBar->setValue(value);
 }
 
 void MainWindow::loadSettings() {
@@ -79,20 +107,6 @@ void MainWindow::saveSettings() {
 	settings.endGroup();
 }
 
-void MainWindow::transferDone() {
-	dialogs::information::data_written_successful(this);
-	m_ui->streamButton->setEnabled(true);
-	m_ui->progressBar->setEnabled(false);
-	m_ui->progressBar->setValue(0);
-}
-
-void MainWindow::transferFail(const QString &reason) {
-	dialogs::critical::transfer_failed(this, reason);
-	m_ui->streamButton->setEnabled(true);
-	m_ui->progressBar->setEnabled(false);
-	m_ui->progressBar->setValue(0);
-}
-
 void MainWindow::stream() {
 	const auto path = m_ui->fileEdit->text();
 	QFile file(path);
@@ -106,13 +120,7 @@ void MainWindow::stream() {
 	if (file.atEnd())
 		return dialogs::critical::file_empty(this, path);
 
-	m_ui->progressBar->setMaximum(file.size());
-	m_ui->progressBar->setEnabled(true);
-
 	m_stream = std::make_unique<QWiiStreamThread>(m_ui->hostEdit->text(), file.readAll());
-	connect(m_stream.get(), &QWiiStreamThread::transferFail, this, &MainWindow::transferFail);
-	connect(m_stream.get(), &QWiiStreamThread::transferDone, this, &MainWindow::transferDone);
-	connect(m_stream.get(), &QWiiStreamThread::progressBarPosition, this, &MainWindow::progressBarPosition);
 	m_stream->start();
-	m_ui->streamButton->setEnabled(false);
+	transactionUpdate();
 }
