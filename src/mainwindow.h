@@ -28,18 +28,18 @@ namespace Ui {
 class MainWindowClass;
 }
 
-class MainWindow : public QMainWindow {
+class MainWindow final : public QMainWindow {
 	Q_OBJECT
 
 public:
 	MainWindow(QWidget *parent = 0);
-	~MainWindow();
+	virtual ~MainWindow();
 
 	std::unique_ptr<QWiiStreamThread> m_stream;
 
 public:
 	void transferDone();
-	void transferFail(QString errorName);
+	void transferFail(const QString &errorName);
 	void progressBarPosition(int value);
 
 private:
@@ -47,11 +47,9 @@ private:
 	void saveSettings();
 
 	void stream();
-	void actionQuit() { close(); };
 	void actionAbout();
 	void openFile();
 
 private:
 	std::unique_ptr<Ui::MainWindowClass> m_ui;
 };
-

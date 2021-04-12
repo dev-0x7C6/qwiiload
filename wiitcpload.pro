@@ -6,10 +6,12 @@ QMAKE_CXXFLAGS += -std=c++20
 TARGET = wiitcpload
 TEMPLATE = app
 SOURCES += src/main.cpp \
+    src/dialogs.cpp \
     src/mainwindow.cpp \
     src/qwiistreamthread.cpp \
     src/about.cpp
 HEADERS += src/mainwindow.h \
+    src/dialogs.hpp \
     src/qwiistreamthread.h \
     src/about.h
 FORMS += ui/mainwindow.ui \

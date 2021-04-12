@@ -24,20 +24,17 @@
 #include "ui_mainwindow.h"
 
 #include <QFile>
-#include <QMessageBox>
 #include <QFileDialog>
 #include <QSettings>
 
-const QString FILE_NOT_FOUND = "%1: File not found !";
-const QString CANT_OPEN_TO_READ = "%1: Cannot open file to read !";
-const QString FILE_IS_EMPTY = "%1: File is empty !";
+#include <src/dialogs.hpp>
 
 MainWindow::MainWindow(QWidget *parent)
 		: QMainWindow(parent)
 		, m_ui(std::make_unique<Ui::MainWindowClass>()) {
 	m_ui->setupUi(this);
 	m_ui->actionQuit->setShortcut(QKeySequence::Close);
-	connect(m_ui->actionQuit, &QAction::triggered, this, &MainWindow::actionQuit);
+	connect(m_ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
 	connect(m_ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout);
 	connect(m_ui->openFile, &QPushButton::clicked, this, &MainWindow::openFile);
 	connect(m_ui->streamButton, &QPushButton::clicked, this, &MainWindow::stream);
@@ -58,9 +55,7 @@ void MainWindow::actionAbout() {
 }
 
 void MainWindow::openFile() {
-	QFileDialog fileOpenDialog(this);
-	QString fileName = fileOpenDialog.getOpenFileName();
-	if (fileName.count() != 0)
+	if (auto fileName = dialogs::ask::open_file(this); !fileName.isEmpty())
 		m_ui->fileEdit->setText(fileName);
 }
 
@@ -85,36 +80,31 @@ void MainWindow::saveSettings() {
 }
 
 void MainWindow::transferDone() {
-	QMessageBox::information(this, "Information", "Data written successful");
+	dialogs::information::data_written_successful(this);
 	m_ui->streamButton->setEnabled(true);
 	m_ui->progressBar->setEnabled(false);
 	m_ui->progressBar->setValue(0);
 }
 
-void MainWindow::transferFail(QString errorName) {
-	QMessageBox::critical(this, "Critical", errorName);
+void MainWindow::transferFail(const QString &reason) {
+	dialogs::critical::transfer_failed(this, reason);
 	m_ui->streamButton->setEnabled(true);
 	m_ui->progressBar->setEnabled(false);
 	m_ui->progressBar->setValue(0);
 }
 
 void MainWindow::stream() {
-	if (QFile::exists(m_ui->fileEdit->text()) != true) {
-		QMessageBox::critical(this, "Critical", QString(FILE_NOT_FOUND).arg(m_ui->fileEdit->text()));
-		return;
-	}
+	const auto path = m_ui->fileEdit->text();
+	QFile file(path);
 
-	QFile file(m_ui->fileEdit->text());
+	if (!file.exists())
+		return dialogs::critical::file_not_found(this, path);
 
-	if (!file.open(QIODevice::ReadOnly)) {
-		QMessageBox::critical(this, "Critical", QString(CANT_OPEN_TO_READ).arg(m_ui->fileEdit->text()));
-		return;
-	}
+	if (!file.open(QIODevice::ReadOnly))
+		return dialogs::critical::file_cant_read(this, path);
 
-	if (file.size() == 0) {
-		QMessageBox::critical(this, "Critical", QString(FILE_IS_EMPTY).arg(m_ui->fileEdit->text()));
-		return;
-	}
+	if (file.atEnd())
+		return dialogs::critical::file_empty(this, path);
 
 	m_ui->progressBar->setMaximum(file.size());
 	m_ui->progressBar->setEnabled(true);
