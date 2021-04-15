@@ -1,6 +1,12 @@
 WiiTCPLoad Changelog
 ====================
 
+QWiiLoad 0.80 (2021/04/13):
+- rewritten core parts
+- updated to qt5
+- working with latest homebrew channel
+
+
 WiiTCPLoad 0.05a: (2009/05/02)
 general: fixes in protocol
 
