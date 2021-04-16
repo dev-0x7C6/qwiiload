@@ -107,20 +107,34 @@ void MainWindow::saveSettings() {
 	settings.endGroup();
 }
 
-void MainWindow::stream() {
-	const auto path = m_ui->fileEdit->text();
+QByteArray MainWindow::readFile(const QString &path) noexcept {
 	QFile file(path);
 
-	if (!file.exists())
-		return dialogs::critical::file_not_found(this, path);
+	if (!file.exists()) {
+		dialogs::critical::file_not_found(this, path);
+		return {};
+	}
 
-	if (!file.open(QIODevice::ReadOnly))
-		return dialogs::critical::file_cant_read(this, path);
+	if (!file.open(QIODevice::ReadOnly)) {
+		dialogs::critical::file_cant_read(this, path);
+		return {};
+	}
 
-	if (file.atEnd())
-		return dialogs::critical::file_empty(this, path);
+	if (file.atEnd()) {
+		dialogs::critical::file_empty(this, path);
+		return {};
+	}
 
-	m_stream = std::make_unique<UploadThread>(m_ui->hostEdit->text(), file.readAll());
+	return file.readAll();
+}
+
+void MainWindow::stream() {
+	auto blob = readFile(m_ui->fileEdit->text());
+
+	if (blob.isEmpty())
+		return;
+
+	m_stream = std::make_unique<UploadThread>(m_ui->hostEdit->text(), std::move(blob));
 	m_stream->start();
 	transactionUpdate();
 }

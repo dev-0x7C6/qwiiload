@@ -21,6 +21,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QByteArray>
 
 class UploadThread;
 
@@ -43,6 +44,8 @@ public:
 private:
 	void loadSettings();
 	void saveSettings();
+
+	auto readFile(const QString &) noexcept -> QByteArray;
 
 	void stream();
 	void actionAbout();
