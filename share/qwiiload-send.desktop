@@ -6,7 +6,7 @@ Name=Send to Homebrew/TCPLoader channel
 Name[pl]=Wyślij do Homebrew/TCPLoader
 GenericName=Send to Homebrew/TCPLoader channel
 GenericName[pl]=Wyślij do Homebrew/TCPLoader
-Icon=wiitcpload48.png
+Icon=qwiiload.svg
 ServiceTypes=application/x-executable
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Type=Service
@@ -14,5 +14,5 @@ Type=Service
 [Desktop Action WiiSend]
 Name=Send to Homebrew/TCPLoader channel
 Name[pl]=Wyślij do Homebrew/TCPLoader
-Exec=wiitcpload %F
-Icon=wiitcpload48.png
+Exec=qwiiload %F
+Icon=qwiiload.svg
